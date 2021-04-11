@@ -21,15 +21,26 @@ public class Market {
 	@Column(name = "market_address")
 	private String marketAddress;
 	
+	@Column(name = "url_photo")
+	private String urlPhoto;
+	
 	public Market() {
 		super();
 	}
-	public Market(String marketName, String marketAddress) {
+	public Market(String marketName, String marketAddress, String urlPhoto) {
 		super();
 		this.marketName = marketName;
 		this.marketAddress = marketAddress;
+		this.urlPhoto = urlPhoto;
 	}
 
+	
+	public String getUrlPhoto() {
+		return urlPhoto;
+	}
+	public void setUrlPhoto(String urlPhoto) {
+		this.urlPhoto = urlPhoto;
+	}
 	public long getMarketId() {
 		return marketId;
 	}
