@@ -16,7 +16,7 @@ public class CorsConfig {
 				registry.addMapping("/**")
 					.allowedMethods("GET", "POST", "PUT", "DELETE")
 					.allowedHeaders("*")
-					.allowedOrigins("https://pasar-yuk.herokuapp.com");
+					.allowedOrigins("*");
 			}
 		};
 	}
