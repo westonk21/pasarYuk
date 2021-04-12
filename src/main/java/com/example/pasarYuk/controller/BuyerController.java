@@ -26,7 +26,7 @@ import com.example.pasarYuk.model.Buyer;
 //import com.example.pasarYuk.repository.BuyerRepository;
 import com.example.pasarYuk.services.BuyerService;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 
