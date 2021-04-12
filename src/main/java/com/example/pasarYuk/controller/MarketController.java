@@ -14,19 +14,19 @@ import com.example.pasarYuk.repository.MarketRepository;
 import com.example.pasarYuk.services.MarketService;
 
 @RestController
-@RequestMapping("api/v1/market")
+@RequestMapping("api/v1")
 public class MarketController {
 
 	@Autowired
 	private MarketService marketService;
 	
-	@GetMapping
+	@GetMapping("/market")
 	public List<Market> getListMarket(){
 		List<Market> temp = marketService.listMarket();
 		return temp;
 	}
 	
-	@PostMapping("/new")
+	@PostMapping("/market/new")
 	public Market newMarket(@RequestBody Market market) {
 		Market marketResp = marketService.createNewMarket(market);
 		return marketResp;
