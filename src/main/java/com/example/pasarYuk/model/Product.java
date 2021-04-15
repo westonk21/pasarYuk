@@ -25,7 +25,7 @@ public class Product implements Comparable<Product> {
 	private String productDesc;
 	
 	@Column(name = "price")
-	private int price;
+	private String price;
 	
 	@Column(name = "satuan_jual")
 	private String satuanJual;
@@ -40,7 +40,7 @@ public class Product implements Comparable<Product> {
 		super();
 	}
 
-	public Product(long sellerId, String productName, String productDesc, int price, float avgStar, String category, String satuanJual) {
+	public Product(long sellerId, String productName, String productDesc, String price, float avgStar, String category, String satuanJual) {
 		super();
 		this.sellerId = sellerId;
 		this.productName = productName;
@@ -99,11 +99,11 @@ public class Product implements Comparable<Product> {
 		this.productDesc = productDesc;
 	}
 
-	public int getPrice() {
+	public String getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 

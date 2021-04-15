@@ -65,9 +65,9 @@ public class ProductController {
 //	}
 	
 	//new product
-	@PostMapping("products/{sellerId}")
-	public Product createProduct(@PathVariable(value = "sellerId") Long sellerId, @RequestBody Product product) {
-		Product productResp = productService.addNewProduct(sellerId, product);
+	@PostMapping("products/new")
+	public Product createProduct(@RequestBody Product product) {
+		Product productResp = productService.addNewProduct(product);
 		return productResp;
 	}
 	

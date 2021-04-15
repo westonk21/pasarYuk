@@ -41,8 +41,8 @@ public class ProductService {
 //		return productRepository.save(productId);
 //	}
 	
-	public Product addNewProduct(Long sellerId, Product product) {
-		product.setSellerId(sellerId);
+	public Product addNewProduct(Product product) {
+		//product.setSellerId(sellerId);
 		return productRepository.save(product);
 	}
 	
@@ -139,16 +139,4 @@ public class ProductService {
 	
 }
 
-class PriceSortAsc implements Comparator<Product>{
-	@Override
-	public int compare(Product prd1, Product prd2) {
-		return prd1.getPrice() - prd2.getPrice();
-	}
-}
 
-class PriceSortDsc implements Comparator<Product>{
-	@Override
-	public int compare(Product prd1, Product prd2) {
-		return prd2.getPrice() - prd1.getPrice();
-	}
-}
