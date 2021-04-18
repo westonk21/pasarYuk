@@ -28,6 +28,9 @@ public class CartService {
 	private ProductService productService;
 	
 	@Autowired
+	private MarketService marketService;
+	
+	@Autowired
 	private BuyerRepository buyerRepository;
 	
 	@Autowired
@@ -51,6 +54,8 @@ public class CartService {
 				Product tempProduct = productService.getProductById(cart2.getCartId().getProductId());
 				temp.setProduct(tempProduct);
 				temp.setQty(cart2.getQuantity());
+				Market tempMarket = marketService.getMarketById(cart2.getMarketId());
+				temp.setMarket(tempMarket);
 				
 				cartDTOList.add(temp);
 			}
