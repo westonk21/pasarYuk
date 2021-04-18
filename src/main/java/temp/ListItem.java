@@ -5,24 +5,14 @@ public class ListItem {
 
 	
 	private Long[] list;
-	private String address;
 	
 	public ListItem() {
 		super();
 	}
 
-	public ListItem(Long[] list, String address) {
+	public ListItem(Long[] list) {
 		super();
 		this.list = list;
-		this.address = address;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public Long[] getList() {

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
+import com.example.pasarYuk.model.Buyer;
 import com.example.pasarYuk.model.Cart;
 import com.example.pasarYuk.model.Order;
 import com.example.pasarYuk.model.Orderitem;
@@ -31,6 +32,9 @@ import temp.OrderDTO;
 @Service
 public class OrderService {
 
+	@Autowired
+	private BuyerService buyerService;
+	
 	@Autowired
 	private CartService cartService;
 	
@@ -402,9 +406,11 @@ public class OrderService {
 		
 		
 		order.setBuyerId(buyerId);
+		Buyer tempBuyer = buyerService.getBuyerById(buyerId);
+		order.setShippingAddress(tempBuyer.getAddress());
+		
 		order.setOrderStatus("01");
-		//get Buyer address or from front end
-		order.setShippingAddress(orderItem.getAddress());
+		//order.setShippingAddress(orderItem.getAddress());
 		//int lengthList = listItem.length;
 		Date dateTemp = new Date();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
