@@ -37,7 +37,7 @@ public class BuyerController {
 	//private BuyerRepository buyerRepository;
 	
 	//get buyer
-	@CrossOrigin
+	//@CrossOrigin
 	@GetMapping("buyers")
 	public List<Buyer> getAllBuyer(HttpServletRequest request){
 		HttpSession session = request.getSession();

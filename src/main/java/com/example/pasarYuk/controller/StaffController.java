@@ -20,7 +20,7 @@ import com.example.pasarYuk.model.Staff;
 import com.example.pasarYuk.repository.StaffRepository;
 import com.example.pasarYuk.services.StaffService;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("api/v1")
 public class StaffController {
@@ -31,7 +31,7 @@ public class StaffController {
 	@Autowired
 	private StaffService staffService;
 	
-	@CrossOrigin
+	//@CrossOrigin
 	@GetMapping("/staff")
 	public List<Staff> viewAllStaff(){
 		return staffRepository.findAll();

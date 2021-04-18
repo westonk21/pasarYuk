@@ -23,6 +23,7 @@ import com.example.pasarYuk.model.Seller;
 //import com.example.pasarYuk.repository.sellerRepository;
 import com.example.pasarYuk.services.SellerService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class SellerController {
@@ -32,7 +33,7 @@ public class SellerController {
 	//private sellerRepository sellerRepository;
 	
 	//get Seller
-	@CrossOrigin
+	//@CrossOrigin
 	@GetMapping("sellers")
 	public List<Seller> getAllSeller(){
 		//return this.sellerRepository.findAll();
