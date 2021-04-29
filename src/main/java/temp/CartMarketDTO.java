@@ -18,6 +18,11 @@ public class CartMarketDTO {
 		this.checkMarket = checkMarket;
 	}
 
+	public Object clone() {
+		CartMarketDTO clone = new CartMarketDTO(this.marketId, this.marketName, this.checkMarket);
+		return clone;
+	}
+	
 	public long getMarketId() {
 		return marketId;
 	}

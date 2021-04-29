@@ -24,6 +24,11 @@ public class CartProductDTO {
 		this.checkItem = checkItem;
 	}
 
+	public Object clone() {
+		CartProductDTO clone = new CartProductDTO(this.productId, this.productName, this.price, this.urlProductImage, this.quantity, this.checkItem);
+		return clone;
+	}
+	
 	public int getQuantity() {
 		return quantity;
 	}

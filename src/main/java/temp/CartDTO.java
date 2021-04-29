@@ -1,14 +1,13 @@
 package temp;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.example.pasarYuk.model.Market;
-import com.example.pasarYuk.model.Product;
 
 public class CartDTO {
 
 	private CartMarketDTO market;
-	private List<CartProductDTO> product;
+//	private List<CartProductDTO> product;
+	private List<CartProductDTO> product = new ArrayList<CartProductDTO>();
 	
 	public CartDTO() {
 		super();
@@ -20,22 +19,51 @@ public class CartDTO {
 		this.market = market;
 		this.product = product;
 	}
-
+	
+//	public CartMarketDTO getMarket() {
+//		return market;
+//	}
+//
+//	public void setMarket(CartMarketDTO market) {
+//		this.market = market;
+//	}
+//
+//	public List<CartProductDTO> getProduct() {
+//		return product;
+//	}
+//
+//	public void setProduct(List<CartProductDTO> product) {
+//		this.product = product;
+//	}
+	
 	public CartMarketDTO getMarket() {
 		return market;
 	}
 
 	public void setMarket(CartMarketDTO market) {
-		this.market = market;
+		this.market = (CartMarketDTO) market.clone();
 	}
-
+	
 	public List<CartProductDTO> getProduct() {
 		return product;
 	}
 
 	public void setProduct(List<CartProductDTO> product) {
-		this.product = product;
+		for (CartProductDTO temp : product) {
+			this.product.add((CartProductDTO) temp.clone());
+		}
 	}
+	
+	
+	
+	
+	
+	
+	
+//	public Object clone() {
+//		CartDTO clone = new CartDTO();
+//		
+//	}
 	
 //	public CartDTO() {
 //		super();

@@ -54,38 +54,44 @@ public class CartService {
 		
 		List<CartProductDTO> listProductDTO = new ArrayList<CartProductDTO>();
 		long marketId=0;
+		String marketCheck = null;
 		int flag=1;
 		int lengthList = cart.size();
-		System.out.println("jumlah item : " + lengthList);
+//		System.out.println("jumlah item : " + lengthList);
 		if(cart != null) {
 			for(Cart cart2 : cart) {
 				
 				//marketId = cart2.getMarketId();
 				if(flag == 1) {
 					marketId = cart2.getMarketId();
-					
+					marketCheck = cart2.getCheckMarket();
 				}
-				System.out.println(cart2.getCartId().getProductId() + " " + marketId);
+//				System.out.println(cart2.getCartId().getProductId() + " " + marketId);
 				if(cart2.getMarketId() != marketId ) {
-					System.out.println("create 1 data");
+//					System.out.println("create 1 data");
 					Market tempMarket = marketService.getMarketById(marketId);
 					CartMarketDTO marketDTO = new CartMarketDTO();
 					marketDTO.setMarketId(tempMarket.getMarketId());
 					marketDTO.setMarketName(tempMarket.getMarketName());
-					marketDTO.setCheckMarket(cart2.getCheckMarket());
+					marketDTO.setCheckMarket(marketCheck);
 					
 					temp.setMarket(marketDTO);
 					temp.setProduct(listProductDTO);
+//					for(CartProductDTO tes : listProductDTO) {
+//						System.out.println("list product : " + tes.getProductId());
+//					}
 					cartDTOList.add(temp);
+					temp = new CartDTO();
 					
 					listProductDTO.clear();
 					marketId = cart2.getMarketId();
-					System.out.println(marketId);
+					marketCheck = cart2.getCheckMarket();
+//					System.out.println(marketId);
 				}
 				
 				Product tempProduct = new Product();
 				tempProduct = productService.getProductById(cart2.getCartId().getProductId());
-				System.out.println("product id nya : " + tempProduct.getProductId());
+//				System.out.println("product id nya : " + tempProduct.getProductId());
 				CartProductDTO productDTO = new CartProductDTO();
 				productDTO.setProductId(tempProduct.getProductId());
 				productDTO.setProductName(tempProduct.getProductName());
@@ -111,6 +117,9 @@ public class CartService {
 			}
 			
 		}
+//		for(CartDTO tes : cartDTOList) {
+//			System.out.println(tes.getProduct().size());
+//		}
 		
 		return cartDTOList;
 	}
