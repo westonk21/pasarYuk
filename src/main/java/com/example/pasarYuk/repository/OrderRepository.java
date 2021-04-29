@@ -76,7 +76,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query(value=
 			"SELECT od.* "
 			+ "FROM orders od "
-			+ "WHERE od.buyer_id=?1 AND (od.order_status!='04' OR od.order_status!='05') "
+			+ "WHERE od.buyer_id=?1 AND (od.order_status='01' OR od.order_status='02' OR od.order_status='03') "
 			+ "ORDER BY od.order_date DESC, od.order_time DESC"
 			, nativeQuery = true)
 	List<Order> findOngoingOrderWithIdBuyer(Long id);
@@ -85,16 +85,16 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			+ "FROM orders od "
 			+ "INNER JOIN orderitem oi ON oi.order_id = od.order_id "
 			+ "INNER JOIN product pd ON oi.product_id = pd.product_id "
-			+ "WHERE pd.seller_id=?1 AND (od.order_status!='04' OR od.order_status!='05') "
+			+ "WHERE pd.seller_id=?1 AND (od.order_status='01' OR od.order_status='02' OR od.order_status='03') "
 			+ "ORDER BY od.order_date DESC, od.order_time DESC"
 			, nativeQuery = true)
 	List<Order> findOngoingOrderWithIdSeller(Long id);
 	@Query(value=
 			"SELECT od.* "
 			+ "FROM orders od "
-			+ "INNER JOIN orderitem oi ON oi.order_id = od.order_id "
-			+ "INNER JOIN product pd ON oi.product_id = pd.product_id "
-			+ "WHERE od.staff_id=?1 AND (od.order_status!='04' OR od.order_status!='05') "
+//			+ "INNER JOIN orderitem oi ON oi.order_id = od.order_id "
+//			+ "INNER JOIN product pd ON oi.product_id = pd.product_id "
+			+ "WHERE od.staff_id=?1 AND (od.order_status='01' OR od.order_status='02' OR od.order_status='03') "
 			+ "ORDER BY od.order_date DESC, od.order_time DESC"
 			, nativeQuery = true)
 	List<Order> findOngoingOrderWithIdStaff(Long id);
@@ -121,12 +121,22 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query(value=
 			"SELECT od.* "
 			+ "FROM orders od "
-			+ "INNER JOIN orderitem oi ON oi.order_id = od.order_id "
-			+ "INNER JOIN product pd ON oi.product_id = pd.product_id "
+//			+ "INNER JOIN orderitem oi ON oi.order_id = od.order_id "
+//			+ "INNER JOIN product pd ON oi.product_id = pd.product_id "
 			+ "WHERE od.staff_id=?1 AND (od.order_status='04' OR od.order_status='05') "
 			+ "ORDER BY od.order_date DESC, od.order_time DESC"
 			, nativeQuery = true)
 	List<Order> findHistoryOrderWithIdStaff(Long id);
+	
+	//yg di komen pake buat kalo staff nya udah di cari dlu , pas bikin order di assign staffid atao dimana
+	@Query(value=
+			"SELECT od.* "
+			+ "FROM orders od "
+			+ "WHERE od.order_status='99' "
+//			+ "WHERE od.staff_id=?1 AND od.order_status='99' "
+			+ "ORDER BY od.order_date DESC, od.order_time DESC"
+			, nativeQuery = true)
+	Order findNewOrderWithIdStaff(Long id);
 	
 	
 }

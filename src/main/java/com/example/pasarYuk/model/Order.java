@@ -33,6 +33,12 @@ public class Order {
 	@Column(name = "shipping_address")
 	private String shippingAddress;
 	
+	@Column(name = "shipping_fee")
+	private long shippingFee;
+	
+	@Column(name = "discount_ShipFee")
+	private long discountShipFee;
+	
 	@Column(name = "market_name")
 	private String marketName;
 
@@ -40,7 +46,7 @@ public class Order {
 		super();
 	}
 	
-	public Order(long buyerId, long staffId, String orderDate, String orderTime, String orderStatus, String shippingAddress, String marketName) {
+	public Order(long buyerId, long staffId, String orderDate, String orderTime, String orderStatus, String shippingAddress, String marketName, long shippingFee, long discountShipFee) {
 		super();
 		this.buyerId = buyerId;
 		this.staffId = staffId;
@@ -49,6 +55,24 @@ public class Order {
 		this.orderStatus = orderStatus;
 		this.shippingAddress = shippingAddress;
 		this.marketName = marketName;
+		this.shippingFee = shippingFee;
+		this.discountShipFee = discountShipFee;
+	}
+
+	public long getShippingFee() {
+		return shippingFee;
+	}
+
+	public void setShippingFee(long shippingFee) {
+		this.shippingFee = shippingFee;
+	}
+
+	public long getDiscountShipFee() {
+		return discountShipFee;
+	}
+
+	public void setDiscountShipFee(long discountShipFee) {
+		this.discountShipFee = discountShipFee;
 	}
 
 	public String getMarketName() {

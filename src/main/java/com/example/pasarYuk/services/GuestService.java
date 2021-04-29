@@ -9,10 +9,20 @@ import org.springframework.stereotype.Service;
 import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Guest;
 import com.example.pasarYuk.repository.GuestRepository;
+import com.example.pasarYuk.repository.SellerRepository;
+import com.example.pasarYuk.repository.StaffRepository;
+
+import temp.HomeAdminDTO;
 
 @Service
 public class GuestService {
 
+	@Autowired
+	private SellerRepository sellerRepository;
+	
+	@Autowired
+	private StaffRepository staffRepository;
+	
 	@Autowired
 	private GuestRepository guestRepository;
 	
@@ -20,6 +30,23 @@ public class GuestService {
 		Guest guest = guestRepository.findById(guestId).orElseThrow(() -> new ResourceNotFoundException("Guest not found for this id :: " + guestId));
 		return guest;
 	}
+	
+	public HomeAdminDTO getDetailWebHome() {
+		HomeAdminDTO temp = new HomeAdminDTO();
+		
+		int totalSeller = sellerRepository.getTotalSeller();
+		int totalStaff = staffRepository.getTotalStaff();
+		int totalGuestSeller = guestRepository.getTotalGuestSeller();
+		int totalGuestStaff = guestRepository.getTotalGuestStaff();
+		
+		temp.setTotalSeller(totalSeller);
+		temp.setTotalStaff(totalStaff);
+		temp.setTotalGuestSeller(totalGuestSeller);
+		temp.setTotalGuestStaff(totalGuestStaff);
+		
+		return temp;
+	}
+	
 	public Guest addNewGuest(Guest guest) {
 		return guestRepository.save(guest);
 	}

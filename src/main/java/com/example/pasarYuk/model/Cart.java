@@ -17,16 +17,40 @@ public class Cart {
 	
 	@Column(name = "market_id")
 	private long marketId;
+	
+	@Column(name = "check_market")
+	private String checkMarket;
+	
+	@Column(name = "check_item")
+	private String checkItem;	
 
 	public Cart() {
 		super();
 	}
 
-	public Cart(CartCkey cartId, int quantity, long marketId) {
+	public Cart(CartCkey cartId, int quantity, long marketId, String checkMarket, String checkItem) {
 		super();
 		this.cartId = cartId;
 		this.quantity = quantity;
 		this.marketId = marketId;
+		this.checkMarket = checkMarket;
+		this.checkItem = checkItem;
+	}
+	
+	public String getCheckMarket() {
+		return checkMarket;
+	}
+
+	public void setCheckMarket(String checkMarket) {
+		this.checkMarket = checkMarket;
+	}
+
+	public String getCheckItem() {
+		return checkItem;
+	}
+
+	public void setCheckItem(String checkItem) {
+		this.checkItem = checkItem;
 	}
 
 	public long getMarketId() {

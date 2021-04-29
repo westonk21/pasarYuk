@@ -17,4 +17,18 @@ public interface GuestRepository extends JpaRepository<Guest, Long>{
 			+ "WHERE ge.type=?1 AND ge.status NOT LIKE 'DECLINE'"
 			, nativeQuery = true)
 	List<Guest> listGuest(String type);
+	
+	@Query(value=
+			"SELECT count(gu.guest_id) "
+			+ "FROM guest gu "
+			+ "WHERE gu.type='seller'"
+			, nativeQuery = true)
+	int getTotalGuestSeller();
+	
+	@Query(value=
+			"SELECT count(gu.guest_id) "
+			+ "FROM guest gu "
+			+ "WHERE gu.type='staff'"
+			, nativeQuery = true)
+	int getTotalGuestStaff();
 }

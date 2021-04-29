@@ -20,6 +20,8 @@ import com.example.pasarYuk.model.Guest;
 import com.example.pasarYuk.repository.GuestRepository;
 import com.example.pasarYuk.services.GuestService;
 
+import temp.HomeAdminDTO;
+
 @CrossOrigin
 @RestController
 @RequestMapping("api/v1")
@@ -39,6 +41,11 @@ public class GuestController {
 	@GetMapping("/guest/type/{type}")
 	public List<Guest> viewAllGuestType(@PathVariable(value = "type") String type){
 		return guestRepository.listGuest(type);
+	}
+	
+	@GetMapping("/guestHome")
+	public HomeAdminDTO  getDetailWebHome() {
+		return guestService.getDetailWebHome();
 	}
 	
 	@GetMapping("/guest/{guestId}")

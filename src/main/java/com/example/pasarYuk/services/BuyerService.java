@@ -38,11 +38,12 @@ public class BuyerService {
 		Buyer buyer = buyerRepository.findById(buyerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Buyer not found for this id :: " + buyerId));
 		
-		buyer.setUsername(buyerDetails.getUsername());
+//		buyer.setUsername(buyerDetails.getUsername());
 		buyer.setPassword(buyerDetails.getPassword());
 		buyer.setEmail(buyerDetails.getEmail());
 		buyer.setPhoneNumber(buyerDetails.getPhoneNumber());
 		buyer.setAddress(buyerDetails.getAddress());
+		buyer.setMarketId(buyerDetails.getMarketId());
 		
 		return this.buyerRepository.save(buyer);
 	}

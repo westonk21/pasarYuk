@@ -20,6 +20,8 @@ import com.example.pasarYuk.repository.MarketRepository;
 import com.example.pasarYuk.repository.ProductRepository;
 
 import temp.CartDTO;
+import temp.CartMarketDTO;
+import temp.CartProductDTO;
 
 @Service
 public class CartService {
@@ -43,26 +45,154 @@ public class CartService {
 		this.cartRepository = cartRepository;
 	}
 	//-----------------------------------------------------------------------------
-	public List<CartDTO> listCart(Long buyerId) throws ResourceNotFoundException{
+	public List<CartDTO> viewCartByMarket(Long buyerId) throws ResourceNotFoundException{
 		//query cart dengan ID BUYER nya = buyerId dari session
-		List<CartDTO> cartDTOList = new ArrayList<CartDTO>();
 		List<Cart> cart = cartRepository.findByBuyerId(buyerId);
 		
+		List<CartDTO> cartDTOList = new ArrayList<CartDTO>();
+		CartDTO temp = new CartDTO();
+		
+		List<CartProductDTO> listProductDTO = new ArrayList<CartProductDTO>();
+		long marketId=0;
+		int flag=1;
+		int lengthList = cart.size();
+		System.out.println("jumlah item : " + lengthList);
 		if(cart != null) {
 			for(Cart cart2 : cart) {
-				CartDTO temp = new CartDTO();
-				Product tempProduct = productService.getProductById(cart2.getCartId().getProductId());
-				temp.setProduct(tempProduct);
-				temp.setQty(cart2.getQuantity());
-				Market tempMarket = marketService.getMarketById(cart2.getMarketId());
-				temp.setMarket(tempMarket);
 				
-				cartDTOList.add(temp);
+				//marketId = cart2.getMarketId();
+				if(flag == 1) {
+					marketId = cart2.getMarketId();
+					
+				}
+				System.out.println(cart2.getCartId().getProductId() + " " + marketId);
+				if(cart2.getMarketId() != marketId ) {
+					System.out.println("create 1 data");
+					Market tempMarket = marketService.getMarketById(marketId);
+					CartMarketDTO marketDTO = new CartMarketDTO();
+					marketDTO.setMarketId(tempMarket.getMarketId());
+					marketDTO.setMarketName(tempMarket.getMarketName());
+					marketDTO.setCheckMarket(cart2.getCheckMarket());
+					
+					temp.setMarket(marketDTO);
+					temp.setProduct(listProductDTO);
+					cartDTOList.add(temp);
+					
+					listProductDTO.clear();
+					marketId = cart2.getMarketId();
+					System.out.println(marketId);
+				}
+				
+				Product tempProduct = new Product();
+				tempProduct = productService.getProductById(cart2.getCartId().getProductId());
+				System.out.println("product id nya : " + tempProduct.getProductId());
+				CartProductDTO productDTO = new CartProductDTO();
+				productDTO.setProductId(tempProduct.getProductId());
+				productDTO.setProductName(tempProduct.getProductName());
+				productDTO.setUrlProductImage(tempProduct.getUrlProductImage());
+				productDTO.setPrice(tempProduct.getPrice());
+				productDTO.setQuantity(cart2.getQuantity());
+				productDTO.setCheckItem(cart2.getCheckItem());
+				listProductDTO.add(productDTO);
+				
+				if(lengthList == flag) {
+					Market tempMarket = marketService.getMarketById(marketId);
+					CartMarketDTO marketDTO = new CartMarketDTO();
+					marketDTO.setMarketId(tempMarket.getMarketId());
+					marketDTO.setMarketName(tempMarket.getMarketName());
+					marketDTO.setCheckMarket(cart2.getCheckMarket());
+					
+					temp.setMarket(marketDTO);
+					temp.setProduct(listProductDTO);
+					cartDTOList.add(temp);
+				}
+				
+				flag++;
 			}
+			
 		}
 		
 		return cartDTOList;
 	}
+	
+//	public List<CartDTO> viewCartByMarket(Long buyerId) {
+//		List<CartDTO> temp = new ArrayList<CartDTO>();
+//		
+//		
+//		return temp;
+//	}
+//	
+	public String checkItem(Long buyerId, Long productId) throws ResourceNotFoundException {
+		Cart cart = cartRepository.findByCartId(new CartCkey(buyerId, productId));
+		if(cart != null) {
+			long marketId = cart.getMarketId();
+			int flagCheckAllMarket = 1;
+			
+			if(cart.getCheckItem().equals("1")) {
+				cart.setCheckItem("0");
+				cartRepository.save(cart);
+				
+				List<Cart> listCart = cartRepository.findByBuyerIdAndMarketId(buyerId, marketId);
+				for(Cart cart2 : listCart) {
+					cart2.setCheckMarket("0");
+					cartRepository.save(cart2);
+				}
+			}else{
+				cart.setCheckItem("1");
+				cartRepository.save(cart);
+				
+				List<Cart> listCart = cartRepository.findByBuyerIdAndMarketId(buyerId, marketId);
+				for(Cart cart2 : listCart) {
+					if(cart2.getCheckItem().equals("1")) {
+						continue;
+					}
+					flagCheckAllMarket = 0;
+				}
+				
+				if(flagCheckAllMarket == 1) {
+					for(Cart cart2 : listCart) {
+						cart2.setCheckMarket("1");
+						cartRepository.save(cart2);
+					}
+				}
+				
+				//proses set selain market yg di cek jadi checked nya 0 semua
+				
+			}
+		}
+		else {
+			throw new ResourceNotFoundException("No Product found for this ProductID : " + productId); 
+		}
+		return "success";
+	}
+	
+	public String checkMarket(Long buyerId, Long marketId) {
+		List<Cart> listCart = cartRepository.findByBuyerIdAndMarketId(buyerId, marketId);
+		int flagCheck = 0;
+		for(Cart cart2 : listCart) {
+			if(cart2.getCheckMarket().equals("1")) {
+				flagCheck = 1;
+			}
+			break;
+		}
+		
+		if(flagCheck == 1) {
+			for(Cart cart2 : listCart) {
+				cart2.setCheckItem("0");
+				cart2.setCheckMarket("0");
+				cartRepository.save(cart2);
+			}
+		}else {
+			for(Cart cart2 : listCart) {
+				cart2.setCheckItem("1");
+				cart2.setCheckMarket("1");
+				cartRepository.save(cart2);
+			}
+		}
+		
+		return "success";
+	}
+	
 	
 	public Cart findCart(Long buyerId, Long productId) {
 		try {
@@ -84,7 +214,7 @@ public class CartService {
 			if(marketId == null) {
 				throw new ResourceNotFoundException("No Market found for this Product");
 			}
-			cart = new Cart(new CartCkey(buyerId, productId), 1, marketId);
+			cart = new Cart(new CartCkey(buyerId, productId), 1, marketId, "0", "0");
 		}else {
 			cart.setQuantity(cart.getQuantity() + 1);
 		}
@@ -128,6 +258,8 @@ public class CartService {
 		Cart temp =  cartRepository.findById(new CartCkey(buyerId, productId)).orElseThrow(() -> new ResourceNotFoundException("Cart not found for this buyerId :: " + buyerId + " and this productId" + productId));
 		temp.setQuantity(cart.getQuantity());
 		temp.setMarketId(cart.getMarketId());
+		temp.setCheckItem(cart.getCheckItem());
+		temp.setCheckMarket(cart.getCheckMarket());
 		
 		return this.cartRepository.save(temp);
 	}

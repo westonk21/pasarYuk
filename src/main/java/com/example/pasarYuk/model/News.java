@@ -27,20 +27,20 @@ public class News {
 	@Column(name = "end_date")
 	private int endDate;
 	
-	@Column(name = "image_url")
-	private String imageUrl;
+	@Column(name = "url_image")
+	private String urlImage;
 
 	public News() {
 		super();
 	}
 
-	public News(String newsName, String newsDesc, int startDate, int endDate, String imageUrl) {
+	public News(String newsName, String newsDesc, int startDate, int endDate, String urlImage) {
 		super();
 		this.newsName = newsName;
 		this.newsDesc = newsDesc;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.imageUrl = imageUrl;
+		this.urlImage = urlImage;
 	}
 
 	public long getNewsId() {
@@ -84,11 +84,11 @@ public class News {
 	}
 
 	public String getImageUrl() {
-		return imageUrl;
+		return urlImage;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setImageUrl(String urlImage) {
+		this.urlImage = urlImage;
 	}
 	
 	

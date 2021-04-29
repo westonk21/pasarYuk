@@ -58,7 +58,7 @@ public class StaffService {
 		staff.setAddress(staffDetails.getAddress());
 		staff.setEmail(staffDetails.getEmail());
 		staff.setPhoneNumber(staffDetails.getPhoneNumber());
-		staff.setPhotoURL(staffDetails.getPhotoURL());
+		staff.setUrlStaffPhotoktp(staffDetails.getUrlStaffPhotoktp());
 //		staff.setStaffNIK(staffDetails.getStaffNIK());
 		staff.setActive(staffDetails.getActive());
 		

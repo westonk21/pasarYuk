@@ -78,6 +78,12 @@ public class OrderController {
 		return orderService.listHistoryOrderStaff(staffId);
 	}
 	
+	@GetMapping("/order4staff/{id}")
+	public OrderDTO getListOrder(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{
+		OrderDTO temp = orderService.orderToConfirm(id);
+		return temp;
+	}
+	
 	@GetMapping("/order-list/{type}/{role}/{id}")
 	public List<OrderDTO> getListOrder(@PathVariable(value = "type") String type, @PathVariable(value = "role") String role, @PathVariable(value = "id") Long id) throws ResourceNotFoundException{
 		List<OrderDTO> temp = orderService.getListOrder(type, role, id);

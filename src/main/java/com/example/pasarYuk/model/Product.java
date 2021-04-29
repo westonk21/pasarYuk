@@ -25,7 +25,7 @@ public class Product implements Comparable<Product> {
 	private String productDesc;
 	
 	@Column(name = "price")
-	private String price;
+	private long price;
 	
 	@Column(name = "satuan_jual")
 	private String satuanJual;
@@ -35,12 +35,15 @@ public class Product implements Comparable<Product> {
 	
 	@Column(name = "category")
 	private String category;
+	
+	@Column(name = "url_product_image")
+	private String urlProductImage;
 
 	public Product() {
 		super();
 	}
 
-	public Product(long sellerId, String productName, String productDesc, String price, float avgStar, String category, String satuanJual) {
+	public Product(String urlProductImage, long sellerId, String productName, String productDesc, long price, float avgStar, String category, String satuanJual) {
 		super();
 		this.sellerId = sellerId;
 		this.productName = productName;
@@ -49,6 +52,15 @@ public class Product implements Comparable<Product> {
 		this.avgStar = avgStar;
 		this.category = category;
 		this.satuanJual = satuanJual;
+		this.urlProductImage = urlProductImage;
+	}
+
+	public String getUrlProductImage() {
+		return urlProductImage;
+	}
+
+	public void setUrlProductImage(String urlProductImage) {
+		this.urlProductImage = urlProductImage;
 	}
 
 	public String getSatuanJual() {
@@ -99,11 +111,11 @@ public class Product implements Comparable<Product> {
 		this.productDesc = productDesc;
 	}
 
-	public String getPrice() {
+	public long getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(long price) {
 		this.price = price;
 	}
 

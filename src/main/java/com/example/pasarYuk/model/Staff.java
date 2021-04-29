@@ -30,27 +30,47 @@ public class Staff {
 	@Column(name = "address")
 	private String address;
 	
-	@Column(name = "photo_url")
-	private String photoURL;
+	@Column(name = "url_staff_photoktp")
+	private String urlStaffPhotoktp;
 	
 	@Column(name = "active")
 	private String active;
+	
+	@Column(name = "market_id")
+	private long marketId;
+	
 	
 	public Staff() {
 		super();
 	}
 	
-	public Staff(String staffNIK, String phoneNumber, String email, String address, String photoURL, String active, String staffName) {
+	public Staff(String staffNIK, String phoneNumber, String email, String address, String urlStaffPhotoktp, String active, String staffName) {
 		super();
 //		this.staffNIK = staffNIK;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.address = address;
-		this.photoURL = photoURL;
+		this.urlStaffPhotoktp = urlStaffPhotoktp;
 		this.active = active;
 		this.staffName = staffName;
 	}
 	
+	public String getUrlStaffPhotoktp() {
+		return urlStaffPhotoktp;
+	}
+
+	public void setUrlStaffPhotoktp(String urlStaffPhotoktp) {
+		this.urlStaffPhotoktp = urlStaffPhotoktp;
+	}
+
+	public long getMarketId() {
+		return marketId;
+	}
+
+	public void setMarketId(long marketId) {
+		this.marketId = marketId;
+	}
+
 	public String getStaffName() {
 		return staffName;
 	}
@@ -93,12 +113,7 @@ public class Staff {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getPhotoURL() {
-		return photoURL;
-	}
-	public void setPhotoURL(String photoURL) {
-		this.photoURL = photoURL;
-	}
+	
 	
 	
 	
