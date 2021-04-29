@@ -99,7 +99,7 @@ public class CartController {
 	}
 	
 	//delete item from cart
-	@DeleteMapping("/cart/{buyerId}/{productId}")
+	@DeleteMapping("/cart/del/{buyerId}/{productId}")
 	public Map<String, Boolean> deleteBuyer(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "productId") Long productId) throws ResourceNotFoundException{
 		//Long buyerId = (Long) session.getAttribute("buyerId");
 		Map<String, Boolean> response = cartService.deleteItemFromCart(buyerId, productId);
