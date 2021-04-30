@@ -7,17 +7,17 @@ public class CartDTO {
 
 	private CartMarketDTO market;
 //	private List<CartProductDTO> product;
-	private List<CartProductDTO> product = new ArrayList<CartProductDTO>();
+	private List<CartProductDTO> data = new ArrayList<CartProductDTO>();
 	
 	public CartDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CartDTO(CartMarketDTO market, List<CartProductDTO> product) {
+	public CartDTO(CartMarketDTO market, List<CartProductDTO> data) {
 		super();
 		this.market = market;
-		this.product = product;
+		this.data = data;
 	}
 	
 //	public CartMarketDTO getMarket() {
@@ -44,13 +44,21 @@ public class CartDTO {
 		this.market = (CartMarketDTO) market.clone();
 	}
 	
-	public List<CartProductDTO> getProduct() {
-		return product;
+//	public List<CartProductDTO> getData() {
+//		return data;
+//	}
+//
+//	public void setData(List<CartProductDTO> data) {
+//		this.data = data;
+//	}
+
+	public List<CartProductDTO> getData() {
+		return data;
 	}
 
-	public void setProduct(List<CartProductDTO> product) {
-		for (CartProductDTO temp : product) {
-			this.product.add((CartProductDTO) temp.clone());
+	public void setData(List<CartProductDTO> data) {
+		for (CartProductDTO temp : data) {
+			this.data.add((CartProductDTO) temp.clone());
 		}
 	}
 	

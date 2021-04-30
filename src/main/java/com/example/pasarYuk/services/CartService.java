@@ -76,7 +76,7 @@ public class CartService {
 					marketDTO.setCheckMarket(marketCheck);
 					
 					temp.setMarket(marketDTO);
-					temp.setProduct(listProductDTO);
+					temp.setData(listProductDTO);
 //					for(CartProductDTO tes : listProductDTO) {
 //						System.out.println("list product : " + tes.getProductId());
 //					}
@@ -109,7 +109,7 @@ public class CartService {
 					marketDTO.setCheckMarket(cart2.getCheckMarket());
 					
 					temp.setMarket(marketDTO);
-					temp.setProduct(listProductDTO);
+					temp.setData(listProductDTO);
 					cartDTOList.add(temp);
 				}
 				
