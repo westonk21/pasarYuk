@@ -21,6 +21,7 @@ import com.example.pasarYuk.model.Cart;
 import com.example.pasarYuk.services.CartService;
 
 import temp.CartDTO;
+import temp.PaymentDTO;
 
 @RestController
 @RequestMapping("api/v1")
@@ -52,6 +53,13 @@ public class CartController {
 	@PutMapping("/cart-check-market/{buyerId}/{marketId}")
 	public String checkMarket(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "marketId") Long marketId){
 		return cartService.checkMarket(buyerId, marketId);
+	}
+	
+	//------------------------------------------------------------------------------
+	
+	@GetMapping("/cart-payment/{buyerId}")
+	public PaymentDTO getDetailPayment(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException {
+		return cartService.getDetailPayment(buyerId);
 	}
 	
 	//------------------------------------------------------------------------------

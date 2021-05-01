@@ -22,6 +22,7 @@ import com.example.pasarYuk.repository.ProductRepository;
 import temp.CartDTO;
 import temp.CartMarketDTO;
 import temp.CartProductDTO;
+import temp.PaymentDTO;
 
 @Service
 public class CartService {
@@ -202,6 +203,25 @@ public class CartService {
 		return "success";
 	}
 	
+	public PaymentDTO getDetailPayment(Long buyerId) throws ResourceNotFoundException {
+		PaymentDTO temp = new PaymentDTO();
+		Buyer buyer = buyerRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("buyer id not found  in database : " + buyerId));
+		List<Cart> cart = cartRepository.findCheckedItemByBuyerId(buyerId);
+		
+		List<Product> listProduct = new ArrayList<Product>();
+		if(cart!=null) {
+			for (Cart cart2 : cart) {
+				if(cart2.getCheckItem().equals("1")) {
+					Product prd = productRepository.findById(cart2.getCartId().getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product id not found  in database"));
+					listProduct.add(prd);
+				}
+			}
+		}
+		temp.setBuyerDetail(buyer);
+		temp.setListItem(listProduct);
+		
+		return temp;
+	}
 	
 	public Cart findCart(Long buyerId, Long productId) {
 		try {

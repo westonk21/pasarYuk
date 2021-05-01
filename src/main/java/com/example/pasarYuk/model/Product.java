@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = "product")
 public class Product implements Comparable<Product> {
@@ -55,6 +56,11 @@ public class Product implements Comparable<Product> {
 		this.urlProductImage = urlProductImage;
 	}
 
+	public Object clone() {
+		Product clone = new Product(this.urlProductImage, this.sellerId, this.productName, this.productDesc, this.price, this.avgStar, this.category, this.satuanJual);
+		return clone;
+	}
+	
 	public String getUrlProductImage() {
 		return urlProductImage;
 	}

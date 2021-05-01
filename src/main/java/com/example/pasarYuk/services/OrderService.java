@@ -403,39 +403,46 @@ public class OrderService {
 	}	
 	
 	public OrderDTO orderToConfirm(long staffId) throws ResourceNotFoundException {
-		Order order2 = orderRepository.findNewOrderWithIdStaff(staffId);
+		List<Order> order = orderRepository.findNewOrderWithIdStaff(staffId);
 		
 		OrderDTO temp = new OrderDTO();
 		String marketName = "";
 		Buyer buyerDetail = new Buyer();
+		int flag=0;
 		
-		if (order2 != null) {
-			temp.setOrderId(order2.getOrderId());
-			//temp.setBuyerId(order2.getBuyerId());
-			temp.setStaffId(order2.getStaffId());
-			temp.setOrderDate(order2.getOrderDate());
-			temp.setOrderTime(order2.getOrderTime());
-			temp.setOrderStatus(order2.getOrderStatus());
-			temp.setShippingAddress(order2.getShippingAddress());
-			
-			List<Product> orderItemList = new ArrayList<Product>();
-			orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
-			temp.setListItem(orderItemList);
-			
-			temp.setShippingFee(order2.getShippingFee());
-			temp.setDiscountShipFee(order2.getDiscountShipFee());
-			long subTotal = calculateSubTotal(orderItemList);
-			temp.setSubTotal(subTotal);
-			long total = subTotal - (order2.getShippingFee() - order2.getDiscountShipFee());
-			temp.setTotal(total);
-			
-			long sellerId = orderItemList.get(0).getSellerId();
-			Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
-			marketName = marketRepository.getMarketName(seller.getMarketId());
-			buyerDetail = buyerService.getBuyerById(order2.getBuyerId());
-			
-			temp.setMarketName(marketName);
-			temp.setBuyerDetail(buyerDetail);
+		for (Order order2 : order) {
+			if (order2 != null) {
+				temp.setOrderId(order2.getOrderId());
+				//temp.setBuyerId(order2.getBuyerId());
+				temp.setStaffId(order2.getStaffId());
+				temp.setOrderDate(order2.getOrderDate());
+				temp.setOrderTime(order2.getOrderTime());
+				temp.setOrderStatus(order2.getOrderStatus());
+				temp.setShippingAddress(order2.getShippingAddress());
+				
+				List<Product> orderItemList = new ArrayList<Product>();
+				orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
+				temp.setListItem(orderItemList);
+				
+				temp.setShippingFee(order2.getShippingFee());
+				temp.setDiscountShipFee(order2.getDiscountShipFee());
+				long subTotal = calculateSubTotal(orderItemList);
+				temp.setSubTotal(subTotal);
+				long total = subTotal - (order2.getShippingFee() - order2.getDiscountShipFee());
+				temp.setTotal(total);
+				
+				long sellerId = orderItemList.get(0).getSellerId();
+				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+				marketName = marketRepository.getMarketName(seller.getMarketId());
+				buyerDetail = buyerService.getBuyerById(order2.getBuyerId());
+				
+				temp.setMarketName(marketName);
+				temp.setBuyerDetail(buyerDetail);
+			}
+			flag++;
+			if(flag == 1) {
+				break;
+			}
 		}
 		return temp;
 	}
