@@ -7,6 +7,7 @@ public class CartDTO {
 
 	private CartMarketDTO market;
 //	private List<CartProductDTO> product;
+//  nama list product nya harus data karena sectionList di react native mesti "data"
 	private List<CartProductDTO> data = new ArrayList<CartProductDTO>();
 	
 	public CartDTO() {

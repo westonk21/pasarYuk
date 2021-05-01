@@ -244,11 +244,25 @@ public class CartService {
 		return this.cartRepository.save(cart);
 	}
 	
+	public Cart updateCart1(Long buyerId, Long productId, Cart cart) throws ResourceNotFoundException {
+		Cart temp =  cartRepository.findById(new CartCkey(buyerId, productId)).orElseThrow(() -> new ResourceNotFoundException("Cart not found for this buyerId :: " + buyerId + " and this productId" + productId));
+		temp.setQuantity(cart.getQuantity());
+		temp.setMarketId(cart.getMarketId());
+		temp.setCheckItem(cart.getCheckItem());
+		temp.setCheckMarket(cart.getCheckMarket());
+		
+		return this.cartRepository.save(temp);
+	}
 	
-	public Cart updateCart(Long buyerId, Long productId, int qty) throws ResourceNotFoundException{
+	public Cart updateQty(Long buyerId, Long productId, int qty) throws ResourceNotFoundException{
 		//Optional<Cart> cart = cartRepository.findById(new CartCkey(buyerId, productId)).orElseThrow();
 		Cart cart = cartRepository.findByCartId(new CartCkey(buyerId, productId));
-		cart.setQuantity(qty);
+		if(cart!=null) {
+			cart.setQuantity(qty);
+		}else {
+			throw new ResourceNotFoundException("No Product found for this ProductID : " + productId); 
+		}
+		
 		return this.cartRepository.save(cart);
 	}
 	
@@ -263,15 +277,7 @@ public class CartService {
 		return response;
 	}
 	
-	public Cart updateCart1(Long buyerId, Long productId, Cart cart) throws ResourceNotFoundException {
-		Cart temp =  cartRepository.findById(new CartCkey(buyerId, productId)).orElseThrow(() -> new ResourceNotFoundException("Cart not found for this buyerId :: " + buyerId + " and this productId" + productId));
-		temp.setQuantity(cart.getQuantity());
-		temp.setMarketId(cart.getMarketId());
-		temp.setCheckItem(cart.getCheckItem());
-		temp.setCheckMarket(cart.getCheckMarket());
-		
-		return this.cartRepository.save(temp);
-	}
+	
 	
 	public void deleteItemFromCartForOrder(Long buyerId, Long productId) throws ResourceNotFoundException{
 		Cart cart = cartRepository.findByCartId(new CartCkey(buyerId, productId));

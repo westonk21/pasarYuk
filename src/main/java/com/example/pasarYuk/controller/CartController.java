@@ -81,19 +81,19 @@ public class CartController {
 		return ResponseEntity.ok(cart);
 	}
 	
-	//update cart1
+	//update with body
 	@PutMapping("/cart/update/{buyerId}/{productId}")
 	public ResponseEntity<Cart> updateCart1(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "productId") Long productId, @RequestBody Cart cart) throws ResourceNotFoundException{
 		Cart temp = cartService.updateCart1(buyerId, productId, cart);
 		return ResponseEntity.ok(temp);
 	}
 	
-	//update cart2
-	@PutMapping("/cart/upd/{productId}/{qty}")
-	public ResponseEntity<Cart> updateCart(HttpSession session, @PathVariable(value = "productId") Long productId, @PathVariable(value = "qty") int qty) throws ResourceNotFoundException{
-		Long buyerId = (Long) session.getAttribute("buyerId");
+	//update quantity aja
+	@PutMapping("/cart/updQTY/{buyerId}/{productId}/{qty}")
+	public ResponseEntity<Cart> updateCart(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "productId") Long productId, @PathVariable(value = "qty") int qty) throws ResourceNotFoundException{
+		//Long buyerId = (Long) session.getAttribute("buyerId");
 		
-		Cart cart = cartService.updateCart(buyerId, productId, qty);
+		Cart cart = cartService.updateQty(buyerId, productId, qty);
 		
 		return ResponseEntity.ok(cart);
 	}
