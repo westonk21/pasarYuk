@@ -40,9 +40,11 @@ public class SellerService {
 		
 		
 		seller.setMarketId(sellerDetails.getMarketId());
-		seller.setEmail(sellerDetails.getEmail());
+		seller.setSellerName(sellerDetails.getSellerName());
+		seller.setPassword(sellerDetails.getPassword());
 		seller.setPhoneNumber(sellerDetails.getPhoneNumber());
-		seller.setAddress(sellerDetails.getAddress());
+		seller.setEmail(sellerDetails.getEmail());
+//		seller.setAddress(sellerDetails.getAddress());
 		seller.setLapakName(sellerDetails.getLapakName());
 		
 		return this.sellerRepository.save(seller);

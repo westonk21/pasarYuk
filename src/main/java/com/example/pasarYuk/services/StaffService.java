@@ -55,12 +55,16 @@ public class StaffService {
 	public Staff updateStaff(Long staffId, Staff staffDetails) throws ResourceNotFoundException {
 		Staff staff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Staff not found for this id :: " + staffId));
 		
-		staff.setAddress(staffDetails.getAddress());
-		staff.setEmail(staffDetails.getEmail());
-		staff.setPhoneNumber(staffDetails.getPhoneNumber());
-		staff.setUrlStaffPhotoktp(staffDetails.getUrlStaffPhotoktp());
 //		staff.setStaffNIK(staffDetails.getStaffNIK());
+		staff.setStaffName(staffDetails.getStaffName());
+		staff.setPassword(staffDetails.getPassword());
+		staff.setPhoneNumber(staffDetails.getPhoneNumber());
+		staff.setEmail(staffDetails.getEmail());
+		staff.setAddress(staffDetails.getAddress());
+		staff.setUrlStaffPhotoktp(staffDetails.getUrlStaffPhotoktp());
 		staff.setActive(staffDetails.getActive());
+		staff.setMarketId(staffDetails.getMarketId());
+		staff.setWorking(staffDetails.getWorking());
 		
 		return this.staffRepository.save(staff);
 	}
@@ -74,5 +78,17 @@ public class StaffService {
 		response.put("Deleted", Boolean.TRUE);
 		
 		return response;
+	}
+
+	public Staff updateActive(Long staffId) throws ResourceNotFoundException {
+		Staff staff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Staff not found for this id :: " + staffId));
+		
+		if(staff.getActive().equals("Yes")) {
+			staff.setActive("No");
+		}else {
+			staff.setActive("Yes");
+		}
+		
+		return this.staffRepository.save(staff);
 	}
 }

@@ -1,5 +1,7 @@
 package com.example.pasarYuk.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,4 +15,11 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
 			+ "FROM staff st"
 			, nativeQuery = true)
 	int getTotalStaff();
+
+	@Query(value=
+			"SELECT * "
+			+ "FROM staff st "
+			+ "WHERE st.market_id=?1"
+			, nativeQuery = true)
+	List<Staff> findAllByMarketId(Long marketIdTemp);
 }

@@ -51,7 +51,7 @@ public class AdminService {
 			seller.setSellerName(guest.getGuestName());
 			seller.setPhoneNumber(guest.getPhoneNumber());
 			seller.setEmail(guest.getEmail());
-			seller.setAddress(guest.getAddress());
+//			seller.setAddress(guest.getAddress());
 			seller.setLapakName(type);
 			seller.setEmail(guest.getEmail());
 			

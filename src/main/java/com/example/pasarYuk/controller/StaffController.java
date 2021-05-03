@@ -50,6 +50,13 @@ public class StaffController {
 		return staffResp;
 	}
 	
+	//update active or not 
+	@PutMapping("/staff/active/update/{staffId}")
+	public ResponseEntity<Staff> updateActive(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException {
+		Staff staff = staffService.updateActive(staffId);
+		return ResponseEntity.ok(staff);
+	}
+	
 	//update staff
 	@PutMapping("/staff/update/{staffId}")
 	public ResponseEntity<Staff> updateStaff(@PathVariable(value = "staffId") Long staffId, @RequestBody Staff staffDetails) throws ResourceNotFoundException{

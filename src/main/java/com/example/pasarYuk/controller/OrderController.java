@@ -78,11 +78,33 @@ public class OrderController {
 		return orderService.listHistoryOrderStaff(staffId);
 	}
 	
-	@GetMapping("/order4staff/{id}")
-	public OrderDTO getListOrderStaff(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{
-		OrderDTO temp = orderService.orderToConfirm(id);
+//---FOR STAFF -----------------------------------------------------------------
+	@GetMapping("/order4staff/{staffId}")
+	public OrderDTO getListOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
+		OrderDTO temp = orderService.orderToConfirm(staffId);
+		//get data order yang staff nya dia, gabakal lebih dari 1 karena kalo udah di assign sekali gabisa di assign lagi karena working ny udah jadi Yes, sedangkan kalo diassign harus no, bakal jadi no lagi kalo di decline staff
 		return temp;
 	}
+	//accept order
+	@PutMapping("/order4staff/{staffId}/{type}/{orderId}")
+	public ResponseEntity<Order> acceptOrder(@PathVariable(value = "type") String type, @PathVariable(value = "orderId") Long orderId, @PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
+		Order order = orderService.updateOngoingStaffOrder(staffId, type, orderId);
+		return ResponseEntity.ok(order);
+	}
+//	//DECLINE order
+//	@PutMapping("/order4staff/decline/{orderId}/{staffId}")
+//	public ResponseEntity<Order> acceptOrder(@PathVariable(value = "orderId") Long orderId, @PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
+//		Order order = orderService.acceptOrder(orderId, staffId);
+//		return ResponseEntity.ok(order);
+//	}
+//	//next step Order
+//	@PutMapping("/order4staff/decline/{orderId}/{staffId}")
+//	public ResponseEntity<Order> acceptOrder(@PathVariable(value = "orderId") Long orderId, @PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
+//		Order order = orderService.acceptOrder(orderId, staffId);
+//		return ResponseEntity.ok(order);
+//	}
+	
+//---FOR STAFF -----------------------------------------------------------------
 	
 	@GetMapping("/order-list/{type}/{role}/{id}")
 	public List<OrderDTO> getListOrder(@PathVariable(value = "type") String type, @PathVariable(value = "role") String role, @PathVariable(value = "id") Long id) throws ResourceNotFoundException{
@@ -104,20 +126,15 @@ public class OrderController {
 		return orderResp;
 	}
 	
-	//accept order
-	@PutMapping("/orders/accept/{orderId}/{staffId}")
-	public ResponseEntity<Order> acceptOrder(@PathVariable(value = "orderId") Long orderId, @PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
-		Order order = orderService.acceptOrder(orderId, staffId);
-		return ResponseEntity.ok(order);
-	}
 	
-	@PutMapping("orders/{orderId}")
+	
+	@PutMapping("/orders/{orderId}")
 	public ResponseEntity<Order> updateOrder(@PathVariable(value = "orderId") Long orderId, @Valid @RequestBody Order orderDetails) throws ResourceNotFoundException{
 		Order order = orderService.updateOrder(orderId, orderDetails);
 		return ResponseEntity.ok(order);
 	}
 	
-	@DeleteMapping("orders/{orderId}")
+	@DeleteMapping("/orders/{orderId}")
 	public Map<String, Boolean> deleteOrder(@PathVariable(value = "orderId") Long orderId) throws ResourceNotFoundException{
 		Map<String, Boolean> response = orderService.deleteOrder(orderId);
 		return response;

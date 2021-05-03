@@ -1,5 +1,6 @@
 package temp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.pasarYuk.model.Buyer;
@@ -8,7 +9,7 @@ import com.example.pasarYuk.model.Product;
 public class PaymentDTO {
 	
 	private Buyer buyerDetail;
-	private List<Product> listItem;
+	private List<Product> listItem = new ArrayList<Product>();
 	
 	public PaymentDTO() {
 		super();

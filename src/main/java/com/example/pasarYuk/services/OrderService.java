@@ -20,11 +20,14 @@ import com.example.pasarYuk.model.Orderitem;
 import com.example.pasarYuk.model.OrderitemCkey;
 import com.example.pasarYuk.model.Product;
 import com.example.pasarYuk.model.Seller;
+import com.example.pasarYuk.model.Staff;
+import com.example.pasarYuk.repository.CartRepository;
 import com.example.pasarYuk.repository.MarketRepository;
 import com.example.pasarYuk.repository.OrderRepository;
 import com.example.pasarYuk.repository.OrderitemRepository;
 import com.example.pasarYuk.repository.ProductRepository;
 import com.example.pasarYuk.repository.SellerRepository;
+import com.example.pasarYuk.repository.StaffRepository;
 
 import temp.ListItem;
 import temp.OrderDTO;
@@ -52,6 +55,12 @@ public class OrderService {
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private StaffRepository staffRepository;
+	
+	@Autowired
+	private CartRepository cartRepository;
 	
 	private OrderRepository orderRepository;
 	@Autowired
@@ -403,47 +412,50 @@ public class OrderService {
 	}	
 	
 	public OrderDTO orderToConfirm(long staffId) throws ResourceNotFoundException {
-		List<Order> order = orderRepository.findNewOrderWithIdStaff(staffId);
+		Order order = orderRepository.findNewOrderWithIdStaff(staffId);
 		
 		OrderDTO temp = new OrderDTO();
 		String marketName = "";
 		Buyer buyerDetail = new Buyer();
-		int flag=0;
+//		int flag=0;
 		
-		for (Order order2 : order) {
-			if (order2 != null) {
-				temp.setOrderId(order2.getOrderId());
+//		for (Order order2 : order) {
+			if (order != null) {
+				temp.setOrderId(order.getOrderId());
 				//temp.setBuyerId(order2.getBuyerId());
-				temp.setStaffId(order2.getStaffId());
-				temp.setOrderDate(order2.getOrderDate());
-				temp.setOrderTime(order2.getOrderTime());
-				temp.setOrderStatus(order2.getOrderStatus());
-				temp.setShippingAddress(order2.getShippingAddress());
+				temp.setStaffId(order.getStaffId());
+				temp.setOrderDate(order.getOrderDate());
+				temp.setOrderTime(order.getOrderTime());
+				temp.setOrderStatus(order.getOrderStatus());
+				temp.setShippingAddress(order.getShippingAddress());
 				
 				List<Product> orderItemList = new ArrayList<Product>();
-				orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
+				orderItemList = productRepository.getListItemWithOrderId(order.getOrderId());
 				temp.setListItem(orderItemList);
 				
-				temp.setShippingFee(order2.getShippingFee());
-				temp.setDiscountShipFee(order2.getDiscountShipFee());
+				temp.setShippingFee(order.getShippingFee());
+				temp.setDiscountShipFee(order.getDiscountShipFee());
 				long subTotal = calculateSubTotal(orderItemList);
 				temp.setSubTotal(subTotal);
-				long total = subTotal - (order2.getShippingFee() - order2.getDiscountShipFee());
+				long total = subTotal - (order.getShippingFee() - order.getDiscountShipFee());
 				temp.setTotal(total);
 				
 				long sellerId = orderItemList.get(0).getSellerId();
 				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
 				marketName = marketRepository.getMarketName(seller.getMarketId());
-				buyerDetail = buyerService.getBuyerById(order2.getBuyerId());
+				buyerDetail = buyerService.getBuyerById(order.getBuyerId());
 				
 				temp.setMarketName(marketName);
 				temp.setBuyerDetail(buyerDetail);
+			}else {
+				return null;
 			}
-			flag++;
-			if(flag == 1) {
-				break;
-			}
-		}
+//			flag++;
+//			if(flag == 1) {
+//				break;
+//			}
+//		}
+			
 		return temp;
 	}
 	
@@ -467,6 +479,8 @@ public class OrderService {
 	}
 	
 	public Order newOrder(Long buyerId, ListItem orderItem) throws ResourceNotFoundException {
+		Long marketIdTemp;
+		Long staffIdNew = null;
 		Order order = new Order();
 		
 		Long[] listItem = orderItem.getList();
@@ -480,6 +494,36 @@ public class OrderService {
 		order.setOrderStatus("01");
 		
 		//FIND STAFF, CHECK IF STAFF HAVE A ONGOING ORDER OR NOT, IF NOT FIND ANOTHER STAFF
+		List<Cart> listCart = cartRepository.findCheckedMarketByBuyerId(buyerId);
+		if(listCart!=null) {
+			Cart temp = listCart.get(0);
+			marketIdTemp = temp.getMarketId();
+		}else {
+			throw new ResourceNotFoundException("Buyer not have data in Cart");
+		}
+		//harusnya perlu sort ke staff yg last order ny paling lama
+		List<Staff> staff = staffRepository.findAllByMarketId(marketIdTemp);
+		if(staff!=null) {
+			for (Staff staff2 : staff) {
+				
+				if(staff2.getActive().equals("Yes") && staff2.getWorking().equals("No")) {
+					staffIdNew = staff2.getStaffId();
+					break;
+				}
+			}
+		}else {
+			throw new ResourceNotFoundException("No Staff Available for this Market");
+		}
+		if(staffIdNew==null) {
+			throw new ResourceNotFoundException("No active staff for now");
+		}else {
+			order.setStaffId(staffIdNew);
+			//update working ny staff = yes
+			Staff updWorkingStaff = staffRepository.findById(staffIdNew).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
+			updWorkingStaff.setWorking("Yes");
+			staffRepository.save(updWorkingStaff);
+		}
+		
 		
 		//order.setShippingAddress(orderItem.getAddress());
 		//int lengthList = listItem.length;
@@ -492,7 +536,7 @@ public class OrderService {
 		String current_time = time_format.format(dateTemp);
 		order.setOrderTime(current_time);
 		
-		orderRepository.save(order);
+//		orderRepository.save(order);
 		//return order;
 		long orderIdTemp = order.getOrderId();
 		
@@ -513,16 +557,72 @@ public class OrderService {
 				throw new ResourceNotFoundException("Item not found in Cart");
 			}
 		}
+		orderRepository.save(order);
 		return order;
 	}
 	
-	public Order acceptOrder(Long orderId, Long staffId) throws ResourceNotFoundException {
+	public Order updateOngoingStaffOrder(Long staffId, String type, Long orderId) throws ResourceNotFoundException {
+		Long newStaffId = null;
+		Long marketId=null;
+		Long lastStaffId=null;
 		Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found for this id :: " + orderId));
 		
-		if(order.getStaffId() != 0) {
-			throw new ResourceNotFoundException("Order Already Assign to another Staff");
+//		if(order.getStaffId() != 0) {
+//			throw new ResourceNotFoundException("Order Already Assign to another Staff");
+//		}
+		//order.setStaffId(staffId);
+		
+		if(order!=null) {
+			if(type.equals("accept") && order.getOrderStatus().equals("01")) {
+				order.setOrderStatus("02");
+			}else if(type.equals("decline") && order.getOrderStatus().equals("01")) {
+				//update working staff yg decline jadi No
+				Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
+				marketId = updWorkingStaff.getMarketId();
+				lastStaffId = updWorkingStaff.getStaffId();
+				updWorkingStaff.setWorking("No");
+				staffRepository.save(updWorkingStaff);
+				
+				//FIND FOW NEW STAFF
+				//harusnya perlu sort ke staff yg last order ny paling lama
+				List<Staff> staff = staffRepository.findAllByMarketId(marketId);
+				if(staff != null) {
+					for (Staff staff2 : staff) {
+						if(staff2.getActive().equals("Yes") && staff2.getWorking().equals("No")) {
+							newStaffId = staff2.getStaffId();
+							break;
+						}
+					}
+				}else {
+					//IN CASE STAFF NY CUMAN 1 DAN DATANYA HILANG DARI MARKET ID INI, ORDER TTP JADI CANCEL
+					order.setOrderStatus("05");
+//					throw new ResourceNotFoundException("No Staff Available for this Market");
+				}
+				//KALO ga ketemu STAFF lain, ORDER NY STATUS CANCELED
+				if(newStaffId==null) {
+					order.setOrderStatus("05");
+//					throw new ResourceNotFoundException("Cannot find staff for now");
+				}else {
+					//kalo staff yg ketemu sama lagi
+					if(newStaffId == lastStaffId) {
+						order.setOrderStatus("05");
+//						throw new ResourceNotFoundException("Cannot find staff for now");
+					}else {
+						order.setStaffId(newStaffId);
+					}
+				}
+			}else if(type.equals("update")) {
+				String status = order.getOrderStatus();
+				if(status.equals("04") || status.equals("05")) {
+					throw new ResourceNotFoundException("Order already final status");
+				}else {
+					int statusInt = Integer.parseInt(status);
+					statusInt++;
+					String newStatus = String.valueOf(statusInt);
+					order.setOrderStatus(newStatus);
+				}
+			}
 		}
-		order.setStaffId(staffId);
 		
 		return this.orderRepository.save(order);
 	}

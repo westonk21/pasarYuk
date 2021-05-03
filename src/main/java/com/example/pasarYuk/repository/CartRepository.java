@@ -35,7 +35,14 @@ public interface CartRepository extends JpaRepository<Cart, CartCkey>{
 	@Query(value = 
 			"SELECT ct.* "
 			+ "FROM cart ct "
-			+ "WHERE ct.buyer_id=?1 AND ct.checkItem='1'"
+			+ "WHERE ct.buyer_id=?1 AND ct.check_item='1'"
 			, nativeQuery = true)
 	public List<Cart> findCheckedItemByBuyerId(Long buyerId);
+	
+	@Query(value = 
+			"SELECT ct.* "
+			+ "FROM cart ct "
+			+ "WHERE ct.buyer_id=?1 AND ct.check_market='1'"
+			, nativeQuery = true)
+	public List<Cart> findCheckedMarketByBuyerId(Long buyerId);
 }

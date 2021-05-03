@@ -21,6 +21,9 @@ public class Staff {
 	@Column(name = "staff_name")
 	private String staffName;
 	
+	@Column(name = "password")
+	private String password;
+	
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
@@ -39,22 +42,44 @@ public class Staff {
 	@Column(name = "market_id")
 	private long marketId;
 	
+	@Column(name = "working")
+	private String working;
+	
 	
 	public Staff() {
 		super();
 	}
 	
-	public Staff(String staffNIK, String phoneNumber, String email, String address, String urlStaffPhotoktp, String active, String staffName) {
+	public Staff(String password, long marketId, String working, String phoneNumber, String email, String address, String urlStaffPhotoktp, String active, String staffName) {
 		super();
 //		this.staffNIK = staffNIK;
 		this.phoneNumber = phoneNumber;
+		this.password = password;
 		this.email = email;
 		this.address = address;
 		this.urlStaffPhotoktp = urlStaffPhotoktp;
 		this.active = active;
 		this.staffName = staffName;
+		this.marketId = marketId;
+		this.working = working;
 	}
 	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getWorking() {
+		return working;
+	}
+
+	public void setWorking(String working) {
+		this.working = working;
+	}
+
 	public String getUrlStaffPhotoktp() {
 		return urlStaffPhotoktp;
 	}

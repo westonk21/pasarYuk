@@ -210,6 +210,7 @@ public class CartService {
 		
 		List<Product> listProduct = new ArrayList<Product>();
 		if(cart!=null) {
+			System.out.println(cart);
 			for (Cart cart2 : cart) {
 				if(cart2.getCheckItem().equals("1")) {
 					Product prd = productRepository.findById(cart2.getCartId().getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product id not found  in database"));

@@ -21,14 +21,17 @@ public class Seller {
 	@Column(name = "seller_name")
 	private String sellerName;
 	
+	@Column(name = "password")
+	private String password;
+	
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
 	@Column(name = "email")
 	private String email;
 	
-	@Column(name = "address")
-	private String address;
+//	@Column(name = "address")
+//	private String address;
 	
 	@Column(name = "lapak_name")
 	private String lapakName;
@@ -43,13 +46,15 @@ public class Seller {
 		super();
 	}
 
-	public Seller(long marketId, String phoneNumber, String email, String lapakName, String address) {
+	public Seller(String password, long marketId, String phoneNumber, String email, String lapakName, String address, String sellerName) {
 		super();
 		this.marketId = marketId;
 		this.phoneNumber = phoneNumber;
+		this.sellerName = sellerName;
+		this.password = password;
 		this.email = email;
 		this.lapakName = lapakName;
-		this.address = address;
+//		this.address = address;
 //		this.marketName = marketName;
 //		this.marketAddress = marketAddress;
 	}
@@ -70,16 +75,24 @@ public class Seller {
 //		this.marketAddress = marketAddress;
 //	}
 
+	
+//	public String getAddress() {
+//		return address;
+//	}
+//	public void setAddress(String address) {
+//		this.address = address;
+//	}
+	
+	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	public String getSellerName() {
 		return sellerName;
 	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public void setSellerName(String sellerName) {
 		this.sellerName = sellerName;
 	}

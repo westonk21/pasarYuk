@@ -132,11 +132,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query(value=
 			"SELECT od.* "
 			+ "FROM orders od "
-			+ "WHERE od.order_status='99' "
-//			+ "WHERE od.staff_id=?1 AND od.order_status='99' "
+//			+ "WHERE od.order_status='01' "
+			+ "WHERE od.staff_id=?1 AND od.order_status='01' "
 			+ "ORDER BY od.order_date DESC, od.order_time DESC"
 			, nativeQuery = true)
-	List<Order> findNewOrderWithIdStaff(Long id);
+	Order findNewOrderWithIdStaff(Long id);
 	
 	
 }
