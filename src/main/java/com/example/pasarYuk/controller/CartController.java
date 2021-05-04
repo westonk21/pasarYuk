@@ -44,6 +44,11 @@ public class CartController {
 		List<CartDTO> temp = cartService.viewCartByMarket(buyerId);
 		return temp;
 	}
+	@GetMapping("/cart-total/{buyerId}")
+	public Integer getTotal(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException {
+		return cartService.getTotal(buyerId);
+	}
+	
 	
 	@PutMapping("/cart-check-item/{buyerId}/{productId}")
 	public String checkItem(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "productId") Long productId) throws ResourceNotFoundException{

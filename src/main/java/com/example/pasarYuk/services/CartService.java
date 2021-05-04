@@ -125,6 +125,23 @@ public class CartService {
 		return cartDTOList;
 	}
 	
+	
+	public Integer getTotal(Long buyerId) throws ResourceNotFoundException {
+		Buyer buyer = buyerRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("buyer id not found  in database : " + buyerId));
+		List<Cart> cart = cartRepository.findCheckedItemByBuyerId(buyerId);
+		int total=0;
+		
+		if(cart!=null) {
+			
+			for (Cart cart2 : cart) {
+				if(cart2.getCheckItem().equals("1")) {
+					Product prd = productRepository.findById(cart2.getCartId().getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product id not found  in database"));
+					total += prd.getPrice();
+				}
+			}
+		}
+		return total;
+	}
 //	public List<CartDTO> viewCartByMarket(Long buyerId) {
 //		List<CartDTO> temp = new ArrayList<CartDTO>();
 //		
