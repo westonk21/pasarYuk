@@ -411,7 +411,7 @@ public class OrderService {
 		return orderDTOList;
 	}	
 	
-	public OrderDTO orderToConfirm(long staffId) throws ResourceNotFoundException {
+	public OrderDTO getOrderStaff(long staffId) throws ResourceNotFoundException {
 		Order order = orderRepository.findNewOrderWithIdStaff(staffId);
 		
 		OrderDTO temp = new OrderDTO();

@@ -80,8 +80,8 @@ public class OrderController {
 	
 //---FOR STAFF -----------------------------------------------------------------
 	@GetMapping("/order4staff/{staffId}")
-	public OrderDTO getListOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
-		OrderDTO temp = orderService.orderToConfirm(staffId);
+	public OrderDTO getOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
+		OrderDTO temp = orderService.getOrderStaff(staffId);
 		//get data order yang staff nya dia, gabakal lebih dari 1 karena kalo udah di assign sekali gabisa di assign lagi karena working ny udah jadi Yes, sedangkan kalo diassign harus no, bakal jadi no lagi kalo di decline staff
 		return temp;
 	}
