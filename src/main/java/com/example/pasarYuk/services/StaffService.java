@@ -83,10 +83,10 @@ public class StaffService {
 	public Staff updateActive(Long staffId) throws ResourceNotFoundException {
 		Staff staff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Staff not found for this id :: " + staffId));
 		
-		if(staff.getActive().equals("Yes")) {
-			staff.setActive("No");
+		if(staff.getActive().equals("1")) {
+			staff.setActive("0");
 		}else {
-			staff.setActive("Yes");
+			staff.setActive("1");
 		}
 		
 		return this.staffRepository.save(staff);
