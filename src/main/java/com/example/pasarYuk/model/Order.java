@@ -54,9 +54,9 @@ public class Order {
 		this.orderTime = orderTime;
 		this.orderStatus = orderStatus;
 		this.shippingAddress = shippingAddress;
-		this.marketName = marketName;
 		this.shippingFee = shippingFee;
 		this.discountShipFee = discountShipFee;
+		this.marketName = marketName;
 	}
 
 	public long getShippingFee() {

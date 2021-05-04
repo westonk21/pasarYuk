@@ -636,6 +636,9 @@ public class OrderService {
 		order.setOrderTime(orderDetails.getOrderTime());
 		order.setOrderStatus(orderDetails.getOrderStatus());
 		order.setShippingAddress(orderDetails.getShippingAddress());
+		order.setShippingFee(orderDetails.getShippingFee());
+		order.setDiscountShipFee(orderDetails.getDiscountShipFee());
+		order.setMarketName(orderDetails.getMarketName());
 		
 		return this.orderRepository.save(order);
 	}
