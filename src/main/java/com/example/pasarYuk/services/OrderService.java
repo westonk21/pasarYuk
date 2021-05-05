@@ -29,8 +29,11 @@ import com.example.pasarYuk.repository.ProductRepository;
 import com.example.pasarYuk.repository.SellerRepository;
 import com.example.pasarYuk.repository.StaffRepository;
 
+import temp.CartProductDTO;
+import temp.LapakSection;
 import temp.ListItem;
 import temp.OrderDTO;
+import temp.OrderStaffDTO;
 
 @Service
 public class OrderService {
@@ -355,11 +358,11 @@ public class OrderService {
 		//get list item
 		
 		if(order != null) {
-			int i=0;
+			//int i=0;
 			String marketName = "";
 			Buyer buyerDetail = new Buyer();
 			for (Order order2 : order) {
-				System.out.println(i);
+				//System.out.println(i);
 				OrderDTO temp = new OrderDTO();
 				temp.setOrderId(order2.getOrderId());
 				//temp.setBuyerId(order2.getBuyerId());
@@ -374,7 +377,9 @@ public class OrderService {
 					orderItemList = productRepository.getListItemWithOrderIdForSellerId(order2.getOrderId(), id);
 				}else {
 					orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
+//					System.out.println();
 				}
+//				System.out.println(orderItemList);
 				temp.setListItem(orderItemList);
 				
 				temp.setShippingFee(order2.getShippingFee());
@@ -385,7 +390,7 @@ public class OrderService {
 				temp.setTotal(total);
 				
 				
-				if(i==0) {
+				//if(i==0) {
 					long sellerId;
 					if(role.equals("seller")) {
 						sellerId = id;
@@ -395,13 +400,13 @@ public class OrderService {
 					Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
 					marketName = marketRepository.getMarketName(seller.getMarketId());
 					buyerDetail = buyerService.getBuyerById(order2.getBuyerId());
-				}
+				//}
 				temp.setMarketName(marketName);
 				temp.setBuyerDetail(buyerDetail);
 				
 				
 				orderDTOList.add(temp);
-				i++;
+				//i++;
 			}
 		}
 		//System.out.println(orderDTOList.size());
@@ -411,12 +416,61 @@ public class OrderService {
 		return orderDTOList;
 	}	
 	
-	public OrderDTO getOrderStaff(long staffId) throws ResourceNotFoundException {
+//	public OrderDTO getOrderStaff(long staffId) throws ResourceNotFoundException {
+//		Order order = orderRepository.findNewOrderWithIdStaff(staffId);
+//		
+//		OrderDTO temp = new OrderDTO();
+//		String marketName = "";
+//		Buyer buyerDetail = new Buyer();
+////		int flag=0;
+//		
+////		for (Order order2 : order) {
+//			if (order != null) {
+//				temp.setOrderId(order.getOrderId());
+//				//temp.setBuyerId(order2.getBuyerId());
+//				temp.setStaffId(order.getStaffId());
+//				temp.setOrderDate(order.getOrderDate());
+//				temp.setOrderTime(order.getOrderTime());
+//				temp.setOrderStatus(order.getOrderStatus());
+//				temp.setShippingAddress(order.getShippingAddress());
+//				
+//				List<Product> orderItemList = new ArrayList<Product>();
+//				orderItemList = productRepository.getListItemWithOrderId(order.getOrderId());
+//				temp.setListItem(orderItemList);
+//				
+//				temp.setShippingFee(order.getShippingFee());
+//				temp.setDiscountShipFee(order.getDiscountShipFee());
+//				long subTotal = calculateSubTotal(orderItemList);
+//				temp.setSubTotal(subTotal);
+//				long total = subTotal - (order.getShippingFee() - order.getDiscountShipFee());
+//				temp.setTotal(total);
+//				
+//				long sellerId = orderItemList.get(0).getSellerId();
+//				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+//				marketName = marketRepository.getMarketName(seller.getMarketId());
+//				buyerDetail = buyerService.getBuyerById(order.getBuyerId());
+//				
+//				temp.setMarketName(marketName);
+//				temp.setBuyerDetail(buyerDetail);
+//			}else {
+//				return null;
+//			}
+////			flag++;
+////			if(flag == 1) {
+////				break;
+////			}
+////		}
+//			
+//		return temp;
+//	}
+	public OrderStaffDTO getOrderStaff(long staffId) throws ResourceNotFoundException {
 		Order order = orderRepository.findNewOrderWithIdStaff(staffId);
 		
-		OrderDTO temp = new OrderDTO();
+		OrderStaffDTO temp = new OrderStaffDTO();
 		String marketName = "";
 		Buyer buyerDetail = new Buyer();
+		
+		
 //		int flag=0;
 		
 //		for (Order order2 : order) {
@@ -430,8 +484,65 @@ public class OrderService {
 				temp.setShippingAddress(order.getShippingAddress());
 				
 				List<Product> orderItemList = new ArrayList<Product>();
-				orderItemList = productRepository.getListItemWithOrderId(order.getOrderId());
-				temp.setListItem(orderItemList);
+				orderItemList = productRepository.getListItemWithOrderIdSortName(order.getOrderId());
+				
+				System.out.println(orderItemList.size());
+				if(orderItemList.size() > 0) {
+//					temp.setListItem(orderItemList);
+				
+					List<LapakSection> listLapak = new ArrayList<LapakSection>();
+					List<CartProductDTO> listProduct = new ArrayList<CartProductDTO>();
+					int i=1;
+					int lengthList = orderItemList.size();
+					Long sellerId = null;
+					String lapakNameTmp = null;
+					for (Product product : orderItemList) {
+						if(i==1) {
+							Seller tempSl = sellerRepository.findById(product.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + product.getSellerId()));
+							sellerId = product.getSellerId();
+							lapakNameTmp = tempSl.getLapakName();
+//							LapakSection lapak = new LapakSection();
+//							
+//							lapak.setLapakName(tempSl.getLapakName());
+//							
+//							List<CartProductDTO> listProduct = new ArrayList<CartProductDTO>();
+//							i++;
+//							continue;
+						}
+						if(product.getSellerId() != sellerId) {
+							//System.out.println(listProduct.get(0));
+							LapakSection lapak = new LapakSection();
+							lapak.setLapakName(lapakNameTmp);
+							lapak.setData(listProduct);
+							listLapak.add(lapak);
+							
+							Seller tempSl = sellerRepository.findById(product.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + product.getSellerId()));
+							sellerId = product.getSellerId();
+							lapakNameTmp = tempSl.getLapakName();
+						}
+						
+						CartProductDTO res = new CartProductDTO();
+						res.setProductId(product.getProductId());
+						res.setPrice(product.getPrice());
+						res.setProductName(product.getProductName());
+						res.setUrlProductImage(product.getUrlProductImage());
+						Orderitem oiTemp = orderitemRepository.findById(new OrderitemCkey(order.getOrderId(), product.getProductId())).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: "));
+						res.setQuantity(oiTemp.getQuantity());
+						listProduct.add(res);	
+						
+						if(i == lengthList) {
+							LapakSection lapak = new LapakSection();
+							lapak.setLapakName(lapakNameTmp);
+							lapak.setData(listProduct);
+							listLapak.add(lapak);
+						}
+												
+						i++;
+					}
+					temp.setListItem(listLapak);
+				}else {
+					throw new ResourceNotFoundException("Item list is empty for orderId : "+ order.getOrderId());
+				}
 				
 				temp.setShippingFee(order.getShippingFee());
 				temp.setDiscountShipFee(order.getDiscountShipFee());
@@ -495,6 +606,7 @@ public class OrderService {
 		
 		//FIND STAFF, CHECK IF STAFF HAVE A ONGOING ORDER OR NOT, IF NOT FIND ANOTHER STAFF
 		List<Cart> listCart = cartRepository.findCheckedMarketByBuyerId(buyerId);
+		System.out.println(listCart);
 		if(listCart!=null) {
 			Cart temp = listCart.get(0);
 			marketIdTemp = temp.getMarketId();
@@ -502,11 +614,14 @@ public class OrderService {
 			throw new ResourceNotFoundException("Buyer not have data in Cart");
 		}
 		//harusnya perlu sort ke staff yg last order ny paling lama
+		System.out.println(marketIdTemp);
 		List<Staff> staff = staffRepository.findAllByMarketId(marketIdTemp);
+		System.out.println(staff);
 		if(staff!=null) {
 			for (Staff staff2 : staff) {
-				
-				if(staff2.getActive().equals("Yes") && staff2.getWorking().equals("No")) {
+				System.out.println("masuk");
+				if(staff2.getActive().equals("1") && staff2.getWorking().equals("0")) {
+					System.out.println("oke");
 					staffIdNew = staff2.getStaffId();
 					break;
 				}
@@ -520,7 +635,7 @@ public class OrderService {
 			order.setStaffId(staffIdNew);
 			//update working ny staff = yes
 			Staff updWorkingStaff = staffRepository.findById(staffIdNew).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
-			updWorkingStaff.setWorking("Yes");
+			updWorkingStaff.setWorking("1");
 			staffRepository.save(updWorkingStaff);
 		}
 		
@@ -536,7 +651,7 @@ public class OrderService {
 		String current_time = time_format.format(dateTemp);
 		order.setOrderTime(current_time);
 		
-//		orderRepository.save(order);
+		orderRepository.save(order);
 		//return order;
 		long orderIdTemp = order.getOrderId();
 		
@@ -580,7 +695,7 @@ public class OrderService {
 				Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
 				marketId = updWorkingStaff.getMarketId();
 				lastStaffId = updWorkingStaff.getStaffId();
-				updWorkingStaff.setWorking("No");
+				updWorkingStaff.setWorking("0");
 				staffRepository.save(updWorkingStaff);
 				
 				//FIND FOW NEW STAFF
@@ -588,7 +703,7 @@ public class OrderService {
 				List<Staff> staff = staffRepository.findAllByMarketId(marketId);
 				if(staff != null) {
 					for (Staff staff2 : staff) {
-						if(staff2.getActive().equals("Yes") && staff2.getWorking().equals("No")) {
+						if(staff2.getActive().equals("1") && staff2.getWorking().equals("0")) {
 							newStaffId = staff2.getStaffId();
 							break;
 						}
@@ -615,6 +730,11 @@ public class OrderService {
 				String status = order.getOrderStatus();
 				if(status.equals("04") || status.equals("05")) {
 					throw new ResourceNotFoundException("Order already final status");
+				}else if(status.equals("03")) {
+					Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Cannot found staffId"));
+					updWorkingStaff.setWorking("0");
+					staffRepository.save(updWorkingStaff);
+					order.setOrderStatus("04");
 				}else {
 					int statusInt = Integer.parseInt(status);
 					statusInt++;

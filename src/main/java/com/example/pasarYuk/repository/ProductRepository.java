@@ -90,6 +90,15 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 			"SELECT pd.* "
 			+ "FROM product pd "
 			+ "INNER JOIN orderitem oi ON pd.product_id = oi.product_id "
+			+ "WHERE oi.order_id=?1 "
+			+ "ORDER BY pd.seller_id ASC"
+			, nativeQuery = true)
+	List<Product> getListItemWithOrderIdSortName(Long orderId);
+	
+	@Query(value=
+			"SELECT pd.* "
+			+ "FROM product pd "
+			+ "INNER JOIN orderitem oi ON pd.product_id = oi.product_id "
 			+ "WHERE oi.order_id=?1 AND pd.seller_id=?2"
 			, nativeQuery = true)
 	List<Product> getListItemWithOrderIdForSellerId(Long orderId, Long sellerId);	

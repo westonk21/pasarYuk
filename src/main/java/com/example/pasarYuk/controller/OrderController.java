@@ -24,6 +24,7 @@ import com.example.pasarYuk.services.OrderitemService;
 
 import temp.ListItem;
 import temp.OrderDTO;
+import temp.OrderStaffDTO;
 
 @RestController
 @RequestMapping("api/v1")
@@ -80,14 +81,14 @@ public class OrderController {
 	
 //---FOR STAFF -----------------------------------------------------------------
 	@GetMapping("/order4staff/{staffId}")
-	public OrderDTO getOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
-		OrderDTO temp = orderService.getOrderStaff(staffId);
+	public OrderStaffDTO getOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
+		OrderStaffDTO temp = orderService.getOrderStaff(staffId);
 		//get data order yang staff nya dia, gabakal lebih dari 1 karena kalo udah di assign sekali gabisa di assign lagi karena working ny udah jadi Yes, sedangkan kalo diassign harus no, bakal jadi no lagi kalo di decline staff
 		return temp;
 	}
 	//accept order
 	@PutMapping("/order4staff/{staffId}/{type}/{orderId}")
-	public ResponseEntity<Order> acceptOrder(@PathVariable(value = "type") String type, @PathVariable(value = "orderId") Long orderId, @PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
+	public ResponseEntity<Order> updateOngoingStaffOrder(@PathVariable(value = "type") String type, @PathVariable(value = "orderId") Long orderId, @PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
 		Order order = orderService.updateOngoingStaffOrder(staffId, type, orderId);
 		return ResponseEntity.ok(order);
 	}
