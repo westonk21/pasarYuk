@@ -386,7 +386,7 @@ public class OrderService {
 				temp.setDiscountShipFee(order2.getDiscountShipFee());
 				long subTotal = calculateSubTotal(orderItemList);
 				temp.setSubTotal(subTotal);
-				long total = subTotal - (order2.getShippingFee() - order2.getDiscountShipFee());
+				long total = subTotal + (order2.getShippingFee() - order2.getDiscountShipFee());
 				temp.setTotal(total);
 				
 				

@@ -86,7 +86,7 @@ public class OrderController {
 		//get data order yang staff nya dia, gabakal lebih dari 1 karena kalo udah di assign sekali gabisa di assign lagi karena working ny udah jadi Yes, sedangkan kalo diassign harus no, bakal jadi no lagi kalo di decline staff
 		return temp;
 	}
-	//accept order
+	//accept,decline,update order
 	@PutMapping("/order4staff/{staffId}/{type}/{orderId}")
 	public ResponseEntity<Order> updateOngoingStaffOrder(@PathVariable(value = "type") String type, @PathVariable(value = "orderId") Long orderId, @PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
 		Order order = orderService.updateOngoingStaffOrder(staffId, type, orderId);
@@ -112,6 +112,8 @@ public class OrderController {
 		List<OrderDTO> temp = orderService.getListOrder(type, role, id);
 		return temp;
 	}
+	
+	
 	
 	@PostMapping("/orders")
 	public Order createOrder(@RequestBody Order order) {
