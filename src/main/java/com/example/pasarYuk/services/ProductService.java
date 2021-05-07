@@ -65,6 +65,7 @@ public class ProductService {
 		product.setAvgStar(productDetails.getAvgStar());
 		product.setCategory(productDetails.getCategory());		
 		product.setSatuanJual(productDetails.getSatuanJual());
+		product.setUrlProductImage(productDetails.getUrlProductImage());
 		
 		return this.productRepository.save(product); 
 	}

@@ -16,6 +16,8 @@ import com.example.pasarYuk.repository.GuestRepository;
 import com.example.pasarYuk.repository.SellerRepository;
 import com.example.pasarYuk.repository.StaffRepository;
 
+import temp.HomeAdminDTO;
+
 @Service
 public class AdminService {
 
@@ -29,6 +31,23 @@ public class AdminService {
 	@Autowired
 	public AdminService(GuestRepository guestRepository) {
 		this.guestRepository = guestRepository;
+	}
+	
+	
+	public HomeAdminDTO getDetailWebHome() {
+		HomeAdminDTO temp = new HomeAdminDTO();
+		
+		int totalSeller = sellerRepository.getTotalSeller();
+		int totalStaff = staffRepository.getTotalStaff();
+		int totalGuestSeller = guestRepository.getTotalGuestSeller();
+		int totalGuestStaff = guestRepository.getTotalGuestStaff();
+		
+		temp.setTotalSeller(totalSeller);
+		temp.setTotalStaff(totalStaff);
+		temp.setTotalGuestSeller(totalGuestSeller);
+		temp.setTotalGuestStaff(totalGuestStaff);
+		
+		return temp;
 	}
 	
 	public List<Guest> getListGuest(String type) {

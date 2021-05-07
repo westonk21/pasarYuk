@@ -43,10 +43,10 @@ public class GuestController {
 		return guestRepository.listGuest(type);
 	}
 	
-	@GetMapping("/guestHome")
-	public HomeAdminDTO  getDetailWebHome() {
-		return guestService.getDetailWebHome();
-	}
+//	@GetMapping("/guestHome")
+//	public HomeAdminDTO  getDetailWebHome() {
+//		return guestService.getDetailWebHome();
+//	}
 	
 	@GetMapping("/guest/{guestId}")
 	public Guest viewGuest(@PathVariable(value = "guestId") Long guestId) throws ResourceNotFoundException {

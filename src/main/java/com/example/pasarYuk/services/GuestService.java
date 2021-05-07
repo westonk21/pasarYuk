@@ -31,21 +31,21 @@ public class GuestService {
 		return guest;
 	}
 	
-	public HomeAdminDTO getDetailWebHome() {
-		HomeAdminDTO temp = new HomeAdminDTO();
-		
-		int totalSeller = sellerRepository.getTotalSeller();
-		int totalStaff = staffRepository.getTotalStaff();
-		int totalGuestSeller = guestRepository.getTotalGuestSeller();
-		int totalGuestStaff = guestRepository.getTotalGuestStaff();
-		
-		temp.setTotalSeller(totalSeller);
-		temp.setTotalStaff(totalStaff);
-		temp.setTotalGuestSeller(totalGuestSeller);
-		temp.setTotalGuestStaff(totalGuestStaff);
-		
-		return temp;
-	}
+//	public HomeAdminDTO getDetailWebHome() {
+//		HomeAdminDTO temp = new HomeAdminDTO();
+//		
+//		int totalSeller = sellerRepository.getTotalSeller();
+//		int totalStaff = staffRepository.getTotalStaff();
+//		int totalGuestSeller = guestRepository.getTotalGuestSeller();
+//		int totalGuestStaff = guestRepository.getTotalGuestStaff();
+//		
+//		temp.setTotalSeller(totalSeller);
+//		temp.setTotalStaff(totalStaff);
+//		temp.setTotalGuestSeller(totalGuestSeller);
+//		temp.setTotalGuestStaff(totalGuestStaff);
+//		
+//		return temp;
+//	}
 	
 	public Guest addNewGuest(Guest guest) {
 		return guestRepository.save(guest);

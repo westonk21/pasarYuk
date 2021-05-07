@@ -18,6 +18,8 @@ import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Guest;
 import com.example.pasarYuk.services.AdminService;
 
+import temp.HomeAdminDTO;
+
 @CrossOrigin
 @RestController
 @RequestMapping("api/v1")
@@ -25,6 +27,12 @@ public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
+	
+	@GetMapping("/guestHome")
+	public HomeAdminDTO  getDetailWebHome() {
+		return adminService.getDetailWebHome();
+	}
+	
 	
 	@GetMapping("/admin/list/{type}")
 	public List<Guest> listGuestSeller(@PathVariable(value = "type") String type) {
