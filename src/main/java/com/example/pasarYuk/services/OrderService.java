@@ -689,9 +689,16 @@ public class OrderService {
 		//order.setStaffId(staffId);
 		
 		if(order!=null) {
-			if(type.equals("accept") && order.getOrderStatus().equals("01")) {
-				order.setOrderStatus("02");
-			}else if(type.equals("decline") && order.getOrderStatus().equals("01")) {
+			if(type.equals("accept")) {
+				if(order.getOrderStatus().equals("01")) {
+					order.setOrderStatus("02");
+				}else {
+					throw new ResourceNotFoundException("Order Status is not 01");
+				}
+			}else if(type.equals("decline")) {
+				if(!order.getOrderStatus().equals("01")) {
+					throw new ResourceNotFoundException("Order Status is not 01");
+				}
 				//update working staff yg decline jadi No
 				Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
 				marketId = updWorkingStaff.getMarketId();
