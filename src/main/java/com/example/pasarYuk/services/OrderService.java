@@ -672,7 +672,8 @@ public class OrderService {
 				throw new ResourceNotFoundException("Item not found in Cart");
 			}
 		}
-		orderRepository.save(order);
+		//save market harusnya bisa dapet dari list cart sebelum save order di atas
+		//orderRepository.save(order);
 		return order;
 	}
 	
@@ -735,11 +736,16 @@ public class OrderService {
 					updWorkingStaff.setWorking("0");
 					staffRepository.save(updWorkingStaff);
 					order.setOrderStatus("04");
-				}else {
-					int statusInt = Integer.parseInt(status);
-					statusInt++;
-					String newStatus = String.valueOf(statusInt);
-					order.setOrderStatus(newStatus);
+				}else if(status.equals("01")) { 
+					throw new ResourceNotFoundException("Order is not accepted yet");
+				}else{
+					if(status.equals("02")) {
+						order.setOrderStatus("03");
+					}
+//					int statusInt = Integer.parseInt(status);
+//					statusInt++;
+//					String newStatus = String.valueOf(statusInt);
+//					order.setOrderStatus(newStatus);
 				}
 			}
 		}
