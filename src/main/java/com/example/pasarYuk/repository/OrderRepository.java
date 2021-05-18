@@ -133,10 +133,17 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			"SELECT od.* "
 			+ "FROM orders od "
 //			+ "WHERE od.order_status='01' "
-			+ "WHERE od.staff_id=?1 AND od.order_status='01' "
-			+ "ORDER BY od.order_date DESC, od.order_time DESC"
+			+ "WHERE od.staff_id=?1 AND od.order_timestamp=?2 AND (od.order_status='01' OR od.order_status='02' OR od.order_status='03')"
+//			+ "ORDER BY od.order_date DESC, od.order_time DESC"
 			, nativeQuery = true)
-	Order findNewOrderWithIdStaff(Long id);
+	Order findNewOrderWithIdStaff(Long id, String maxDate);
+
+	@Query(value=
+			"SELECT MAX(order_timestamp) "
+			+ "FROM orders "
+			+ "WHERE staff_id=?1"
+			, nativeQuery = true)
+	String findStaffLastOrderTimestamp(long staffId);
 	
 	
 }

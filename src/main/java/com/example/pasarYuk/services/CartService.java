@@ -182,7 +182,14 @@ public class CartService {
 						cartRepository.save(cart2);
 					}
 				}
-				
+				List<Cart> allCart = cartRepository.findByBuyerId(buyerId);
+				for (Cart cart3 : allCart) {
+					if(cart3.getMarketId() != marketId) {
+						cart3.setCheckItem("0");
+						cart3.setCheckMarket("0");
+						cartRepository.save(cart3);
+					}
+				}
 				//proses set selain market yg di cek jadi checked nya 0 semua
 				
 			}
@@ -210,6 +217,12 @@ public class CartService {
 				cartRepository.save(cart2);
 			}
 		}else {
+			List<Cart> allCart = cartRepository.findByBuyerId(buyerId);
+			for (Cart cart : allCart) {
+				cart.setCheckItem("0");
+				cart.setCheckMarket("0");
+				cartRepository.save(cart);
+			}
 			for(Cart cart2 : listCart) {
 				cart2.setCheckItem("1");
 				cart2.setCheckMarket("1");

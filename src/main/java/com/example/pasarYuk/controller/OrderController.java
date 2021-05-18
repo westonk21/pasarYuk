@@ -41,43 +41,43 @@ public class OrderController {
 		return orderService.listOrder();
 	}
 	
-	//get order on going for BUYER
-	@GetMapping("/orders/list/ongoing/buyer/{buyerId}")
-	public List<OrderDTO> getOnGoingOrderBuyer(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{
-		//harusnya pake session
-		return orderService.listOnGoingOrderBuyer(buyerId);
-	}
-
-	//get order history for BUYER
-	@GetMapping("/orders/list/history/buyer/{buyerId}")
-	public List<OrderDTO> getHistoryOrderBuyer(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{
-		//harusnya pake session
-		return orderService.listHistoryOrderBuyer(buyerId);
-	}
-	
-	@GetMapping("/orders/list/ongoing/seller/{sellerId}")
-	public List<OrderDTO> getOnGoingOrderSeller(@PathVariable(value = "sellerId") Long sellerId) throws ResourceNotFoundException{
-		//harusnya pake session
-		return orderService.listOnGoingOrderSeller(sellerId);
-	}
-	
-	@GetMapping("/orders/list/history/seller/{sellerId}")
-	public List<OrderDTO> getHistoryOrderSeller(@PathVariable(value = "sellerId") Long sellerId) throws ResourceNotFoundException{
-		//harusnya pake session
-		return orderService.listHistoryOrderSeller(sellerId);
-	}
-	
-	//get on going list order for STAFF
-	@GetMapping("/orders/list/ongoing/staff/{staffId}")
-	public List<OrderDTO> getOnGoingOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
-		return orderService.listOnGoingOrderStaff(staffId);
-	}
-	
-	//get on going list order for STAFF
-	@GetMapping("/orders/list/history/staff/{staffId}")
-	public List<OrderDTO> getHistoryOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
-		return orderService.listHistoryOrderStaff(staffId);
-	}
+//	//get order on going for BUYER
+//	@GetMapping("/orders/list/ongoing/buyer/{buyerId}")
+//	public List<OrderDTO> getOnGoingOrderBuyer(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{
+//		//harusnya pake session
+//		return orderService.listOnGoingOrderBuyer(buyerId);
+//	}
+//
+//	//get order history for BUYER
+//	@GetMapping("/orders/list/history/buyer/{buyerId}")
+//	public List<OrderDTO> getHistoryOrderBuyer(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{
+//		//harusnya pake session
+//		return orderService.listHistoryOrderBuyer(buyerId);
+//	}
+//	
+//	@GetMapping("/orders/list/ongoing/seller/{sellerId}")
+//	public List<OrderDTO> getOnGoingOrderSeller(@PathVariable(value = "sellerId") Long sellerId) throws ResourceNotFoundException{
+//		//harusnya pake session
+//		return orderService.listOnGoingOrderSeller(sellerId);
+//	}
+//	
+//	@GetMapping("/orders/list/history/seller/{sellerId}")
+//	public List<OrderDTO> getHistoryOrderSeller(@PathVariable(value = "sellerId") Long sellerId) throws ResourceNotFoundException{
+//		//harusnya pake session
+//		return orderService.listHistoryOrderSeller(sellerId);
+//	}
+//	
+//	//get on going list order for STAFF
+//	@GetMapping("/orders/list/ongoing/staff/{staffId}")
+//	public List<OrderDTO> getOnGoingOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
+//		return orderService.listOnGoingOrderStaff(staffId);
+//	}
+//	
+//	//get on going list order for STAFF
+//	@GetMapping("/orders/list/history/staff/{staffId}")
+//	public List<OrderDTO> getHistoryOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
+//		return orderService.listHistoryOrderStaff(staffId);
+//	}
 	
 //---FOR STAFF -----------------------------------------------------------------
 	@GetMapping("/order4staff/{staffId}")

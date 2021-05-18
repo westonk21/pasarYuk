@@ -76,252 +76,7 @@ public class OrderService {
 		return orderRepository.findAll();
 	}
 	
-	//LIST ORDER FOR BUYER ongoing
-	public List<OrderDTO> listOnGoingOrderBuyer(Long buyerId) throws ResourceNotFoundException{
-		//Order order = (Order) orderRepository.findOngoingOrderWithBuyerId(buyerId);
-		List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
-		List<Order> order = orderRepository.findOngoingOrderWithBuyerId(buyerId);
-		
-		if(order != null) {
-			int i=0;
-			String marketName = "";
-			for (Order order2 : order) {
-				OrderDTO temp = new OrderDTO();
-				temp.setOrderId(order2.getOrderId());
-				//temp.setBuyerId(order2.getBuyerId());
-				temp.setStaffId(order2.getStaffId());
-				temp.setOrderDate(order2.getOrderDate());
-				temp.setOrderTime(order2.getOrderTime());
-				temp.setOrderStatus(order2.getOrderStatus());
-				temp.setShippingAddress(order2.getShippingAddress());
-				List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
-				temp.setListItem(orderItemList);
-				
-				if(i==0) {
-					long sellerId = orderItemList.get(0).getSellerId();
-					Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
-					marketName = marketRepository.getMarketName(seller.getMarketId());
-				}
-				temp.setMarketName(marketName);
-				
-				
-				orderDTOList.add(temp);
-				i++;
-			}
-		}
-		//System.out.println(orderDTOList.size());
-		if(orderDTOList.size() == 0) {
-			throw new ResourceNotFoundException("No data found for this Buyer");
-		}
-		return orderDTOList;
-	}
-	
-	//LIST ORDER FOR BUYER history
-	public List<OrderDTO> listHistoryOrderBuyer(Long buyerId) throws ResourceNotFoundException{
-		List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
-		List<Order> order = orderRepository.findHistoryOrderWithBuyerId(buyerId);
-	
-		if(order != null) {
-			for (Order order2 : order) {
-				OrderDTO temp = new OrderDTO();
-				temp.setOrderId(order2.getOrderId());
-				//temp.setBuyerId(order2.getBuyerId());
-				temp.setStaffId(order2.getStaffId());
-				temp.setOrderDate(order2.getOrderDate());
-				temp.setOrderTime(order2.getOrderTime());
-				temp.setOrderStatus(order2.getOrderStatus());
-				temp.setShippingAddress(order2.getShippingAddress());
-				List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
-				temp.setListItem(orderItemList);
-				
-				long sellerId = orderItemList.get(0).getSellerId();
-				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
-				String marketName = marketRepository.getMarketName(seller.getMarketId());
-				temp.setMarketName(marketName);
-				
-				orderDTOList.add(temp);
-			}
-		}
-		//System.out.println(orderDTOList.size());
-		if(orderDTOList.size() == 0) {
-			throw new ResourceNotFoundException("No data found");
-		}
-		return orderDTOList;
-	}
-	
-	//LIST ORDER FOR SELLER ongoing
-	public List<OrderDTO> listOnGoingOrderSeller(Long sellerId) throws ResourceNotFoundException{
-		//Order order = (Order) orderRepository.findOngoingOrderWithBuyerId(buyerId);
-		List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
-		List<Order> order = orderRepository.findOngoingOrderWithSellerId(sellerId);
-		
-		if(order != null) {
-			for (Order order2 : order) {
-				OrderDTO temp = new OrderDTO();
-				temp.setOrderId(order2.getOrderId());
-				//temp.setBuyerId(order2.getBuyerId());
-				temp.setStaffId(order2.getStaffId());
-				temp.setOrderDate(order2.getOrderDate());
-				temp.setOrderTime(order2.getOrderTime());
-				temp.setOrderStatus(order2.getOrderStatus());
-				temp.setShippingAddress(order2.getShippingAddress());
-				List<Product> orderItemList = productRepository.getListItemWithOrderIdForSellerId(order2.getOrderId(), sellerId);
-				temp.setListItem(orderItemList);
-				
-				//long sellerId = orderItemList.get(0).getSellerId();
-				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
-				String marketName = marketRepository.getMarketName(seller.getMarketId());
-				temp.setMarketName(marketName);
-				
-				orderDTOList.add(temp);
-			}
-		}
-		//System.out.println(orderDTOList.size());
-		if(orderDTOList.size() == 0) {
-			throw new ResourceNotFoundException("No data found");
-		}
-		return orderDTOList;
-	}
-	
-	//LIST ORDER FOR SELLER history
-	public List<OrderDTO> listHistoryOrderSeller(Long sellerId) throws ResourceNotFoundException{
-		List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
-		List<Order> order = orderRepository.findHistoryOrderWithSellerId(sellerId);
 
-		if(order != null) {
-			for (Order order2 : order) {
-				OrderDTO temp = new OrderDTO();
-				temp.setOrderId(order2.getOrderId());
-				//temp.setBuyerId(order2.getBuyerId());
-				temp.setStaffId(order2.getStaffId());
-				temp.setOrderDate(order2.getOrderDate());
-				temp.setOrderTime(order2.getOrderTime());
-				temp.setOrderStatus(order2.getOrderStatus());
-				temp.setShippingAddress(order2.getShippingAddress());
-				List<Product> orderItemList = productRepository.getListItemWithOrderIdForSellerId(order2.getOrderId(), sellerId);
-				temp.setListItem(orderItemList);
-				
-				//long sellerId = orderItemList.get(0).getSellerId();
-				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
-				String marketName = marketRepository.getMarketName(seller.getMarketId());
-				temp.setMarketName(marketName);
-				
-				orderDTOList.add(temp);
-			}
-		}
-		//System.out.println(orderDTOList.size());
-		if(orderDTOList.size() == 0) {
-			throw new ResourceNotFoundException("No data found");
-		}
-		return orderDTOList;
-	}
-
-	//LIST ORDER FOR STAFF ongoing
-	public List<OrderDTO> listOnGoingOrderStaff(Long staffId) throws ResourceNotFoundException{
-		//Order order = (Order) orderRepository.findOngoingOrderWithBuyerId(buyerId);
-		List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
-		List<Order> order = orderRepository.findOngoingOrderWithStaffId(staffId);
-		
-		if(order != null) {
-			for (Order order2 : order) {
-				OrderDTO temp = new OrderDTO();
-				temp.setOrderId(order2.getOrderId());
-				//temp.setBuyerId(order2.getBuyerId());
-				temp.setStaffId(order2.getStaffId());
-				temp.setOrderDate(order2.getOrderDate());
-				temp.setOrderTime(order2.getOrderTime());
-				temp.setOrderStatus(order2.getOrderStatus());
-				temp.setShippingAddress(order2.getShippingAddress());
-				List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
-				temp.setListItem(orderItemList);
-				
-				long sellerId = orderItemList.get(0).getSellerId();
-				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
-				String marketName = marketRepository.getMarketName(seller.getMarketId());
-				temp.setMarketName(marketName);
-				
-				orderDTOList.add(temp);
-			}
-		}
-			//System.out.println(orderDTOList.size());
-		if(orderDTOList.size() == 0) {
-			throw new ResourceNotFoundException("No data found");
-		}
-		return orderDTOList;
-	}
-	
-	//LIST ORDER FOR STAFF history
-	public List<OrderDTO> listHistoryOrderStaff(Long staffId) throws ResourceNotFoundException{
-		List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
-		List<Order> order = orderRepository.findHistoryOrderWithStaffId(staffId);
-	
-		if(order != null) {
-			for (Order order2 : order) {
-				OrderDTO temp = new OrderDTO();
-				temp.setOrderId(order2.getOrderId());
-				//temp.setBuyerId(order2.getBuyerId());
-				temp.setStaffId(order2.getStaffId());
-				temp.setOrderDate(order2.getOrderDate());
-				temp.setOrderTime(order2.getOrderTime());
-				temp.setOrderStatus(order2.getOrderStatus());
-				temp.setShippingAddress(order2.getShippingAddress());
-				List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
-				temp.setListItem(orderItemList);
-				
-				long sellerId = orderItemList.get(0).getSellerId();
-				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
-				String marketName = marketRepository.getMarketName(seller.getMarketId());
-				temp.setMarketName(marketName);
-				
-				orderDTOList.add(temp);
-			}
-		}
-		//System.out.println(orderDTOList.size());
-		if(orderDTOList.size() == 0) {
-			throw new ResourceNotFoundException("No data found");
-		}
-		return orderDTOList;
-	}
-	
-	public List<OrderDTO> getListOrder2(String type, String role, Long id) throws ResourceNotFoundException{
-		List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
-		if(role.equals("buyer")) {
-			if(type.equals("ongoing")) {
-				
-			}else {
-				
-			}
-			List<Order> order = orderRepository.findOngoingOrderWithBuyerId(id);
-		}
-		List<Order> order = orderRepository.findHistoryOrderWithStaffId(id);
-	
-		if(order != null) {
-			for (Order order2 : order) {
-				OrderDTO temp = new OrderDTO();
-				temp.setOrderId(order2.getOrderId());
-				//temp.setBuyerId(order2.getBuyerId());
-				temp.setStaffId(order2.getStaffId());
-				temp.setOrderDate(order2.getOrderDate());
-				temp.setOrderTime(order2.getOrderTime());
-				temp.setOrderStatus(order2.getOrderStatus());
-				temp.setShippingAddress(order2.getShippingAddress());
-				List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
-				temp.setListItem(orderItemList);
-				
-				long sellerId = orderItemList.get(0).getSellerId();
-				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
-				String marketName = marketRepository.getMarketName(seller.getMarketId());
-				temp.setMarketName(marketName);
-				
-				orderDTOList.add(temp);
-			}
-		}
-		//System.out.println(orderDTOList.size());
-		if(orderDTOList.size() == 0) {
-			throw new ResourceNotFoundException("No data found");
-		}
-		return orderDTOList;
-	}
 	
 	public List<OrderDTO> getListOrder(String type, String role, Long id) throws ResourceNotFoundException{
 		//Order order = (Order) orderRepository.findOngoingOrderWithBuyerId(buyerId);
@@ -367,8 +122,9 @@ public class OrderService {
 				temp.setOrderId(order2.getOrderId());
 				//temp.setBuyerId(order2.getBuyerId());
 				temp.setStaffId(order2.getStaffId());
-				temp.setOrderDate(order2.getOrderDate());
-				temp.setOrderTime(order2.getOrderTime());
+//				temp.setOrderDate(order2.getOrderDate());
+//				temp.setOrderTime(order2.getOrderTime());
+				temp.setOrderTime(order2.getOrderTimestamp());
 				temp.setOrderStatus(order2.getOrderStatus());
 				temp.setShippingAddress(order2.getShippingAddress());
 				
@@ -464,7 +220,13 @@ public class OrderService {
 //		return temp;
 //	}
 	public OrderStaffDTO getOrderStaff(long staffId) throws ResourceNotFoundException {
-		Order order = orderRepository.findNewOrderWithIdStaff(staffId);
+		Order order = new Order();
+		String maxDate = orderRepository.findStaffLastOrderTimestamp(staffId);
+		if(maxDate!=null) {
+			order = orderRepository.findNewOrderWithIdStaff(staffId, maxDate);
+		}else {
+			throw new ResourceNotFoundException("No Order For Now");
+		}
 		
 		OrderStaffDTO temp = new OrderStaffDTO();
 		String marketName = "";
@@ -478,8 +240,9 @@ public class OrderService {
 				temp.setOrderId(order.getOrderId());
 				//temp.setBuyerId(order2.getBuyerId());
 				temp.setStaffId(order.getStaffId());
-				temp.setOrderDate(order.getOrderDate());
-				temp.setOrderTime(order.getOrderTime());
+//				temp.setOrderDate(order.getOrderDate());
+//				temp.setOrderTime(order.getOrderTime());
+				temp.setOrderTime(order.getOrderTimestamp());
 				temp.setOrderStatus(order.getOrderStatus());
 				temp.setShippingAddress(order.getShippingAddress());
 				
@@ -559,7 +322,8 @@ public class OrderService {
 				temp.setMarketName(marketName);
 				temp.setBuyerDetail(buyerDetail);
 			}else {
-				return null;
+//				return null;
+				throw new ResourceNotFoundException("No Order For Now");
 			}
 //			flag++;
 //			if(flag == 1) {
@@ -644,34 +408,55 @@ public class OrderService {
 		//int lengthList = listItem.length;
 		Date dateTemp = new Date();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
-		SimpleDateFormat date_format = new SimpleDateFormat("dd-MM-yyyy");
-		SimpleDateFormat time_format = new SimpleDateFormat("HH:mm:ss");
-		String current_date = date_format.format(dateTemp);
-		order.setOrderDate(current_date);
-		String current_time = time_format.format(dateTemp);
-		order.setOrderTime(current_time);
+		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
+		String timeStamp = date_format.format(dateTemp);
+		order.setOrderTimestamp(timeStamp);
+//		SimpleDateFormat time_format = new SimpleDateFormat("HHmmss");
+//		String current_date = date_format.format(dateTemp);
+//		order.setOrderDate(current_date);
+//		String current_time = time_format.format(dateTemp);
+//		order.setOrderTime(current_time);
 		
 		orderRepository.save(order);
 		//return order;
 		long orderIdTemp = order.getOrderId();
-		
-		for (int i = 0; i < listItem.length; i++) {
-			//System.out.println(listItem[i]);
-			Cart cartTemp = cartService.findCart(buyerId, listItem[i]);
-			if(cartTemp != null) {
-				int qtyTemp = cartTemp.getQuantity();
+		List<Cart> cart = cartRepository.findCheckedItemByBuyerId(buyerId);
+		int i;
+		if(cart!=null) {
+			i=0;
+			for (Cart cart2 : cart) {
+				int qtyTemp = cart2.getQuantity();
 				
 				//cartService.deleteItemFromCartForOrder(buyerId, listItem[i]);
 				/////Product productTemp = productService.getProductById(listItem[i]);
 				orderitemRepository.save(new Orderitem(new OrderitemCkey(orderIdTemp, listItem[i]), qtyTemp));
 				if(i==0) {
-					String marketName = marketRepository.getMarketName(cartTemp.getMarketId());
+					String marketName = marketRepository.getMarketName(cart2.getMarketId());
 					order.setMarketName(marketName);
 				}
-			}else {
-				throw new ResourceNotFoundException("Item not found in Cart");
+				i++;
 			}
+		}else {
+			throw new ResourceNotFoundException("Item not found in Cart");
 		}
+		
+//		for (int i = 0; i < listItem.length; i++) {
+//			//System.out.println(listItem[i]);
+//			Cart cartTemp = cartService.findCart(buyerId, listItem[i]);
+//			if(cartTemp != null) {
+//				int qtyTemp = cartTemp.getQuantity();
+//				
+//				//cartService.deleteItemFromCartForOrder(buyerId, listItem[i]);
+//				/////Product productTemp = productService.getProductById(listItem[i]);
+//				orderitemRepository.save(new Orderitem(new OrderitemCkey(orderIdTemp, listItem[i]), qtyTemp));
+//				if(i==0) {
+//					String marketName = marketRepository.getMarketName(cartTemp.getMarketId());
+//					order.setMarketName(marketName);
+//				}
+//			}else {
+//				throw new ResourceNotFoundException("Item not found in Cart");
+//			}
+//		}
 		//save market harusnya bisa dapet dari list cart sebelum save order di atas
 		//orderRepository.save(order);
 		return order;
@@ -765,13 +550,20 @@ public class OrderService {
 		
 		order.setBuyerId(orderDetails.getBuyerId());
 		order.setStaffId(orderDetails.getStaffId());
-		order.setOrderDate(orderDetails.getOrderDate());
-		order.setOrderTime(orderDetails.getOrderTime());
+//		order.setOrderDate(orderDetails.getOrderDate());
+//		order.setOrderTime(orderDetails.getOrderTime());
+		order.setOrderTimestamp(orderDetails.getOrderTimestamp());
 		order.setOrderStatus(orderDetails.getOrderStatus());
 		order.setShippingAddress(orderDetails.getShippingAddress());
 		order.setShippingFee(orderDetails.getShippingFee());
 		order.setDiscountShipFee(orderDetails.getDiscountShipFee());
 		order.setMarketName(orderDetails.getMarketName());
+		order.setOrderType(orderDetails.getOrderType());
+		order.setOrderAcceptTime(orderDetails.getOrderAcceptTime());
+		order.setOrderCollectTime(orderDetails.getOrderCollectTime());
+		order.setOrderShipTime(orderDetails.getOrderShipTime());
+		order.setOrderFinishTime(orderDetails.getOrderFinishTime());
+		order.setOrderCancelTime(orderDetails.getOrderCancelTime());
 		
 		return this.orderRepository.save(order);
 	}
@@ -788,3 +580,256 @@ public class OrderService {
 		return response;
 	}
 }
+
+
+
+
+
+
+
+////LIST ORDER FOR BUYER ongoing
+//public List<OrderDTO> listOnGoingOrderBuyer(Long buyerId) throws ResourceNotFoundException{
+//	//Order order = (Order) orderRepository.findOngoingOrderWithBuyerId(buyerId);
+//	List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
+//	List<Order> order = orderRepository.findOngoingOrderWithBuyerId(buyerId);
+//	
+//	if(order != null) {
+//		int i=0;
+//		String marketName = "";
+//		for (Order order2 : order) {
+//			OrderDTO temp = new OrderDTO();
+//			temp.setOrderId(order2.getOrderId());
+//			//temp.setBuyerId(order2.getBuyerId());
+//			temp.setStaffId(order2.getStaffId());
+//			temp.setOrderDate(order2.getOrderDate());
+//			temp.setOrderTime(order2.getOrderTime());
+//			temp.setOrderStatus(order2.getOrderStatus());
+//			temp.setShippingAddress(order2.getShippingAddress());
+//			List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
+//			temp.setListItem(orderItemList);
+//			
+//			if(i==0) {
+//				long sellerId = orderItemList.get(0).getSellerId();
+//				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+//				marketName = marketRepository.getMarketName(seller.getMarketId());
+//			}
+//			temp.setMarketName(marketName);
+//			
+//			
+//			orderDTOList.add(temp);
+//			i++;
+//		}
+//	}
+//	//System.out.println(orderDTOList.size());
+//	if(orderDTOList.size() == 0) {
+//		throw new ResourceNotFoundException("No data found for this Buyer");
+//	}
+//	return orderDTOList;
+//}
+//
+////LIST ORDER FOR BUYER history
+//public List<OrderDTO> listHistoryOrderBuyer(Long buyerId) throws ResourceNotFoundException{
+//	List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
+//	List<Order> order = orderRepository.findHistoryOrderWithBuyerId(buyerId);
+//
+//	if(order != null) {
+//		for (Order order2 : order) {
+//			OrderDTO temp = new OrderDTO();
+//			temp.setOrderId(order2.getOrderId());
+//			//temp.setBuyerId(order2.getBuyerId());
+//			temp.setStaffId(order2.getStaffId());
+//			temp.setOrderDate(order2.getOrderDate());
+//			temp.setOrderTime(order2.getOrderTime());
+//			temp.setOrderStatus(order2.getOrderStatus());
+//			temp.setShippingAddress(order2.getShippingAddress());
+//			List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
+//			temp.setListItem(orderItemList);
+//			
+//			long sellerId = orderItemList.get(0).getSellerId();
+//			Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+//			String marketName = marketRepository.getMarketName(seller.getMarketId());
+//			temp.setMarketName(marketName);
+//			
+//			orderDTOList.add(temp);
+//		}
+//	}
+//	//System.out.println(orderDTOList.size());
+//	if(orderDTOList.size() == 0) {
+//		throw new ResourceNotFoundException("No data found");
+//	}
+//	return orderDTOList;
+//}
+//
+////LIST ORDER FOR SELLER ongoing
+//public List<OrderDTO> listOnGoingOrderSeller(Long sellerId) throws ResourceNotFoundException{
+//	//Order order = (Order) orderRepository.findOngoingOrderWithBuyerId(buyerId);
+//	List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
+//	List<Order> order = orderRepository.findOngoingOrderWithSellerId(sellerId);
+//	
+//	if(order != null) {
+//		for (Order order2 : order) {
+//			OrderDTO temp = new OrderDTO();
+//			temp.setOrderId(order2.getOrderId());
+//			//temp.setBuyerId(order2.getBuyerId());
+//			temp.setStaffId(order2.getStaffId());
+//			temp.setOrderDate(order2.getOrderDate());
+//			temp.setOrderTime(order2.getOrderTime());
+//			temp.setOrderStatus(order2.getOrderStatus());
+//			temp.setShippingAddress(order2.getShippingAddress());
+//			List<Product> orderItemList = productRepository.getListItemWithOrderIdForSellerId(order2.getOrderId(), sellerId);
+//			temp.setListItem(orderItemList);
+//			
+//			//long sellerId = orderItemList.get(0).getSellerId();
+//			Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+//			String marketName = marketRepository.getMarketName(seller.getMarketId());
+//			temp.setMarketName(marketName);
+//			
+//			orderDTOList.add(temp);
+//		}
+//	}
+//	//System.out.println(orderDTOList.size());
+//	if(orderDTOList.size() == 0) {
+//		throw new ResourceNotFoundException("No data found");
+//	}
+//	return orderDTOList;
+//}
+//
+////LIST ORDER FOR SELLER history
+//public List<OrderDTO> listHistoryOrderSeller(Long sellerId) throws ResourceNotFoundException{
+//	List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
+//	List<Order> order = orderRepository.findHistoryOrderWithSellerId(sellerId);
+//
+//	if(order != null) {
+//		for (Order order2 : order) {
+//			OrderDTO temp = new OrderDTO();
+//			temp.setOrderId(order2.getOrderId());
+//			//temp.setBuyerId(order2.getBuyerId());
+//			temp.setStaffId(order2.getStaffId());
+//			temp.setOrderDate(order2.getOrderDate());
+//			temp.setOrderTime(order2.getOrderTime());
+//			temp.setOrderStatus(order2.getOrderStatus());
+//			temp.setShippingAddress(order2.getShippingAddress());
+//			List<Product> orderItemList = productRepository.getListItemWithOrderIdForSellerId(order2.getOrderId(), sellerId);
+//			temp.setListItem(orderItemList);
+//			
+//			//long sellerId = orderItemList.get(0).getSellerId();
+//			Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+//			String marketName = marketRepository.getMarketName(seller.getMarketId());
+//			temp.setMarketName(marketName);
+//			
+//			orderDTOList.add(temp);
+//		}
+//	}
+//	//System.out.println(orderDTOList.size());
+//	if(orderDTOList.size() == 0) {
+//		throw new ResourceNotFoundException("No data found");
+//	}
+//	return orderDTOList;
+//}
+//
+////LIST ORDER FOR STAFF ongoing
+//public List<OrderDTO> listOnGoingOrderStaff(Long staffId) throws ResourceNotFoundException{
+//	//Order order = (Order) orderRepository.findOngoingOrderWithBuyerId(buyerId);
+//	List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
+//	List<Order> order = orderRepository.findOngoingOrderWithStaffId(staffId);
+//	
+//	if(order != null) {
+//		for (Order order2 : order) {
+//			OrderDTO temp = new OrderDTO();
+//			temp.setOrderId(order2.getOrderId());
+//			//temp.setBuyerId(order2.getBuyerId());
+//			temp.setStaffId(order2.getStaffId());
+//			temp.setOrderDate(order2.getOrderDate());
+//			temp.setOrderTime(order2.getOrderTime());
+//			temp.setOrderStatus(order2.getOrderStatus());
+//			temp.setShippingAddress(order2.getShippingAddress());
+//			List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
+//			temp.setListItem(orderItemList);
+//			
+//			long sellerId = orderItemList.get(0).getSellerId();
+//			Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+//			String marketName = marketRepository.getMarketName(seller.getMarketId());
+//			temp.setMarketName(marketName);
+//			
+//			orderDTOList.add(temp);
+//		}
+//	}
+//		//System.out.println(orderDTOList.size());
+//	if(orderDTOList.size() == 0) {
+//		throw new ResourceNotFoundException("No data found");
+//	}
+//	return orderDTOList;
+//}
+//
+////LIST ORDER FOR STAFF history
+//public List<OrderDTO> listHistoryOrderStaff(Long staffId) throws ResourceNotFoundException{
+//	List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
+//	List<Order> order = orderRepository.findHistoryOrderWithStaffId(staffId);
+//
+//	if(order != null) {
+//		for (Order order2 : order) {
+//			OrderDTO temp = new OrderDTO();
+//			temp.setOrderId(order2.getOrderId());
+//			//temp.setBuyerId(order2.getBuyerId());
+//			temp.setStaffId(order2.getStaffId());
+//			temp.setOrderDate(order2.getOrderDate());
+//			temp.setOrderTime(order2.getOrderTime());
+//			temp.setOrderStatus(order2.getOrderStatus());
+//			temp.setShippingAddress(order2.getShippingAddress());
+//			List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
+//			temp.setListItem(orderItemList);
+//			
+//			long sellerId = orderItemList.get(0).getSellerId();
+//			Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+//			String marketName = marketRepository.getMarketName(seller.getMarketId());
+//			temp.setMarketName(marketName);
+//			
+//			orderDTOList.add(temp);
+//		}
+//	}
+//	//System.out.println(orderDTOList.size());
+//	if(orderDTOList.size() == 0) {
+//		throw new ResourceNotFoundException("No data found");
+//	}
+//	return orderDTOList;
+//}
+//
+//public List<OrderDTO> getListOrder2(String type, String role, Long id) throws ResourceNotFoundException{
+//	List<OrderDTO> orderDTOList = new ArrayList<OrderDTO>();
+//	if(role.equals("buyer")) {
+//		if(type.equals("ongoing")) {
+//			
+//		}else {
+//			
+//		}
+//		List<Order> order = orderRepository.findOngoingOrderWithBuyerId(id);
+//	}
+//	List<Order> order = orderRepository.findHistoryOrderWithStaffId(id);
+//
+//	if(order != null) {
+//		for (Order order2 : order) {
+//			OrderDTO temp = new OrderDTO();
+//			temp.setOrderId(order2.getOrderId());
+//			//temp.setBuyerId(order2.getBuyerId());
+//			temp.setStaffId(order2.getStaffId());
+//			temp.setOrderDate(order2.getOrderDate());
+//			temp.setOrderTime(order2.getOrderTime());
+//			temp.setOrderStatus(order2.getOrderStatus());
+//			temp.setShippingAddress(order2.getShippingAddress());
+//			List<Product> orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
+//			temp.setListItem(orderItemList);
+//			
+//			long sellerId = orderItemList.get(0).getSellerId();
+//			Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+//			String marketName = marketRepository.getMarketName(seller.getMarketId());
+//			temp.setMarketName(marketName);
+//			
+//			orderDTOList.add(temp);
+//		}
+//	}
+//	//System.out.println(orderDTOList.size());
+//	if(orderDTOList.size() == 0) {
+//		throw new ResourceNotFoundException("No data found");
+//	}
+//	return orderDTOList;
+//}
