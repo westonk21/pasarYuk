@@ -19,7 +19,8 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
 	@Query(value=
 			"SELECT * "
 			+ "FROM staff st "
-			+ "WHERE st.market_id=?1"
+			+ "WHERE st.market_id=?1 "
+			+ "ORDER BY st.lastorder_timestamp ASC"
 			, nativeQuery = true)
 	List<Staff> findAllByMarketId(Long marketIdTemp);
 }

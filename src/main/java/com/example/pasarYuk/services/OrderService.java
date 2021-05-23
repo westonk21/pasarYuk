@@ -219,12 +219,12 @@ public class OrderService {
 //			
 //		return temp;
 //	}
-	public OrderStaffDTO getOrderStaff(long staffId) throws ResourceNotFoundException {
+	public OrderStaffDTO getOrderStaff(long staffId, String type) throws ResourceNotFoundException {
 		Order order = new Order();
-		String maxDate = orderRepository.findStaffLastOrderTimestamp(staffId);
+		String maxDate = orderRepository.findStaffLastOrderTimestamp(staffId, type);
 		if(maxDate!=null) {
-			order = orderRepository.findNewOrderWithIdStaff(staffId, maxDate);
-		}else {
+			order = orderRepository.findNewOrderWithIdStaff(staffId, maxDate, type);
+		}else { 
 			throw new ResourceNotFoundException("No Order For Now");
 		}
 		
@@ -353,12 +353,12 @@ public class OrderService {
 		return orderRepository.save(order);
 	}
 	
-	public Order newOrder(Long buyerId, ListItem orderItem) throws ResourceNotFoundException {
+	public Order newOrder(Long buyerId, String type) throws ResourceNotFoundException {
 		Long marketIdTemp;
 		Long staffIdNew = null;
 		Order order = new Order();
 		
-		Long[] listItem = orderItem.getList();
+//		Long[] listItem = orderItem.getList();
 		
 		
 		order.setBuyerId(buyerId);
@@ -367,10 +367,16 @@ public class OrderService {
 		order.setDiscountShipFee(0);
 		order.setShippingFee(10000);
 		order.setOrderStatus("01");
+		order.setOrderType(type);
+		Date dateTemp = new Date();
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
+		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
+		String timeStamp = date_format.format(dateTemp);
+		order.setOrderTimestamp(timeStamp);
 		
 		//FIND STAFF, CHECK IF STAFF HAVE A ONGOING ORDER OR NOT, IF NOT FIND ANOTHER STAFF
 		List<Cart> listCart = cartRepository.findCheckedMarketByBuyerId(buyerId);
-		System.out.println(listCart);
+//		System.out.println(listCart);
 		if(listCart!=null) {
 			Cart temp = listCart.get(0);
 			marketIdTemp = temp.getMarketId();
@@ -378,16 +384,36 @@ public class OrderService {
 			throw new ResourceNotFoundException("Buyer not have data in Cart");
 		}
 		//harusnya perlu sort ke staff yg last order ny paling lama
-		System.out.println(marketIdTemp);
+//		System.out.println(marketIdTemp);
 		List<Staff> staff = staffRepository.findAllByMarketId(marketIdTemp);
-		System.out.println(staff);
+//		System.out.println(staff); 
 		if(staff!=null) {
 			for (Staff staff2 : staff) {
-				System.out.println("masuk");
-				if(staff2.getActive().equals("1") && staff2.getWorking().equals("0")) {
-					System.out.println("oke");
-					staffIdNew = staff2.getStaffId();
-					break;
+//				System.out.println("masuk");
+				if(type.equals("LIVE")) {
+					if(staff2.getActive().equals("1") && staff2.getWorking().equals("0")) {
+//						System.out.println("oke");
+						staffIdNew = staff2.getStaffId();
+						
+						order.setStaffId(staffIdNew);
+//						Staff updWorkingStaff = staffRepository.findById(staffIdNew).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
+						staff2.setWorking("1");
+						staff2.setLastorderTimestamp(timeStamp);
+						staffRepository.save(staff2);
+						break;
+					}
+				}else if(type.equals("PO")) {
+					if(staff2.getWorkingPo() >= 0 && staff2.getWorkingPo() < 2 && staff2.getActive().equals("1")) {
+//						System.out.println("oke");
+						staffIdNew = staff2.getStaffId();
+						
+						order.setStaffId(staffIdNew);
+//						Staff updWorkingStaff = staffRepository.findById(staffIdNew).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
+						staff2.setWorkingPo(staff2.getWorkingPo() + 1);
+						staff2.setLastorderTimestamp(timeStamp);
+						staffRepository.save(staff2);
+						break;
+					}
 				}
 			}
 		}else {
@@ -395,22 +421,12 @@ public class OrderService {
 		}
 		if(staffIdNew==null) {
 			throw new ResourceNotFoundException("No active staff for now");
-		}else {
-			order.setStaffId(staffIdNew);
-			//update working ny staff = yes
-			Staff updWorkingStaff = staffRepository.findById(staffIdNew).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
-			updWorkingStaff.setWorking("1");
-			staffRepository.save(updWorkingStaff);
 		}
 		
 		
 		//order.setShippingAddress(orderItem.getAddress());
 		//int lengthList = listItem.length;
-		Date dateTemp = new Date();
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
-		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
-		String timeStamp = date_format.format(dateTemp);
-		order.setOrderTimestamp(timeStamp);
+		
 //		SimpleDateFormat time_format = new SimpleDateFormat("HHmmss");
 //		String current_date = date_format.format(dateTemp);
 //		order.setOrderDate(current_date);
@@ -426,10 +442,11 @@ public class OrderService {
 			i=0;
 			for (Cart cart2 : cart) {
 				int qtyTemp = cart2.getQuantity();
+				long prodId = cart2.getCartId().getProductId();
 				
-				//cartService.deleteItemFromCartForOrder(buyerId, listItem[i]);
+				//cartService.deleteItemFromCartForOrder(buyerId, prodId);
 				/////Product productTemp = productService.getProductById(listItem[i]);
-				orderitemRepository.save(new Orderitem(new OrderitemCkey(orderIdTemp, listItem[i]), qtyTemp));
+				orderitemRepository.save(new Orderitem(new OrderitemCkey(orderIdTemp, prodId), qtyTemp));
 				if(i==0) {
 					String marketName = marketRepository.getMarketName(cart2.getMarketId());
 					order.setMarketName(marketName);
@@ -458,7 +475,7 @@ public class OrderService {
 //			}
 //		}
 		//save market harusnya bisa dapet dari list cart sebelum save order di atas
-		//orderRepository.save(order);
+		orderRepository.save(order);
 		return order;
 	}
 	
@@ -474,74 +491,108 @@ public class OrderService {
 		//order.setStaffId(staffId);
 		
 		if(order!=null) {
-			if(type.equals("accept")) {
-				if(order.getOrderStatus().equals("01")) {
-					order.setOrderStatus("02");
-				}else {
-					throw new ResourceNotFoundException("Order Status is not 01");
-				}
-			}else if(type.equals("decline")) {
-				if(!order.getOrderStatus().equals("01")) {
-					throw new ResourceNotFoundException("Order Status is not 01");
-				}
-				//update working staff yg decline jadi No
-				Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
-				marketId = updWorkingStaff.getMarketId();
-				lastStaffId = updWorkingStaff.getStaffId();
-				updWorkingStaff.setWorking("0");
-				staffRepository.save(updWorkingStaff);
-				
-				//FIND FOW NEW STAFF
-				//harusnya perlu sort ke staff yg last order ny paling lama
-				List<Staff> staff = staffRepository.findAllByMarketId(marketId);
-				if(staff != null) {
-					for (Staff staff2 : staff) {
-						if(staff2.getActive().equals("1") && staff2.getWorking().equals("0")) {
-							newStaffId = staff2.getStaffId();
-							break;
-						}
-					}
-				}else {
-					//IN CASE STAFF NY CUMAN 1 DAN DATANYA HILANG DARI MARKET ID INI, ORDER TTP JADI CANCEL
-					order.setOrderStatus("05");
-//					throw new ResourceNotFoundException("No Staff Available for this Market");
-				}
-				//KALO ga ketemu STAFF lain, ORDER NY STATUS CANCELED
-				if(newStaffId==null) {
-					order.setOrderStatus("05");
-//					throw new ResourceNotFoundException("Cannot find staff for now");
-				}else {
-					//kalo staff yg ketemu sama lagi
-					if(newStaffId == lastStaffId) {
-						order.setOrderStatus("05");
-//						throw new ResourceNotFoundException("Cannot find staff for now");
+			if(order.getOrderType().equals("LIVE")) {
+				if(type.equals("accept")) {
+					if(order.getOrderStatus().equals("01")) {
+						order.setOrderStatus("02");
 					}else {
-						order.setStaffId(newStaffId);
+						throw new ResourceNotFoundException("Order Status is not 01");
 					}
-				}
-			}else if(type.equals("update")) {
-				String status = order.getOrderStatus();
-				if(status.equals("04") || status.equals("05")) {
-					throw new ResourceNotFoundException("Order already final status");
-				}else if(status.equals("03")) {
-					Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Cannot found staffId"));
+				}else if(type.equals("decline")) {
+					if(!order.getOrderStatus().equals("01")) {
+						throw new ResourceNotFoundException("Order Status is not 01");
+					}
+					//update working staff yg decline jadi No
+					Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
+					//marketId = updWorkingStaff.getMarketId();
+					//lastStaffId = updWorkingStaff.getStaffId();
 					updWorkingStaff.setWorking("0");
 					staffRepository.save(updWorkingStaff);
-					order.setOrderStatus("04");
-				}else if(status.equals("01")) { 
-					throw new ResourceNotFoundException("Order is not accepted yet");
-				}else{
-					if(status.equals("02")) {
-						order.setOrderStatus("03");
+					order.setOrderStatus("05");
+					
+					//FIND FOW NEW STAFF
+					//harusnya perlu sort ke staff yg last order ny paling lama
+	//				List<Staff> staff = staffRepository.findAllByMarketId(marketId);
+	//				if(staff != null) {
+	//					for (Staff staff2 : staff) {
+	//						if(staff2.getActive().equals("1") && staff2.getWorking().equals("0")) {
+	//							newStaffId = staff2.getStaffId();
+	//							break;
+	//						}
+	//					}
+	//				}else {
+	//					//IN CASE STAFF NY CUMAN 1 DAN DATANYA HILANG DARI MARKET ID INI, ORDER TTP JADI CANCEL
+	//					order.setOrderStatus("05");
+	////					throw new ResourceNotFoundException("No Staff Available for this Market");
+	//				}
+	//				//KALO ga ketemu STAFF lain, ORDER NY STATUS CANCELED
+	//				if(newStaffId==null) {
+	//					order.setOrderStatus("05");
+	////					throw new ResourceNotFoundException("Cannot find staff for now");
+	//				}else {
+	//					//kalo staff yg ketemu sama lagi
+	//					if(newStaffId == lastStaffId) {
+	//						order.setOrderStatus("05");
+	////						throw new ResourceNotFoundException("Cannot find staff for now");
+	//					}else {
+	//						order.setStaffId(newStaffId);
+	//					}
+	//				} 
+				}else if(type.equals("update")) {
+					String status = order.getOrderStatus();
+					if(status.equals("04") || status.equals("05")) {
+						throw new ResourceNotFoundException("Order already final status");
+					}else if(status.equals("03")) {
+						Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Cannot found staffId"));
+						updWorkingStaff.setWorking("0");
+						staffRepository.save(updWorkingStaff);
+						order.setOrderStatus("04");
+					}else if(status.equals("01")) { 
+						throw new ResourceNotFoundException("Order is not accepted yet");
+					}else{
+						if(status.equals("02")) {
+							order.setOrderStatus("03");
+						}
+	//					int statusInt = Integer.parseInt(status);
+	//					statusInt++;
+	//					String newStatus = String.valueOf(statusInt);
+	//					order.setOrderStatus(newStatus);
 					}
-//					int statusInt = Integer.parseInt(status);
-//					statusInt++;
-//					String newStatus = String.valueOf(statusInt);
-//					order.setOrderStatus(newStatus);
+				}
+			}else if(order.getOrderType().equals("PO")){
+				if(type.equals("update")) {
+					if(order.getOrderStatus().equals("01")) {
+						throw new ResourceNotFoundException("Order is not accepted yet");
+					}else if(order.getOrderStatus().equals("02")) {
+						order.setOrderStatus("03");
+					}else if(order.getOrderStatus().equals("03")) {
+						Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
+						updWorkingStaff.setWorkingPo(updWorkingStaff.getWorkingPo() - 1);
+						staffRepository.save(updWorkingStaff);
+						order.setOrderStatus("04");
+					}else {
+						throw new ResourceNotFoundException("Order is not valid to update");
+					}
+				}else if(type.equals("accept")) {
+					if(order.getOrderStatus().equals("01")) {
+						order.setOrderStatus("02");
+					}else {
+						throw new ResourceNotFoundException("Order Status is not 01");
+					}
+				}else if(type.equals("decline")) {
+					if(!order.getOrderStatus().equals("01")) {
+						throw new ResourceNotFoundException("Order Status is not 01");
+					}
+					Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
+					updWorkingStaff.setWorkingPo(updWorkingStaff.getWorkingPo() - 1);
+					staffRepository.save(updWorkingStaff);
+					order.setOrderStatus("05");
 				}
 			}
-		}
+		} 
 		
+		
+		//hit api send notif, dengan message yg di isi dari if else di atas
 		return this.orderRepository.save(order);
 	}
 	

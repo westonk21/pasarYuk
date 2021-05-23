@@ -80,9 +80,9 @@ public class OrderController {
 //	}
 	
 //---FOR STAFF -----------------------------------------------------------------
-	@GetMapping("/order4staff/{staffId}")
-	public OrderStaffDTO getOrderStaff(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException{
-		OrderStaffDTO temp = orderService.getOrderStaff(staffId);
+	@GetMapping("/order4staff/{staffId}/{type}")
+	public OrderStaffDTO getOrderStaff(@PathVariable(value = "staffId") Long staffId, @PathVariable(value = "type") String type) throws ResourceNotFoundException{
+		OrderStaffDTO temp = orderService.getOrderStaff(staffId, type);
 		//get data order yang staff nya dia, gabakal lebih dari 1 karena kalo udah di assign sekali gabisa di assign lagi karena working ny udah jadi Yes, sedangkan kalo diassign harus no, bakal jadi no lagi kalo di decline staff
 		return temp;
 	}
@@ -122,10 +122,10 @@ public class OrderController {
 	}
 	
 	//new order
-	@PostMapping("/orders/new/{buyerId}")
-	public Order newOrder(@PathVariable(value = "buyerId") Long buyerId, @RequestBody ListItem orderItem) throws ResourceNotFoundException {
+	@PostMapping("/orders/new/{buyerId}/{type}")
+	public Order newOrder(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "type") String type) throws ResourceNotFoundException {
 		//sementara buyerId pake dari url dlu, kalo udah oke baru http session
-		Order orderResp =  orderService.newOrder(buyerId, orderItem);
+		Order orderResp =  orderService.newOrder(buyerId, type);
 		return orderResp;
 	}
 	

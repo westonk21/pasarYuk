@@ -45,12 +45,18 @@ public class Staff {
 	@Column(name = "working")
 	private String working;
 	
+	@Column(name = "working_po")
+	private int workingPo;
+	
+	@Column(name = "lastorder_timestamp")
+	private String lastorderTimestamp;
+	
 	
 	public Staff() {
 		super();
 	}
 	
-	public Staff(String password, long marketId, String working, String phoneNumber, String email, String address, String urlStaffPhotoktp, String active, String staffName) {
+	public Staff(String password, long marketId, String working, String phoneNumber, String email, String address, String urlStaffPhotoktp, String active, String staffName, int workingPo, String lastorderTimestamp) {
 		super();
 //		this.staffNIK = staffNIK;
 		this.phoneNumber = phoneNumber;
@@ -62,8 +68,26 @@ public class Staff {
 		this.staffName = staffName;
 		this.marketId = marketId;
 		this.working = working;
+		this.workingPo = workingPo;
+		this.lastorderTimestamp = lastorderTimestamp;
 	}
 	
+	public String getLastorderTimestamp() {
+		return lastorderTimestamp;
+	}
+
+	public void setLastorderTimestamp(String lastorderTimestamp) {
+		this.lastorderTimestamp = lastorderTimestamp;
+	}
+
+	public int getWorkingPo() {
+		return workingPo;
+	}
+
+	public void setWorkingPo(int workingPo) {
+		this.workingPo = workingPo;
+	}
+
 	public String getPassword() {
 		return password;
 	}
