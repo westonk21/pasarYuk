@@ -44,7 +44,7 @@ public class Order {
 	@Column(name = "market_name")
 	private String marketName;
 	
-	@Column(name = "order_Type")
+	@Column(name = "order_type")
 	private String orderType;
 	
 	@Column(name = "order_accept_time")

@@ -333,6 +333,117 @@ public class OrderService {
 			
 		return temp;
 	}
+	public List<OrderStaffDTO> getListOrderPoStaff(long staffId, String type) throws ResourceNotFoundException {
+		List<Order> listOrder = orderRepository.findPoOngoingOrderWithIdStaff(staffId);
+		List<OrderStaffDTO> listTemp = new ArrayList<OrderStaffDTO>();
+		String marketName = "";
+		Buyer buyerDetail = new Buyer();
+		
+		OrderStaffDTO temp = new OrderStaffDTO();
+//		int flag=0;
+		
+		if (listOrder != null) {
+			for (Order order : listOrder) {
+					temp.setOrderId(order.getOrderId());
+					//temp.setBuyerId(order2.getBuyerId());
+					temp.setStaffId(order.getStaffId());
+	//				temp.setOrderDate(order.getOrderDate());
+	//				temp.setOrderTime(order.getOrderTime());
+					temp.setOrderTime(order.getOrderTimestamp());
+					temp.setOrderStatus(order.getOrderStatus());
+					temp.setShippingAddress(order.getShippingAddress());
+					
+					List<Product> orderItemList = new ArrayList<Product>();
+					orderItemList = productRepository.getListItemWithOrderIdSortName(order.getOrderId());
+					
+					System.out.println(orderItemList.size());
+					if(orderItemList.size() > 0) {
+	//					temp.setListItem(orderItemList);
+					
+						List<LapakSection> listLapak = new ArrayList<LapakSection>();
+						List<CartProductDTO> listProduct = new ArrayList<CartProductDTO>();
+						int i=1;
+						int lengthList = orderItemList.size();
+						Long sellerId = null;
+						String lapakNameTmp = null;
+						for (Product product : orderItemList) {
+							if(i==1) {
+								Seller tempSl = sellerRepository.findById(product.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + product.getSellerId()));
+								sellerId = product.getSellerId();
+								lapakNameTmp = tempSl.getLapakName();
+	//							LapakSection lapak = new LapakSection();
+	//							
+	//							lapak.setLapakName(tempSl.getLapakName());
+	//							
+	//							List<CartProductDTO> listProduct = new ArrayList<CartProductDTO>();
+	//							i++;
+	//							continue;
+							}
+							if(product.getSellerId() != sellerId) {
+								//System.out.println(listProduct.get(0));
+								LapakSection lapak = new LapakSection();
+								lapak.setLapakName(lapakNameTmp);
+								lapak.setData(listProduct);
+								listLapak.add(lapak);
+								
+								Seller tempSl = sellerRepository.findById(product.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + product.getSellerId()));
+								sellerId = product.getSellerId();
+								lapakNameTmp = tempSl.getLapakName();
+							}
+							
+							CartProductDTO res = new CartProductDTO();
+							res.setProductId(product.getProductId());
+							res.setPrice(product.getPrice());
+							res.setProductName(product.getProductName());
+							res.setUrlProductImage(product.getUrlProductImage());
+							Orderitem oiTemp = orderitemRepository.findById(new OrderitemCkey(order.getOrderId(), product.getProductId())).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: "));
+							res.setQuantity(oiTemp.getQuantity());
+							listProduct.add(res);	
+							
+							if(i == lengthList) {
+								LapakSection lapak = new LapakSection();
+								lapak.setLapakName(lapakNameTmp);
+								lapak.setData(listProduct);
+								listLapak.add(lapak);
+							}
+													
+							i++;
+						}
+						temp.setListItem(listLapak);
+					}else {
+						throw new ResourceNotFoundException("Item list is empty for orderId : "+ order.getOrderId());
+					}
+					
+					temp.setShippingFee(order.getShippingFee());
+					temp.setDiscountShipFee(order.getDiscountShipFee());
+					long subTotal = calculateSubTotal(orderItemList);
+					temp.setSubTotal(subTotal);
+					long total = subTotal - (order.getShippingFee() - order.getDiscountShipFee());
+					temp.setTotal(total);
+					
+					long sellerId = orderItemList.get(0).getSellerId();
+					Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
+					marketName = marketRepository.getMarketName(seller.getMarketId());
+					buyerDetail = buyerService.getBuyerById(order.getBuyerId());
+					
+					temp.setMarketName(marketName);
+					temp.setBuyerDetail(buyerDetail);
+				
+					listTemp.add(temp);
+					temp = new OrderStaffDTO();
+	//			flag++;
+	//			if(flag == 1) {
+	//				break;
+	//			}
+			}
+		}
+		else {
+			return null;
+//			throw new ResourceNotFoundException("No Order For Now");
+		}
+			
+		return listTemp;
+	}
 	
 	public long calculateSubTotal(List<Product> listItem) {
 		Iterator<Product> iterator = listItem.iterator();
