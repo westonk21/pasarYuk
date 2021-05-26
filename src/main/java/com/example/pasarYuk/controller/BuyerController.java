@@ -77,7 +77,7 @@ public class BuyerController {
 		return buyerResp;
 	}
 	//login
-	@GetMapping("loginRegister/{email}/{password}")
+	@GetMapping("buyerLogin/{email}/{password}")
 	public Buyer loginBuyer(@PathVariable(value = "email") String email, @PathVariable(value = "password") String password ) {
 		Buyer buyerResp = buyerService.loginBuyer(email, password);
 		return buyerResp;
