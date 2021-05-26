@@ -76,7 +76,24 @@ public class BuyerController {
 		Buyer buyerResp = buyerService.addNewBuyer(buyer);
 		return buyerResp;
 	}
-	
+	//login
+	@GetMapping("loginRegister/{email}/{password}")
+	public Buyer loginBuyer(@PathVariable(value = "email") String email, @PathVariable(value = "password") String password ) {
+		Buyer buyerResp = buyerService.loginBuyer(email, password);
+		return buyerResp;
+	}
+	//register
+	@PostMapping("buyerRegister")
+	public Buyer registerBuyer(@RequestBody Buyer buyer) {
+		Buyer buyerResp = buyerService.registerBuyer(buyer);
+		return buyerResp;
+	}
+//	//send otp
+//	@PostMapping("buyerRegister")
+//	public Buyer sendOTP(@RequestBody Buyer buyer) {
+//		Buyer buyerResp = buyerService.registerBuyer(buyer);
+//		return buyerResp;
+//	}
 	//update buyer
 	@PutMapping("buyers/{buyerId}")
 	public ResponseEntity<Buyer> updateBuyer(@PathVariable(value = "buyerId") Long buyerId, @Valid @RequestBody Buyer buyerDetails) throws ResourceNotFoundException{

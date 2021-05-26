@@ -13,4 +13,6 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long>{
 	
 	@Query(value="SELECT * FROM buyer WHERE email=?1", nativeQuery = true)
 	List<Buyer> testQuery(String email);
+
+	Buyer findByEmail(String email);
 }

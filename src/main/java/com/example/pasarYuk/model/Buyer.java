@@ -24,6 +24,12 @@ public class Buyer {
 	@Column(name = "password")
 	private String password;
 	
+	@Column(name = "otp")
+	private int otp;
+	
+	@Column(name = "salt")
+	private String salt;
+	
 	@Column(name = "email")
 	private String email;
 	
@@ -36,12 +42,15 @@ public class Buyer {
 	@Column(name = "market_id")
 	private long marketId;
 	
+	@Column(name = "token")
+	private String token;
+	
 	public Buyer() {
 		super();
 	}
 	
 	public Buyer(String buyerName, String username, String password, String email, String address, String phoneNumber,
-			long marketId) {
+			long marketId, String salt, int otp, String token) {
 		super();
 		this.buyerName = buyerName;
 //		this.username = username;
@@ -50,6 +59,33 @@ public class Buyer {
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 		this.marketId = marketId;
+		this.salt = salt;
+		this.otp = otp;
+		this.token = token;
+	}
+
+	public int getOtp() {
+		return otp;
+	}
+
+	public void setOtp(int otp) {
+		this.otp = otp;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 	public long getMarketId() {
