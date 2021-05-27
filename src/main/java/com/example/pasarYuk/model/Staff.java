@@ -24,6 +24,9 @@ public class Staff {
 	@Column(name = "password")
 	private String password;
 	
+	@Column(name = "salt")
+	private String salt;
+	
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
@@ -51,12 +54,15 @@ public class Staff {
 	@Column(name = "lastorder_timestamp")
 	private String lastorderTimestamp;
 	
+	@Column(name = "token")
+	private String token;
+	
 	
 	public Staff() {
 		super();
 	}
 	
-	public Staff(String password, long marketId, String working, String phoneNumber, String email, String address, String urlStaffPhotoktp, String active, String staffName, int workingPo, String lastorderTimestamp) {
+	public Staff(String password, long marketId, String working, String phoneNumber, String email, String address, String urlStaffPhotoktp, String active, String staffName, int workingPo, String lastorderTimestamp, String salt, String token) {
 		super();
 //		this.staffNIK = staffNIK;
 		this.phoneNumber = phoneNumber;
@@ -70,8 +76,26 @@ public class Staff {
 		this.working = working;
 		this.workingPo = workingPo;
 		this.lastorderTimestamp = lastorderTimestamp;
+		this.salt = salt;
+		this.token = token;
 	}
 	
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	public String getLastorderTimestamp() {
 		return lastorderTimestamp;
 	}

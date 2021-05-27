@@ -14,4 +14,6 @@ public interface SellerRepository extends JpaRepository<Seller, Long>{
 			+ "FROM seller sl"
 			, nativeQuery = true)
 	int getTotalSeller();
+
+	Seller findByEmail(String email);
 }

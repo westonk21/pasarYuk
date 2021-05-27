@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Staff;
 import com.example.pasarYuk.repository.StaffRepository;
+import com.example.pasarYuk.services.EmailService;
 import com.example.pasarYuk.services.StaffService;
 
 @CrossOrigin
@@ -25,6 +26,9 @@ import com.example.pasarYuk.services.StaffService;
 @RequestMapping("api/v1")
 public class StaffController {
 
+	@Autowired
+	private EmailService emailService;
+	
 	@Autowired
 	private StaffRepository staffRepository;
 	
@@ -48,6 +52,15 @@ public class StaffController {
 	public Staff addStaff(@RequestBody Staff staff) {
 		Staff staffResp = staffService.addNewStaff(staff);
 		return staffResp;
+	}
+	
+	
+	//send otp
+	@PostMapping("/staffOTP/{email}")
+	public String sendOTP(@PathVariable(value = "email") String email) {
+		String emailLC = email.toLowerCase();
+		String buyerResp = emailService.sendOTP(emailLC, "Staff");
+		return buyerResp;
 	}
 	
 	//update active or not 

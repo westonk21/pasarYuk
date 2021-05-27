@@ -24,6 +24,9 @@ public class Seller {
 	@Column(name = "password")
 	private String password;
 	
+	@Column(name = "salt")
+	private String salt;
+	
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
@@ -41,12 +44,15 @@ public class Seller {
 //	
 //	@Column(name = "market_address")
 //	private String marketAddress;
-//	
+	
+	@Column(name = "token")
+	private String token;
+
 	public Seller() {
 		super();
 	}
 
-	public Seller(String password, long marketId, String phoneNumber, String email, String lapakName, String address, String sellerName) {
+	public Seller(String password, long marketId, String phoneNumber, String email, String lapakName, String address, String sellerName, String salt, String token) {
 		super();
 		this.marketId = marketId;
 		this.phoneNumber = phoneNumber;
@@ -54,6 +60,8 @@ public class Seller {
 		this.password = password;
 		this.email = email;
 		this.lapakName = lapakName;
+		this.salt = salt;
+		this.token = token;
 //		this.address = address;
 //		this.marketName = marketName;
 //		this.marketAddress = marketAddress;
@@ -87,6 +95,22 @@ public class Seller {
 	public String getPassword() {
 		return password;
 	}
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}

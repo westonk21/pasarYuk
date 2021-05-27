@@ -24,9 +24,6 @@ public class Buyer {
 	@Column(name = "password")
 	private String password;
 	
-	@Column(name = "otp")
-	private int otp;
-	
 	@Column(name = "salt")
 	private String salt;
 	
@@ -50,7 +47,7 @@ public class Buyer {
 	}
 	
 	public Buyer(String buyerName, String username, String password, String email, String address, String phoneNumber,
-			long marketId, String salt, int otp, String token) {
+			long marketId, String salt , String token) {
 		super();
 		this.buyerName = buyerName;
 //		this.username = username;
@@ -60,17 +57,10 @@ public class Buyer {
 		this.phoneNumber = phoneNumber;
 		this.marketId = marketId;
 		this.salt = salt;
-		this.otp = otp;
 		this.token = token;
 	}
 
-	public int getOtp() {
-		return otp;
-	}
-
-	public void setOtp(int otp) {
-		this.otp = otp;
-	}
+	
 
 	public String getToken() {
 		return token;

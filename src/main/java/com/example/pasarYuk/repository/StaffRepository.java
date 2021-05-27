@@ -23,4 +23,6 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
 			+ "ORDER BY st.lastorder_timestamp ASC"
 			, nativeQuery = true)
 	List<Staff> findAllByMarketId(Long marketIdTemp);
+
+	Staff findByEmail(String email);
 }

@@ -19,7 +19,10 @@ public class ListOTP {
 	private String email;
 	
 	@Column(name = "otp")
-	private int otp;
+	private String otp;
+	
+	@Column(name = "type")
+	private String type;
 	
 	@Column(name = "timestamp")
 	private String timestamp;
@@ -29,11 +32,20 @@ public class ListOTP {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ListOTP(String email, int otp, String timestamp) {
+	public ListOTP(String email, String otp, String timestamp, String type) {
 		super();
 		this.email = email;
 		this.otp = otp;
 		this.timestamp = timestamp;
+		this.type = type;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public long getListotpId() {
@@ -52,11 +64,11 @@ public class ListOTP {
 		this.email = email;
 	}
 
-	public int getOtp() {
+	public String getOtp() {
 		return otp;
 	}
 
-	public void setOtp(int otp) {
+	public void setOtp(String otp) {
 		this.otp = otp;
 	}
 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Seller;
+import com.example.pasarYuk.services.EmailService;
 //import com.example.pasarYuk.repository.sellerRepository;
 import com.example.pasarYuk.services.SellerService;
 
@@ -28,6 +29,8 @@ import com.example.pasarYuk.services.SellerService;
 @RequestMapping("/api/v1")
 public class SellerController {
 
+	@Autowired
+	private EmailService emailService;
 	@Autowired
 	private SellerService sellerService;
 	//private sellerRepository sellerRepository;
@@ -56,6 +59,16 @@ public class SellerController {
 		Seller sellerResp = sellerService.addNewSeller(seller);
 		return sellerResp;
 	}
+	
+	
+	//send otp
+	@PostMapping("/sellerOTP/{email}")
+	public String sendOTP(@PathVariable(value = "email") String email) {
+		String emailLC = email.toLowerCase();
+		String buyerResp = emailService.sendOTP(emailLC, "Seller");
+		return buyerResp;
+	}
+	
 	
 	//update Seller
 	@PutMapping("sellers/{sellerId}")

@@ -25,6 +25,7 @@ import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Buyer;
 //import com.example.pasarYuk.repository.BuyerRepository;
 import com.example.pasarYuk.services.BuyerService;
+import com.example.pasarYuk.services.EmailService;
 
 @CrossOrigin
 @RestController
@@ -32,6 +33,9 @@ import com.example.pasarYuk.services.BuyerService;
 
 public class BuyerController {
 
+	@Autowired
+	private EmailService emailService;
+	
 	@Autowired
 	private BuyerService buyerService;
 	//private BuyerRepository buyerRepository;
@@ -71,31 +75,33 @@ public class BuyerController {
 	}
 	
 	//save buyer
-	@PostMapping("buyers")
+	@PostMapping("/buyers")
 	public Buyer createBuyer(@RequestBody Buyer buyer) {
 		Buyer buyerResp = buyerService.addNewBuyer(buyer);
 		return buyerResp;
 	}
 	//login
-	@GetMapping("buyerLogin/{email}/{password}")
-	public Buyer loginBuyer(@PathVariable(value = "email") String email, @PathVariable(value = "password") String password ) {
-		Buyer buyerResp = buyerService.loginBuyer(email, password);
+	@GetMapping("/buyerLogin/{email}/{password}")
+	public Buyer loginBuyer(@PathVariable(value = "email") String email, @PathVariable(value = "password") String password ) throws ResourceNotFoundException {
+		String emailLC = email.toLowerCase();
+		Buyer buyerResp = buyerService.loginBuyer(emailLC, password);
 		return buyerResp;
 	}
 	//register
-	@PostMapping("buyerRegister")
-	public Buyer registerBuyer(@RequestBody Buyer buyer) {
-		Buyer buyerResp = buyerService.registerBuyer(buyer);
+	@PostMapping("/buyerRegister/{otp}")
+	public Buyer registerBuyer(@RequestBody Buyer buyer, @PathVariable(value = "otp") String otp) throws ResourceNotFoundException {
+		Buyer buyerResp = buyerService.registerBuyer(buyer, otp);
 		return buyerResp;
 	}
-//	//send otp
-//	@PostMapping("buyerRegister")
-//	public Buyer sendOTP(@RequestBody Buyer buyer) {
-//		Buyer buyerResp = buyerService.registerBuyer(buyer);
-//		return buyerResp;
-//	}
+	//send otp
+	@PostMapping("/buyerOTP/{email}")
+	public String sendOTP(@PathVariable(value = "email") String email) {
+		String emailLC = email.toLowerCase();
+		String buyerResp = emailService.sendOTP(emailLC, "Buyer");
+		return buyerResp;
+	}
 	//update buyer
-	@PutMapping("buyers/{buyerId}")
+	@PutMapping("/buyers/{buyerId}")
 	public ResponseEntity<Buyer> updateBuyer(@PathVariable(value = "buyerId") Long buyerId, @Valid @RequestBody Buyer buyerDetails) throws ResourceNotFoundException{
 //		Buyer buyer = buyerRepository.findById(buyerId)
 //				.orElseThrow(() -> new ResourceNotFoundException("Buyer not found for this id :: " + buyerId));
@@ -112,7 +118,7 @@ public class BuyerController {
 	}
 	
 	//delete buyer
-	@DeleteMapping("buyers/{buyerId}")
+	@DeleteMapping("/buyers/{buyerId}")
 	public Map<String, Boolean> deleteBuyer(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{
 //		Buyer buyer = buyerRepository.findById(buyerId)
 //				.orElseThrow(() -> new ResourceNotFoundException("Buyer not found for this id :: " + buyerId));
