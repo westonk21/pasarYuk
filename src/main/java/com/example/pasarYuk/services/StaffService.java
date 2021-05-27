@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
+import com.example.pasarYuk.model.Guest;
 import com.example.pasarYuk.model.ListOTP;
 import com.example.pasarYuk.model.Seller;
 import com.example.pasarYuk.model.Staff;
+import com.example.pasarYuk.repository.GuestRepository;
 import com.example.pasarYuk.repository.ListOtpRepository;
 import com.example.pasarYuk.repository.StaffRepository;
 
@@ -30,6 +32,9 @@ public class StaffService {
 //	@Autowired
 //	private SellerRepository sellerRepository;
 	
+	
+	@Autowired
+	private GuestRepository guestRepository;
 	@Autowired
 	private ListOtpRepository listOtpRepository;
 	
@@ -70,13 +75,13 @@ public class StaffService {
 		}
 	}
 	
-	public String registerBuyer(Seller sellerDtl, String otp) throws ResourceNotFoundException {
+	public String registerBuyer(Staff staffDtl, String otp) throws ResourceNotFoundException {
 		Date dateTemp = new Date();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
 		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
 		String timeCurrent = date_format.format(dateTemp);
 
-		ListOTP temp = listOtpRepository.findByEmailAndType(sellerDtl.getEmail().toLowerCase(), "Seller");
+		ListOTP temp = listOtpRepository.findByEmailAndType(staffDtl.getEmail().toLowerCase(), "Seller");
 		if(temp!=null) {
 			String timeDB = temp.getTimestamp();
 			
@@ -91,7 +96,7 @@ public class StaffService {
 						throw new ResourceNotFoundException("Invalid OTP1");
 					}
 				}else {
-					throw new ResourceNotFoundException("Invalid OTP2");
+					throw new ResourceNotFoundException("OTP has been Expired");
 				}
 			}else {
 				throw new ResourceNotFoundException("Invalid OTP3");
@@ -100,10 +105,22 @@ public class StaffService {
 			throw new ResourceNotFoundException("Invalid OTP4");
 		}
 		
-		return "Kami akan segera mengirim email untuk Wawancara";
+		
 
-//		Seller seller = sellerRepository.findByEmail(sellerDtl.getEmail().toLowerCase());
-//		if(seller == null) {
+		Staff staff = staffRepository.findByEmail(staffDtl.getEmail().toLowerCase());
+		if(staff == null) {
+			Guest guestTemp = guestRepository.findByEmail(staffDtl.getEmail().toLowerCase());
+			if(guestTemp!=null) {
+				Guest guest = new Guest();
+				guest.setGuestName(staffDtl.getStaffName());
+				guest.setPhoneNumber(staffDtl.getPhoneNumber());
+				guest.setEmail(staffDtl.getEmail());
+				guest.setType("staff");
+				guest.setStatus("NEW");
+				guestRepository.save(guest);
+			}else {
+				throw new ResourceNotFoundException("Email Already Registered, Please go to Login Page");
+			}
 //			Seller newSeller = new Seller();
 //			newSeller.setSellerName(sellerDtl.getSellerName());
 //			newSeller.setEmail(sellerDtl.getEmail().toLowerCase());
@@ -116,9 +133,10 @@ public class StaffService {
 //			newSeller.setSalt(salt);
 //			sellerRepository.save(newSeller);
 //			return newSeller;
-//		}else {
-//			throw new ResourceNotFoundException("Email Already Registered, Please go to Login Page");
-//		}
+		}else {
+			throw new ResourceNotFoundException("Email Already Registered, Please go to Login Page");
+		}
+		return "Kami akan segera mengirim email untuk Wawancara";
 	}
 	
 	public Staff updateStaff(Long staffId, Staff staffDetails) throws ResourceNotFoundException {

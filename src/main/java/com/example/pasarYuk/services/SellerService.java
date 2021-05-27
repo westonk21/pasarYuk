@@ -11,14 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
-import com.example.pasarYuk.model.Buyer;
+import com.example.pasarYuk.model.Guest;
 import com.example.pasarYuk.model.ListOTP;
 import com.example.pasarYuk.model.Seller;
+import com.example.pasarYuk.repository.GuestRepository;
 import com.example.pasarYuk.repository.ListOtpRepository;
 import com.example.pasarYuk.repository.SellerRepository;
 
 @Service
 public class SellerService {
+	
+	@Autowired
+	private GuestRepository guestRepository;
 	
 	@Autowired
 	private ListOtpRepository listOtpRepository;
@@ -88,10 +92,23 @@ public class SellerService {
 			throw new ResourceNotFoundException("Invalid OTP4");
 		}
 		
-		return "Kami akan segera mengirim email untuk peninjauan lokasi Pasar";
+		
 
-//		Seller seller = sellerRepository.findByEmail(sellerDtl.getEmail().toLowerCase());
-//		if(seller == null) {
+		Seller seller = sellerRepository.findByEmail(sellerDtl.getEmail().toLowerCase());
+		if(seller == null) {
+			Guest guestTemp = guestRepository.findByEmail(sellerDtl.getEmail().toLowerCase());
+			if(guestTemp!=null) {
+				Guest guest = new Guest();
+				guest.setGuestName(sellerDtl.getSellerName());
+				guest.setPhoneNumber(sellerDtl.getPhoneNumber());
+				guest.setEmail(sellerDtl.getEmail());
+				guest.setType("seller");
+				guest.setStatus("NEW");
+				guestRepository.save(guest);
+			}else {
+				throw new ResourceNotFoundException("Email Already Registered, Please go to Login Page");
+			}
+			
 //			Seller newSeller = new Seller();
 //			newSeller.setSellerName(sellerDtl.getSellerName());
 //			newSeller.setEmail(sellerDtl.getEmail().toLowerCase());
@@ -104,9 +121,10 @@ public class SellerService {
 //			newSeller.setSalt(salt);
 //			sellerRepository.save(newSeller);
 //			return newSeller;
-//		}else {
-//			throw new ResourceNotFoundException("Email Already Registered, Please go to Login Page");
-//		}
+		}else {
+			throw new ResourceNotFoundException("Email Already Registered, Please go to Login Page");
+		}
+		return "Kami akan segera mengirim email untuk peninjauan langsung ke Pasar";
 	}
 	
 	public Seller addNewSeller(Seller seller) {

@@ -31,4 +31,6 @@ public interface GuestRepository extends JpaRepository<Guest, Long>{
 			+ "WHERE gu.type='staff'"
 			, nativeQuery = true)
 	int getTotalGuestStaff();
+
+	Guest findByEmail(String lowerCase);
 }
