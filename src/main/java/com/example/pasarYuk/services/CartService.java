@@ -2,6 +2,7 @@ package com.example.pasarYuk.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +15,12 @@ import com.example.pasarYuk.model.Cart;
 import com.example.pasarYuk.model.CartCkey;
 import com.example.pasarYuk.model.Market;
 import com.example.pasarYuk.model.Product;
+import com.example.pasarYuk.model.Seller;
 import com.example.pasarYuk.repository.BuyerRepository;
 import com.example.pasarYuk.repository.CartRepository;
 import com.example.pasarYuk.repository.MarketRepository;
 import com.example.pasarYuk.repository.ProductRepository;
+import com.example.pasarYuk.repository.SellerRepository;
 
 import temp.CartDTO;
 import temp.CartMarketDTO;
@@ -32,6 +35,12 @@ public class CartService {
 	
 	@Autowired
 	private MarketService marketService;
+	
+	@Autowired
+	private SellerRepository sellerRepository;
+	
+	@Autowired
+	private MarketRepository marketRepository;
 	
 	@Autowired
 	private BuyerRepository buyerRepository;
@@ -238,6 +247,8 @@ public class CartService {
 		PaymentDTO temp = new PaymentDTO();
 		Buyer buyer = buyerRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("buyer id not found  in database : " + buyerId));
 		List<Cart> cart = cartRepository.findCheckedItemByBuyerId(buyerId);
+//		List<Product> orderItemList = new ArrayList<Product>();
+		Long sellerId = null;
 		
 		List<Product> listProduct = new ArrayList<Product>();
 		if(cart!=null) {
@@ -246,13 +257,41 @@ public class CartService {
 				if(cart2.getCheckItem().equals("1")) {
 					Product prd = productRepository.findById(cart2.getCartId().getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product id not found  in database"));
 					listProduct.add(prd);
+					
+					sellerId = prd.getSellerId();
 				}
 			}
+			temp.setBuyerDetail(buyer);
+			temp.setListItem(listProduct);
+			
+			if(sellerId != null) {
+				Seller seller = sellerRepository.findById(sellerId).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+				Long marketId = seller.getMarketId();
+				Market market = marketRepository.findById(marketId).orElseThrow(() -> new ResourceNotFoundException("Market not found"));
+				String marketName = market.getMarketName();
+				temp.setMarketName(marketName);
+			}
+			temp.setShippingFee(10000);
+			temp.setDiscountShipFee(10000);
+			long subTotal = calculateSubTotal(listProduct);
+			temp.setSubTotal(subTotal);
+//			long total = subTotal + (order2.getShippingFee() - order2.getDiscountShipFee());
+			long total = subTotal;
+			temp.setTotal(total);
 		}
-		temp.setBuyerDetail(buyer);
-		temp.setListItem(listProduct);
+		
 		
 		return temp;
+	}
+	
+	public long calculateSubTotal(List<Product> listItem) {
+		Iterator<Product> iterator = listItem.iterator();
+		long total=0;
+	    while(iterator.hasNext()) {
+//	    	System.out.println(iterator.next());
+	    	total = total + iterator.next().getPrice();
+	    }
+		return total;
 	}
 	
 	public Cart findCart(Long buyerId, Long productId) {
