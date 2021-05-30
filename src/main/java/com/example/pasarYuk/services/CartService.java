@@ -48,6 +48,7 @@ public class CartService {
 	//-----------------------------------------------------------------------------
 	public List<CartDTO> viewCartByMarket(Long buyerId) throws ResourceNotFoundException{
 		//query cart dengan ID BUYER nya = buyerId dari session
+		Buyer buyer = buyerRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("Buyer id not found  in database : " + buyerId));
 		List<Cart> cart = cartRepository.findByBuyerId(buyerId);
 		
 		List<CartDTO> cartDTOList = new ArrayList<CartDTO>();
