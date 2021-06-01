@@ -33,6 +33,12 @@ public class MarketController {
 		return temp;
 	}
 	
+	@GetMapping("/market/{marketId}")
+	public Market getListMarket(@PathVariable(value = "marketId") Long marketId) throws ResourceNotFoundException{
+		Market temp = marketService.getMarketById(marketId);
+		return temp;
+	}
+	
 	@PostMapping("/market/new")
 	public Market newMarket(@RequestBody Market market) {
 		Market marketResp = marketService.createNewMarket(market);
