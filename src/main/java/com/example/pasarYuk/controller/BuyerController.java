@@ -117,6 +117,14 @@ public class BuyerController {
 		return ResponseEntity.ok(buyer);
 	}
 	
+	@PutMapping("/buyers/{buyerId}/market/{marketId}")
+	public ResponseEntity<Buyer> updateMarket(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "marketId") Long marketId) throws ResourceNotFoundException{
+		
+		Buyer buyer = buyerService.updateMarket(buyerId, marketId);
+		
+		return ResponseEntity.ok(buyer);
+	}
+	
 	//delete buyer
 	@DeleteMapping("/buyers/{buyerId}")
 	public Map<String, Boolean> deleteBuyer(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{

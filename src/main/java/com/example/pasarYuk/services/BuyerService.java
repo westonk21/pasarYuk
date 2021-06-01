@@ -131,6 +131,15 @@ public class BuyerService {
 		return this.buyerRepository.save(buyer);
 	}
 	
+	public Buyer updateMarket(Long buyerId, Long marketId) throws ResourceNotFoundException{
+		Buyer buyer = buyerRepository.findById(buyerId)
+				.orElseThrow(() -> new ResourceNotFoundException("Buyer not found for this id :: " + buyerId));
+		
+		buyer.setMarketId(marketId);
+		
+		return this.buyerRepository.save(buyer);
+	}
+	
 	public Map<String, Boolean> deleteBuyer(Long buyerId) throws ResourceNotFoundException{
 		Buyer buyer = buyerRepository.findById(buyerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Buyer not found for this id :: " + buyerId));

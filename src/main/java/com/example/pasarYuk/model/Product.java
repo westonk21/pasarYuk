@@ -28,6 +28,9 @@ public class Product implements Comparable<Product> {
 	@Column(name = "price")
 	private long price;
 	
+	@Column(name = "price_promo")
+	private long pricePromo;
+	
 	@Column(name = "satuan_jual")
 	private String satuanJual;
 	
