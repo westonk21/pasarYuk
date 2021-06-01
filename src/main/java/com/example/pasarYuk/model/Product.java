@@ -47,13 +47,14 @@ public class Product implements Comparable<Product> {
 		super();
 	}
 
-	public Product(String urlProductImage, long sellerId, String productName, String productDesc, long price, float avgStar, String category, String satuanJual, long productId) {
+	public Product(String urlProductImage, long sellerId, String productName, String productDesc, long price, float avgStar, String category, String satuanJual, long productId, long pricePromo) {
 		super();
 		this.productId = productId;
 		this.sellerId = sellerId;
 		this.productName = productName;
 		this.productDesc = productDesc;
 		this.price = price;
+		this.pricePromo = pricePromo;
 		this.avgStar = avgStar;
 		this.category = category;
 		this.satuanJual = satuanJual;
@@ -73,10 +74,18 @@ public class Product implements Comparable<Product> {
 	}
 
 	public Object clone() {
-		Product clone = new Product(this.urlProductImage, this.sellerId, this.productName, this.productDesc, this.price, this.avgStar, this.category, this.satuanJual, this.productId);
+		Product clone = new Product(this.urlProductImage, this.sellerId, this.productName, this.productDesc, this.price, this.avgStar, this.category, this.satuanJual, this.productId, this.pricePromo);
 		return clone;
 	}
 	
+	public long getPricePromo() {
+		return pricePromo;
+	}
+
+	public void setPricePromo(long pricePromo) {
+		this.pricePromo = pricePromo;
+	}
+
 	public String getUrlProductImage() {
 		return urlProductImage;
 	}
