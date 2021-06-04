@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Buyer;
+import com.example.pasarYuk.model.Market;
 //import com.example.pasarYuk.repository.BuyerRepository;
 import com.example.pasarYuk.services.BuyerService;
 import com.example.pasarYuk.services.EmailService;
+import com.example.pasarYuk.services.MarketService;
 
 @CrossOrigin
 @RestController
@@ -35,6 +37,9 @@ public class BuyerController {
 
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private MarketService marketService;
 	
 	@Autowired
 	private BuyerService buyerService;
@@ -72,6 +77,15 @@ public class BuyerController {
 	public ResponseEntity<Buyer> getBuyerById(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException {
 		Buyer buyer = buyerService.getBuyerById(buyerId);
 		return ResponseEntity.ok().body(buyer);
+	}
+	
+	//get buyer's market name
+	@GetMapping("/buyersmarketname/{buyerId}")
+	public String getMarketName(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException {
+		Buyer buyer = buyerService.getBuyerById(buyerId); 
+		System.out.println(buyer.getMarketId());
+		Market market = marketService.getMarketById(buyer.getMarketId());
+		return market.getMarketName();
 	}
 	
 	//save buyer

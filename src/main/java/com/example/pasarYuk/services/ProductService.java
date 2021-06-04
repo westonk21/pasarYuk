@@ -62,6 +62,7 @@ public class ProductService {
 		product.setProductName(productDetails.getProductName());
 		product.setProductDesc(productDetails.getProductDesc());
 		product.setPrice(productDetails.getPrice());
+		product.setPricePromo(productDetails.getPricePromo());
 		product.setAvgStar(productDetails.getAvgStar());
 		product.setCategory(productDetails.getCategory());		
 		product.setSatuanJual(productDetails.getSatuanJual());
