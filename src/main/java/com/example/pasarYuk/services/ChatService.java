@@ -52,7 +52,7 @@ public class ChatService {
 		List<ChathistoryDTO> chatHistory = new ArrayList<ChathistoryDTO>();
 		if(chat!=null) {
 			List<Chathistory> tempDB = chathistoryRepository.getHistoryBuyerId(chat.getChatId());
-			int idInc = 0;
+			int idInc = 1;
 			for (Chathistory temp : tempDB) {
 				ChathistoryDTO newCHS =  new ChathistoryDTO();
 				newCHS.setId(idInc);
