@@ -23,11 +23,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Buyer;
+import com.example.pasarYuk.model.Chat;
 import com.example.pasarYuk.model.Market;
 //import com.example.pasarYuk.repository.BuyerRepository;
 import com.example.pasarYuk.services.BuyerService;
+import com.example.pasarYuk.services.ChatService;
 import com.example.pasarYuk.services.EmailService;
 import com.example.pasarYuk.services.MarketService;
+
+import temp.ChathistoryDTO;
+import temp.Message;
 
 @CrossOrigin
 @RestController
@@ -40,6 +45,9 @@ public class BuyerController {
 	
 	@Autowired
 	private MarketService marketService;
+	
+	@Autowired
+	private ChatService chatService;
 	
 	@Autowired
 	private BuyerService buyerService;
@@ -153,4 +161,26 @@ public class BuyerController {
 		Map<String, Boolean> response = buyerService.deleteBuyer(buyerId);
 		return response;
 	}
+	
+//	-------CHAT BUYER----------
+	@GetMapping("/buyersChat/{buyerId}")
+	public List<Chat> getChatList(@PathVariable(value = "buyerId") Long buyerId) {
+		List<Chat> chat = chatService.getChatListForBuyerId(buyerId);
+		return chat;
+	}
+	
+	@GetMapping("/buyersChatHistory/{buyerId}/{rcvId}/{type}")
+	public List<ChathistoryDTO> getChatHistory(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "rcvId") Long rcvId, @PathVariable(value = "type") String type) throws ResourceNotFoundException {
+		List<ChathistoryDTO> chat = chatService.getChatHistory(buyerId, rcvId, type);
+		return chat;
+	}
+	
+	@PostMapping("/buyersSendMessage/{buyerId}/{rcvId}/{type}")
+	public List<ChathistoryDTO> sendMessageFromBuyer(@Valid @RequestBody Message msg, @PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "rcvId") Long rcvId, @PathVariable(value = "type") String type) throws ResourceNotFoundException {
+		List<ChathistoryDTO> chat = chatService.sendMessageFromBuyer(buyerId, rcvId, type, msg.getText());
+		return chat;
+	}
+	
+//	-------CHAT BUYER----------
+	
 }
