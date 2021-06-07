@@ -31,6 +31,7 @@ import com.example.pasarYuk.services.ChatService;
 import com.example.pasarYuk.services.EmailService;
 import com.example.pasarYuk.services.MarketService;
 
+import temp.ChatDTO;
 import temp.ChathistoryDTO;
 import temp.Message;
 
@@ -164,8 +165,8 @@ public class BuyerController {
 	
 //	-------CHAT BUYER----------
 	@GetMapping("/buyersChat/{buyerId}")
-	public List<Chat> getChatList(@PathVariable(value = "buyerId") Long buyerId) {
-		List<Chat> chat = chatService.getChatListForBuyerId(buyerId);
+	public List<ChatDTO> getChatList(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException {
+		List<ChatDTO> chat = chatService.getChatListForBuyerId(buyerId);
 		return chat;
 	}
 	

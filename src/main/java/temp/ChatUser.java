@@ -2,7 +2,7 @@ package temp;
 
 public class ChatUser {
 
-	private long userId;
+	private long _id;
 	private String name;
 	private String photoURL;
 	
@@ -11,18 +11,21 @@ public class ChatUser {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ChatUser(String name, String photoURL) {
+	public ChatUser(Long _id, String name, String photoURL) {
 		super();
+		this._id = _id;
 		this.name = name;
 		this.photoURL = photoURL;
 	}
 
-	public long getUserId() {
-		return userId;
+	
+
+	public long get_id() {
+		return _id;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void set_id(long _id) {
+		this._id = _id;
 	}
 
 	public String getName() {

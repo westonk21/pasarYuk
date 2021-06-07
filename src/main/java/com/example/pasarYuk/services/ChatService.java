@@ -21,6 +21,7 @@ import com.example.pasarYuk.repository.ChathistoryRepository;
 import com.example.pasarYuk.repository.SellerRepository;
 import com.example.pasarYuk.repository.StaffRepository;
 
+import temp.ChatDTO;
 import temp.ChatUser;
 import temp.ChathistoryDTO;
 
@@ -42,9 +43,34 @@ public class ChatService {
 	@Autowired 
 	private ChatRepository chatRepository;
 	
-	public List<Chat> getChatListForBuyerId(Long buyerId) {
+	public List<ChatDTO> getChatListForBuyerId(Long buyerId) throws ResourceNotFoundException {
 		List<Chat> chat = chatRepository.getChatListForBuyerId(buyerId);
-		return chat;
+		List<ChatDTO> listChat = new ArrayList<ChatDTO>();
+		for (Chat chat2 : chat) {
+			ChatDTO temp = new ChatDTO();
+			temp.setChatId(chat2.getChatId());
+			temp.setLastMessage(chat2.getLastTimestamp());
+			temp.setLastTimestamp(chat2.getLastTimestamp());
+			temp.setType(chat2.getType());
+			
+//			Buyer buyer = buyerRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
+			ChatUser chatUserBuyer = new ChatUser();
+			chatUserBuyer.set_id(buyerId);
+			chatUserBuyer.setName(null);
+			chatUserBuyer.setPhotoURL(null);
+			
+			Seller seller = sellerRepository.findById(chat2.getReceiverId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+			ChatUser chatUserSeller = new ChatUser();
+			chatUserSeller.set_id(chat2.getReceiverId());
+			chatUserSeller.setName(seller.getSellerName());
+			chatUserSeller.setPhotoURL(null);
+			
+			temp.setSender(chatUserBuyer);
+			temp.setReceiver(chatUserSeller);
+			
+			listChat.add(temp);
+		}
+		return listChat;
 	}
 	
 	public List<ChathistoryDTO> getChatHistory(Long buyerId, Long rcvId, String type ) throws ResourceNotFoundException {
@@ -59,7 +85,7 @@ public class ChatService {
 				newCHS.setText(temp.getMessage());
 				newCHS.setCreatedAt(temp.getTimestamp());
 					ChatUser user = new ChatUser();
-					user.setUserId(temp.getOwnerId());
+					user.set_id(temp.getOwnerId());
 					if(temp.getOwnerId() == buyerId) {
 						Buyer buyer = buyerRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
 						user.setName(buyer.getBuyerName());	
