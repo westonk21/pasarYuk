@@ -2,7 +2,7 @@ package temp;
 
 public class ChathistoryDTO {
 
-	private long id;
+	private long _id;
 	private String text;
 	private String createdAt;
 	private ChatUser user;
@@ -12,19 +12,23 @@ public class ChathistoryDTO {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public ChathistoryDTO(String text, String createdAt, ChatUser user) {
+	public ChathistoryDTO(Long _id, String text, String createdAt, ChatUser user) {
 		super();
+		this._id = _id;
 		this.text = text;
 		this.createdAt = createdAt;
 		this.user = user;
 	}
 
-	public long getId() {
-		return id;
+	
+	public long get_id() {
+		return _id;
 	}
-	public void setId(long id) {
-		this.id = id;
+
+	public void set_id(long _id) {
+		this._id = _id;
 	}
+
 	public String getText() {
 		return text;
 	}

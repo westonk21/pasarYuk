@@ -81,7 +81,7 @@ public class ChatService {
 			int idInc = 1;
 			for (Chathistory temp : tempDB) {
 				ChathistoryDTO newCHS =  new ChathistoryDTO();
-				newCHS.setId(idInc);
+				newCHS.set_id(idInc);
 				newCHS.setText(temp.getMessage());
 				newCHS.setCreatedAt(temp.getTimestamp());
 					ChatUser user = new ChatUser();
