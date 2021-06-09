@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Buyer;
-import com.example.pasarYuk.model.Chat;
 import com.example.pasarYuk.model.Market;
-//import com.example.pasarYuk.repository.BuyerRepository;
 import com.example.pasarYuk.services.BuyerService;
 import com.example.pasarYuk.services.ChatService;
 import com.example.pasarYuk.services.EmailService;
@@ -163,22 +161,37 @@ public class BuyerController {
 		return response;
 	}
 	
-//	-------CHAT BUYER----------
-	@GetMapping("/buyersChat/{buyerId}")
-	public List<ChatDTO> getChatList(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException {
-		List<ChatDTO> chat = chatService.getChatListForBuyerId(buyerId);
+//	-------CHAT BUYER---------- role bisa BUYER/SELLER
+	@GetMapping("/listChat/{id}/{role}")
+	public List<ChatDTO> getChatList(@PathVariable(value = "id") Long id, @PathVariable(value = "role") String role) throws ResourceNotFoundException {
+		List<ChatDTO> chat = chatService.getChatListForBuyerId(id, role.toUpperCase());
 		return chat;
 	}
 	
-	@GetMapping("/buyersChatHistory/{buyerId}/{rcvId}/{type}")
-	public List<ChathistoryDTO> getChatHistory(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "rcvId") Long rcvId, @PathVariable(value = "type") String type) throws ResourceNotFoundException {
-		List<ChathistoryDTO> chat = chatService.getChatHistory(buyerId, rcvId, type);
+//	@GetMapping("/buyersChatHistory/{buyerId}/{rcvId}/{type}")
+//  role can be BUYER/SELEER/STAFF
+	@GetMapping("listChatHistory/{chatId}/{role}")
+	public List<ChathistoryDTO> getChatHistory(@PathVariable(value = "chatId") Long chatId, @PathVariable(value = "role") String role) throws ResourceNotFoundException {
+//		List<ChathistoryDTO> chat = chatService.getBuyerChatHistory(buyerId, rcvId, type);
+		List<ChathistoryDTO> chat = chatService.getChatHistory(chatId, role);
 		return chat;
 	}
 	
-	@PostMapping("/buyersSendMessage/{buyerId}/{rcvId}/{type}")
-	public List<ChathistoryDTO> sendMessageFromBuyer(@Valid @RequestBody Message msg, @PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "rcvId") Long rcvId, @PathVariable(value = "type") String type) throws ResourceNotFoundException {
-		List<ChathistoryDTO> chat = chatService.sendMessageFromBuyer(buyerId, rcvId, type, msg.getText());
+//	@PostMapping("/buyersSendMessage/{buyerId}/{rcvId}/{type}")
+//	public List<ChathistoryDTO> sendMessageFromBuyer(@Valid @RequestBody Message msg, @PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "rcvId") Long rcvId, @PathVariable(value = "type") String type) throws ResourceNotFoundException {
+//		List<ChathistoryDTO> chat = chatService.sendMessageFromBuyer(buyerId, rcvId, type, msg.getText());
+//		return chat;
+//	}
+	
+	@PostMapping("/sendMessage/{chatId}/{role}")
+	public List<ChathistoryDTO> sendMessage(@Valid @RequestBody Message msg, @PathVariable(value = "chatId") Long chatId, @PathVariable(value = "role") String role) throws ResourceNotFoundException {
+		List<ChathistoryDTO> chat = chatService.sendMessage(chatId, role, msg.getText());
+		return chat;
+	}
+	
+	@PostMapping("/newMessage/{buyerId}/{rcvId}")
+	public List<ChathistoryDTO> newMessage(@Valid @RequestBody Message msg, @PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "rcvId") Long rcvId) throws ResourceNotFoundException {
+		List<ChathistoryDTO> chat = chatService.newMessage(buyerId, rcvId, msg.getText());
 		return chat;
 	}
 	

@@ -18,6 +18,21 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 			+ "ORDER BY ch.last_timestamp DESC"
 			, nativeQuery = true)
 	public List<Chat> getChatListForBuyerId(Long buyerId);
+	
+	@Query(value = 
+			"SELECT * "
+			+ "FROM chat ch "
+			+ "WHERE ch.receiver_id=?1 AND ch.type='SELLER' "
+			+ "ORDER BY ch.last_timestamp DESC"
+			, nativeQuery = true)
+	public List<Chat> getChatListForSellerId(Long buyerId);
+	
+	@Query(value = 
+			"SELECT * "
+			+ "FROM chat ch "
+			+ "WHERE ch.chat_id=?1"
+			, nativeQuery = true)
+	public Chat getByChatId(Long chatId);
 
 	@Query(value = 
 			"SELECT * "
