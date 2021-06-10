@@ -23,6 +23,7 @@ import com.example.pasarYuk.repository.StaffRepository;
 
 import temp.ChatDTO;
 import temp.ChatUser;
+import temp.ChatUser2;
 import temp.ChathistoryDTO;
 
 @Service
@@ -56,14 +57,14 @@ public class ChatService {
 				temp.setType(chat2.getType());
 				
 //				Buyer buyer = buyerRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
-				ChatUser chatUserBuyer = new ChatUser();
-				chatUserBuyer.set_id(id);
+				ChatUser2 chatUserBuyer = new ChatUser2();
+				chatUserBuyer.setId(id);
 				chatUserBuyer.setName(null);
 				chatUserBuyer.setPhotoURL(null);
 				
 				Seller seller = sellerRepository.findById(chat2.getReceiverId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
-				ChatUser chatUserSeller = new ChatUser();
-				chatUserSeller.set_id(chat2.getReceiverId());
+				ChatUser2 chatUserSeller = new ChatUser2();
+				chatUserSeller.setId(chat2.getReceiverId());
 				chatUserSeller.setName(seller.getSellerName());
 				chatUserSeller.setPhotoURL(null);
 				
@@ -82,14 +83,14 @@ public class ChatService {
 				temp.setType(chat2.getType());
 				
 				Buyer buyer = buyerRepository.findById(chat2.getSenderId()).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
-				ChatUser chatUserBuyer = new ChatUser();
-				chatUserBuyer.set_id(chat2.getSenderId());
+				ChatUser2 chatUserBuyer = new ChatUser2();
+				chatUserBuyer.setId(chat2.getSenderId());
 				chatUserBuyer.setName(buyer.getBuyerName());
 				chatUserBuyer.setPhotoURL(null);
 				
 //				Seller seller = sellerRepository.findById(chat2.getReceiverId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
-				ChatUser chatUserSeller = new ChatUser();
-				chatUserSeller.set_id(id);
+				ChatUser2 chatUserSeller = new ChatUser2();
+				chatUserSeller.setId(id);
 				chatUserSeller.setName(null);
 				chatUserSeller.setPhotoURL(null);
 				

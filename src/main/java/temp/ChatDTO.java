@@ -4,8 +4,8 @@ package temp;
 public class ChatDTO {
 	
 	private long chatId;
-	private ChatUser sender;
-	private ChatUser receiver;
+	private ChatUser2 sender;
+	private ChatUser2 receiver;
 	private String type;
 	private String lastTimestamp;
 	private String lastMessage;
@@ -13,7 +13,7 @@ public class ChatDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ChatDTO(ChatUser sender, ChatUser receiver, String type, String lastTimestamp, String lastMessage) {
+	public ChatDTO(ChatUser2 sender, ChatUser2 receiver, String type, String lastTimestamp, String lastMessage) {
 		super();
 		this.sender = sender;
 		this.receiver = receiver;
@@ -27,16 +27,16 @@ public class ChatDTO {
 	public void setChatId(long chatId) {
 		this.chatId = chatId;
 	}
-	public ChatUser getSender() {
+	public ChatUser2 getSender() {
 		return sender;
 	}
-	public void setSender(ChatUser sender) {
+	public void setSender(ChatUser2 sender) {
 		this.sender = sender;
 	}
-	public ChatUser getReceiver() {
+	public ChatUser2 getReceiver() {
 		return receiver;
 	}
-	public void setReceiver(ChatUser receiver) {
+	public void setReceiver(ChatUser2 receiver) {
 		this.receiver = receiver;
 	}
 	public String getType() {
