@@ -39,6 +39,9 @@ public class Buyer {
 	@Column(name = "market_id")
 	private long marketId;
 	
+	@Column(name = "photo_url")
+	private String photoUrl;
+	
 	@Column(name = "token")
 	private String token;
 	
@@ -47,7 +50,7 @@ public class Buyer {
 	}
 	
 	public Buyer(String buyerName, String username, String password, String email, String address, String phoneNumber,
-			long marketId, String salt , String token) {
+			long marketId, String salt , String photoUrl, String token) {
 		super();
 		this.buyerName = buyerName;
 //		this.username = username;
@@ -57,10 +60,19 @@ public class Buyer {
 		this.phoneNumber = phoneNumber;
 		this.marketId = marketId;
 		this.salt = salt;
+		this.photoUrl = photoUrl;
 		this.token = token;
 	}
 
 	
+
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
 
 	public String getToken() {
 		return token;

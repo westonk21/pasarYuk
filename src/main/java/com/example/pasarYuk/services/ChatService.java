@@ -144,38 +144,46 @@ public class ChatService {
 //		return chat;
 	}
 	
-	public List<ChathistoryDTO> getChatHistory(Long chatId, String role ) throws ResourceNotFoundException {
-		Chat chat = chatRepository.getByChatId(chatId);
+	public List<ChathistoryDTO> getChatHistory(Long buyerId, Long rcvId, String type ) throws ResourceNotFoundException {
+		
+		Chat chat = chatRepository.findByBuyerIdAndReceiverId(buyerId, rcvId, type);
+		
 		List<ChathistoryDTO> chatHistory = new ArrayList<ChathistoryDTO>();
+		
 		if(chat!=null) {
+			long chatId = chat.getChatId();
 			List<Chathistory> tempDB = chathistoryRepository.getHistoryBuyerId(chatId);
 			int idInc = 1;
-			for (Chathistory temp : tempDB) {
-				ChathistoryDTO newCHS =  new ChathistoryDTO();
-				newCHS.set_id(idInc);
-				newCHS.setText(temp.getMessage());
-				newCHS.setCreatedAt(temp.getTimestamp());
-					ChatUser user = new ChatUser();
-					user.set_id(temp.getOwnerId());
-					if(role.equals("BUYER")) {
-						Buyer buyer = buyerRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
-						user.setName(buyer.getBuyerName());	
-						user.setPhotoURL(null);
-					}else {
-						if(role.equals("SELLER")) {
-							Seller seller = sellerRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
-							user.setName(seller.getSellerName());
-							user.setPhotoURL(null);
-						}else {
-							Staff staff = staffRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Staff not found"));
-							user.setName(staff.getStaffName());
-							user.setPhotoURL(null);
-						}
-					}
-				newCHS.setUser(user);
-				
-				chatHistory.add(newCHS);
-				idInc++;
+			if(tempDB !=null) {
+				for (Chathistory temp : tempDB) {
+					ChathistoryDTO newCHS =  new ChathistoryDTO();
+					newCHS.set_id(idInc);
+					newCHS.setText(temp.getMessage());
+					newCHS.setCreatedAt(temp.getTimestamp());
+						ChatUser user = new ChatUser();
+						user.set_id(temp.getOwnerId());
+						user.setName(temp.getOwnerName());
+						user.setPhotoURL(temp.getOwnerPhotoURL());
+//						if(type.equals("BUYER")) {
+//							Buyer buyer = buyerRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
+//							user.setName(buyer.getBuyerName());	
+//							user.setPhotoURL(null);
+//						}else {
+//							if(type.equals("SELLER")) {
+//								Seller seller = sellerRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+//								user.setName(seller.getSellerName());
+//								user.setPhotoURL(null);
+//							}else {
+//								Staff staff = staffRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Staff not found"));
+//								user.setName(staff.getStaffName());
+//								user.setPhotoURL(null);
+//							}
+//						}
+					newCHS.setUser(user);
+					
+					chatHistory.add(newCHS);
+					idInc++;
+				}
 			}
 			return chatHistory;
 		}else {
@@ -220,47 +228,72 @@ public class ChatService {
 //		return chatHistory;
 //	}
 	
-	public List<ChathistoryDTO> sendMessage(Long chatId, String role, String text ) throws ResourceNotFoundException {
-		Chat chat = chatRepository.getByChatId(chatId);
-//		List<ChathistoryDTO> chatHistory = new ArrayList<ChathistoryDTO>();
-		//variabel
-		//long chatIdTemp=0;
+	public List<ChathistoryDTO> sendMessage(Long buyerId, Long rcvId, String type, String text ) throws ResourceNotFoundException {
+		
 		Date dateTemp = new Date();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
 		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
 		String timeStamp = date_format.format(dateTemp);
+		String role;
+		if(type.equals("BUYERSL")) {
+			role = "SELLER";
+		}else if(type.equals("BUYERST")) {
+			role = "STAFF";
+		}else {
+			role = type;
+		}
+		Chat chat = chatRepository.findByBuyerIdAndReceiverId(buyerId, rcvId, role);
+//		List<ChathistoryDTO> chatHistory = new ArrayList<ChathistoryDTO>();
 		
-//		if(chat == null) {
-//			Chat new1 = new Chat();
-//			new1.setSenderId(buyerId);
-//			new1.setReceiverId(rcvId);
-//			new1.setType(type);
-//			new1.setLastMessage(text);
-//			new1.setLastTimestamp(timeStamp);
-//			
-//			chatRepository.save(new1);
-//			chatIdTemp = new1.getChatId();
-//		}
-//		else {
-//			chatIdTemp = chat.getChatId();
-//		}
+		long chatIdTemp;
+		
+		if(chat == null) {
+			Chat new1 = new Chat();
+			new1.setSenderId(buyerId);
+			new1.setReceiverId(rcvId);
+			new1.setType(role);
+			new1.setLastMessage(text);
+			new1.setLastTimestamp(timeStamp);
+			
+			chatRepository.save(new1);
+			chatIdTemp = new1.getChatId();
+			chat = new1;
+		}
+		else {
+			chatIdTemp = chat.getChatId();
+			chat.setLastMessage(text);
+			chat.setLastTimestamp(timeStamp);
+			chatRepository.save(chat);
+		}
 		
 		Chathistory temp = new Chathistory();
-		temp.setChatIdHistory(chatId);
+		temp.setChatIdHistory(chatIdTemp);
 		temp.setMessage(text);
 		temp.setTimestamp(timeStamp);
-		if(role.equals("BUYER")) {
+		if(type.equals("BUYERSL") || type.equals("BUYERST")) {
 			temp.setOwnerId(chat.getSenderId());
+			Buyer buyer = buyerRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
+			temp.setOwnerName(buyer.getBuyerName());
+			temp.setOwnerPhotoURL(buyer.getPhotoUrl());
 		}else {
 			temp.setOwnerId(chat.getReceiverId());
+			if(type.equals("SELLER")) {
+				Seller seller = sellerRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+				temp.setOwnerName(seller.getSellerName());
+				temp.setOwnerPhotoURL(seller.getPhotoUrl());
+			}else {
+				Staff staff = staffRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Staff not found"));
+				temp.setOwnerName(staff.getStaffName());
+				temp.setOwnerPhotoURL(staff.getPhotoUrl());
+			}
+			
 		}
 		chathistoryRepository.save(temp);
 		
-		chat.setLastMessage(text);
-		chat.setLastTimestamp(timeStamp);
-		chatRepository.save(chat);
 		
-		List<ChathistoryDTO> chatHistory = getChatHistory(chatId, role);
+		
+//		List<ChathistoryDTO> chatHistory = getChatHistory(buyerId, role);
+		List<ChathistoryDTO> chatHistory = new ArrayList<ChathistoryDTO>();
 		return chatHistory;
 	}
 	
@@ -293,7 +326,8 @@ public class ChatService {
 		chathistoryRepository.save(temp);
 		
 		
-		List<ChathistoryDTO> chatHistory = getChatHistory(chatId, "SELLER");
+//		List<ChathistoryDTO> chatHistory = getChatHistory(chatId, "SELLER");
+		List<ChathistoryDTO> chatHistory = new ArrayList<ChathistoryDTO>();
 		return chatHistory;
 	}
 	

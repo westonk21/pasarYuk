@@ -21,6 +21,12 @@ public class Chathistory {
 	@Column(name = "owner_id")
 	private long ownerId;
 	
+	@Column(name = "owner_name")
+	private String ownerName;
+	
+	@Column(name = "owner_photourl")
+	private String ownerPhotoURL;
+	
 	@Column(name = "message")
 	private String message;
 	
@@ -32,12 +38,30 @@ public class Chathistory {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Chathistory(long chatIdHistory, long ownerId, String message, String timestamp) {
+	public Chathistory(long chatIdHistory, long ownerId, String message, String timestamp, String ownerName, String ownerPhotoURL) {
 		super();
 		this.chatIdHistory = chatIdHistory;
 		this.ownerId = ownerId;
 		this.message = message;
 		this.timestamp = timestamp;
+		this.ownerName = ownerName;
+		this.ownerPhotoURL = ownerPhotoURL;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+
+	public String getOwnerPhotoURL() {
+		return ownerPhotoURL;
+	}
+
+	public void setOwnerPhotoURL(String ownerPhotoURL) {
+		this.ownerPhotoURL = ownerPhotoURL;
 	}
 
 	public long getId() {
