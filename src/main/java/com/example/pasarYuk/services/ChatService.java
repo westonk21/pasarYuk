@@ -146,8 +146,11 @@ public class ChatService {
 	}
 	
 	public List<ChathistoryDTO> getChatHistory(Long buyerId, Long rcvId, String type ) throws ResourceNotFoundException {
-		
-		Chat chat = chatRepository.findByBuyerIdAndReceiverId(buyerId, rcvId, type);
+		String role=type;
+		if(type.equals("BUYER")) {
+			role = "SELLER";
+		}
+		Chat chat = chatRepository.findByBuyerIdAndReceiverId(buyerId, rcvId, role);
 		
 		List<ChathistoryDTO> chatHistory = new ArrayList<ChathistoryDTO>();
 		
@@ -155,14 +158,36 @@ public class ChatService {
 			long chatId = chat.getChatId();
 			List<Chathistory> tempDB = chathistoryRepository.getHistoryBuyerId(chatId);
 			int idInc = 1;
+			long idRole=0;
+			long id;
 			if(tempDB !=null) {
+				for (Chathistory find : tempDB) {
+					if(find.getOwnerRole().equals(type)) {
+						idRole = find.getOwnerId();
+					}
+				}
 				for (Chathistory temp : tempDB) {
+//					if(idInc==1) {
+//						role = temp.getOwnerRole();
+//						id = temp.getChatIdHistory();
+//					}else {
+//						if(id == temp.getChatIdHistory()) {
+//							
+//						}
+//					}
+					
 					ChathistoryDTO newCHS =  new ChathistoryDTO();
 					newCHS.set_id(idInc);
 					newCHS.setText(temp.getMessage());
 					newCHS.setCreatedAt(temp.getTimestamp());
 						ChatUser user = new ChatUser();
-						user.set_id(temp.getOwnerId());
+						id=temp.getOwnerId();
+						if(!temp.getOwnerRole().equals(type)) {
+							if(temp.getOwnerId() == idRole) {
+								id++;
+							}
+						}
+						user.set_id(id);
 						user.setName(temp.getOwnerName());
 						user.setPhotoURL(temp.getOwnerPhotoURL());
 //						if(type.equals("BUYER")) {
@@ -276,16 +301,19 @@ public class ChatService {
 			Buyer buyer = buyerRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
 			temp.setOwnerName(buyer.getBuyerName());
 			temp.setOwnerPhotoURL(buyer.getPhotoUrl());
+			temp.setOwnerRole("BUYER");
 		}else {
 			temp.setOwnerId(chat.getReceiverId());
 			if(type.equals("SELLER")) {
 				Seller seller = sellerRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
 				temp.setOwnerName(seller.getSellerName());
 				temp.setOwnerPhotoURL(seller.getPhotoUrl());
+				temp.setOwnerRole(type);
 			}else {
 				Staff staff = staffRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Staff not found"));
 				temp.setOwnerName(staff.getStaffName());
 				temp.setOwnerPhotoURL(staff.getPhotoUrl());
+				temp.setOwnerRole(type);
 			}
 			
 		}

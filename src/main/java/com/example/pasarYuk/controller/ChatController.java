@@ -34,7 +34,7 @@ public class ChatController {
 //	@GetMapping("/buyersChatHistory/{buyerId}/{rcvId}/{type}")
 //  role can be BUYER/SELEER/STAFF
 //	@GetMapping("listChatHistory/{chatId}/{role}")
-//  type just can be SELLER/STAFF
+//  type just can be BUYER/SELLER/STAFF, KALO BUYER GANTI KE SELLER PAS INQ KE CHAT
 	@GetMapping("listChatHistory/{buyerId}/{rcvId}/{type}")
 	public List<ChathistoryDTO> getChatHistory(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "rcvId") Long rcvId, @PathVariable(value = "type") String type) throws ResourceNotFoundException {
 //		List<ChathistoryDTO> chat = chatService.getBuyerChatHistory(buyerId, rcvId, type);
