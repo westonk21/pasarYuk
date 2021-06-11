@@ -6,12 +6,12 @@ import javax.persistence.Column;
 
 import com.example.pasarYuk.model.Buyer;
 import com.example.pasarYuk.model.Product;
+import com.example.pasarYuk.model.Staff;
 
 public class OrderDTO {
 
 	private long orderId;
-	
-	private long staffId;
+	private Staff staff;
 	private String orderDate;
 	private String orderTime;
 	private String orderStatus;
@@ -28,12 +28,12 @@ public class OrderDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public OrderDTO(long orderId, long staffId, String orderDate, String orderTime, String orderStatus,
+	public OrderDTO(long orderId, Staff staff, String orderDate, String orderTime, String orderStatus,
 			String marketName, String shippingAddress, Buyer buyerDetail, List<Product> listItem, long shippingFee,
 			long discountShipFee, long subTotal, long total) {
 		super();
 		this.orderId = orderId;
-		this.staffId = staffId;
+		this.staff = staff;
 		this.orderDate = orderDate;
 		this.orderTime = orderTime;
 		this.orderStatus = orderStatus;
@@ -90,12 +90,18 @@ public class OrderDTO {
 		this.orderId = orderId;
 	}
 	
-	public long getStaffId() {
-		return staffId;
+	public Staff getStaff() {
+		return staff;
 	}
-	public void setStaffId(long staffId) {
-		this.staffId = staffId;
+	public void setStaff(Staff staff) {
+		this.staff = staff;
 	}
+	//	public long getStaffId() {
+//		return staffId;
+//	}
+//	public void setStaffId(long staffId) {
+//		this.staffId = staffId;
+//	}
 	public String getOrderDate() {
 		return orderDate;
 	}

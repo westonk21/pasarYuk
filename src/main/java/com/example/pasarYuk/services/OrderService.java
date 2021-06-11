@@ -121,7 +121,9 @@ public class OrderService {
 				OrderDTO temp = new OrderDTO();
 				temp.setOrderId(order2.getOrderId());
 				//temp.setBuyerId(order2.getBuyerId());
-				temp.setStaffId(order2.getStaffId());
+//				temp.setStaffId(order2.getStaffId());
+				Staff staff = staffRepository.findById(order2.getStaffId()).orElseThrow(() -> new ResourceNotFoundException("Staff not found "));
+				temp.setStaff(staff);
 //				temp.setOrderDate(order2.getOrderDate());
 //				temp.setOrderTime(order2.getOrderTime());
 				temp.setOrderTime(order2.getOrderTimestamp());
