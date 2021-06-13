@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
+import com.example.pasarYuk.firebase.PushNotificationRequest;
+import com.example.pasarYuk.firebase.PushNotificationService;
 import com.example.pasarYuk.model.Buyer;
 import com.example.pasarYuk.model.Chat;
 import com.example.pasarYuk.model.Chathistory;
@@ -31,6 +33,9 @@ public class ChatService {
 
 	@Autowired
 	private ChathistoryRepository chathistoryRepository;
+	
+	@Autowired
+	private PushNotificationService pushNotificationService;
 	
 	@Autowired
 	private BuyerRepository buyerRepository;
@@ -292,6 +297,7 @@ public class ChatService {
 			chatRepository.save(chat);
 		}
 		
+		
 		Chathistory temp = new Chathistory();
 		temp.setChatIdHistory(chatIdTemp);
 		temp.setMessage(text);
@@ -302,6 +308,7 @@ public class ChatService {
 			temp.setOwnerName(buyer.getBuyerName());
 			temp.setOwnerPhotoURL(buyer.getPhotoUrl());
 			temp.setOwnerRole("BUYER");
+//			sendToken = buyer.getToken();
 		}else {
 			temp.setOwnerId(chat.getReceiverId());
 			if(type.equals("SELLER")) {
@@ -309,17 +316,39 @@ public class ChatService {
 				temp.setOwnerName(seller.getSellerName());
 				temp.setOwnerPhotoURL(seller.getPhotoUrl());
 				temp.setOwnerRole(type);
+//				sendToken = seller.getToken();
 			}else {
 				Staff staff = staffRepository.findById(temp.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Staff not found"));
 				temp.setOwnerName(staff.getStaffName());
 				temp.setOwnerPhotoURL(staff.getPhotoUrl());
 				temp.setOwnerRole(type);
+//				sendToken = staff.getToken();
 			}
-			
 		}
 		chathistoryRepository.save(temp);
 		
+		String sendToken;
+		if(type.equals("BUYERSL")) {
+			Seller seller = sellerRepository.findById(chat.getReceiverId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+			sendToken = seller.getToken();
+		}else if (type.equals("BUYERST")) {
+			Staff staff = staffRepository.findById(chat.getReceiverId()).orElseThrow(() -> new ResourceNotFoundException("Staff not found"));
+			sendToken = staff.getToken();
+		}else {
+			Buyer buyer = buyerRepository.findById(chat.getSenderId()).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
+			sendToken = buyer.getToken();
+		}
 		
+		
+		
+		if(sendToken!=null) {
+			PushNotificationRequest request = new PushNotificationRequest();
+			request.setTitle("Ada Pesan Untukmu");
+			request.setMessage(text);
+			request.setToken(sendToken);
+			request.setTopic("");
+			pushNotificationService.sendPushNotificationToToken(request);
+		}
 		
 //		List<ChathistoryDTO> chatHistory = getChatHistory(buyerId, role);
 		List<ChathistoryDTO> chatHistory = new ArrayList<ChathistoryDTO>();

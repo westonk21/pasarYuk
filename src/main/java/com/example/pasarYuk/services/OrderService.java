@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
+import com.example.pasarYuk.firebase.PushNotificationRequest;
+import com.example.pasarYuk.firebase.PushNotificationService;
 import com.example.pasarYuk.model.Buyer;
 import com.example.pasarYuk.model.Cart;
 import com.example.pasarYuk.model.Order;
@@ -21,6 +23,7 @@ import com.example.pasarYuk.model.OrderitemCkey;
 import com.example.pasarYuk.model.Product;
 import com.example.pasarYuk.model.Seller;
 import com.example.pasarYuk.model.Staff;
+import com.example.pasarYuk.repository.BuyerRepository;
 import com.example.pasarYuk.repository.CartRepository;
 import com.example.pasarYuk.repository.MarketRepository;
 import com.example.pasarYuk.repository.OrderRepository;
@@ -31,7 +34,6 @@ import com.example.pasarYuk.repository.StaffRepository;
 
 import temp.CartProductDTO;
 import temp.LapakSection;
-import temp.ListItem;
 import temp.OrderDTO;
 import temp.OrderStaffDTO;
 
@@ -42,10 +44,17 @@ public class OrderService {
 	private BuyerService buyerService;
 	
 	@Autowired
-	private CartService cartService;
+	private PushNotificationService pushNotificationService;
+	
+//	
+//	@Autowired
+//	private CartService cartService;
+//	
+//	@Autowired
+//	private ProductService productService;
 	
 	@Autowired
-	private ProductService productService;
+	private BuyerRepository BuyerRepository;
 	
 	@Autowired
 	private SellerRepository sellerRepository;
@@ -493,6 +502,8 @@ public class OrderService {
 		if(listCart!=null) {
 			Cart temp = listCart.get(0);
 			marketIdTemp = temp.getMarketId();
+			String marketName = marketRepository.getMarketName(temp.getMarketId());
+			order.setMarketName(marketName);
 		}else {
 			throw new ResourceNotFoundException("Buyer not have data in Cart");
 		}
@@ -500,6 +511,7 @@ public class OrderService {
 //		System.out.println(marketIdTemp);
 		List<Staff> staff = staffRepository.findAllByMarketId(marketIdTemp);
 //		System.out.println(staff); 
+		String sendToken=null;
 		if(staff!=null) {
 			for (Staff staff2 : staff) {
 //				System.out.println("masuk");
@@ -513,6 +525,7 @@ public class OrderService {
 						staff2.setWorking("1");
 						staff2.setLastorderTimestamp(timeStamp);
 						staffRepository.save(staff2);
+						sendToken = staff2.getToken();
 						break;
 					}
 				}else if(type.equals("PO")) {
@@ -525,6 +538,7 @@ public class OrderService {
 						staff2.setWorkingPo(staff2.getWorkingPo() + 1);
 						staff2.setLastorderTimestamp(timeStamp);
 						staffRepository.save(staff2);
+						sendToken = staff2.getToken();
 						break;
 					}
 				}
@@ -550,9 +564,9 @@ public class OrderService {
 		//return order;
 		long orderIdTemp = order.getOrderId();
 		List<Cart> cart = cartRepository.findCheckedItemByBuyerId(buyerId);
-		int i;
+//		int i;
 		if(cart!=null) {
-			i=0;
+//			i=0;
 			for (Cart cart2 : cart) {
 				int qtyTemp = cart2.getQuantity();
 				long prodId = cart2.getCartId().getProductId();
@@ -560,11 +574,11 @@ public class OrderService {
 				//cartService.deleteItemFromCartForOrder(buyerId, prodId);
 				/////Product productTemp = productService.getProductById(listItem[i]);
 				orderitemRepository.save(new Orderitem(new OrderitemCkey(orderIdTemp, prodId), qtyTemp));
-				if(i==0) {
-					String marketName = marketRepository.getMarketName(cart2.getMarketId());
-					order.setMarketName(marketName);
-				}
-				i++;
+//				if(i==0) {
+//					String marketName = marketRepository.getMarketName(cart2.getMarketId());
+//					order.setMarketName(marketName);
+//				}
+//				i++;
 			}
 		}else {
 			throw new ResourceNotFoundException("Item not found in Cart");
@@ -588,7 +602,17 @@ public class OrderService {
 //			}
 //		}
 		//save market harusnya bisa dapet dari list cart sebelum save order di atas
-		orderRepository.save(order);
+//		orderRepository.save(order);
+		
+		if(sendToken != null) {
+			PushNotificationRequest request = new PushNotificationRequest();
+			request.setTitle("Orderan Baru !!");
+			request.setMessage("Ada orderan nih, segera pastikan anda bisa memprosesnya!!");
+			request.setToken(sendToken);
+			request.setTopic("");
+			pushNotificationService.sendPushNotificationToToken(request);
+		}
+		
 		return order;
 	}
 	
@@ -598,7 +622,10 @@ public class OrderService {
 		Long lastStaffId=null;
 		Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found for this id :: " + orderId));
 		
-//		if(order.getStaffId() != 0) {
+		String sendToken=null;
+		Buyer buyer = BuyerRepository.findById(order.getBuyerId()).orElseThrow(() -> new ResourceNotFoundException("Buyer not found "));
+		sendToken = buyer.getToken();
+		//		if(order.getStaffId() != 0) {
 //			throw new ResourceNotFoundException("Order Already Assign to another Staff");
 //		}
 		//order.setStaffId(staffId);
@@ -706,6 +733,15 @@ public class OrderService {
 		
 		
 		//hit api send notif, dengan message yg di isi dari if else di atas
+		if(sendToken != null) {
+			PushNotificationRequest request = new PushNotificationRequest();
+			request.setTitle("Orderan Baru !!");
+			request.setMessage("Ada orderan nih, segera pastikan anda bisa memprosesnya!!");
+			request.setToken(sendToken);
+			request.setTopic("");
+			pushNotificationService.sendPushNotificationToToken(request);
+		}
+		
 		return this.orderRepository.save(order);
 	}
 	
