@@ -18,6 +18,8 @@ import com.example.pasarYuk.model.ListOTP;
 import com.example.pasarYuk.repository.BuyerRepository;
 import com.example.pasarYuk.repository.ListOtpRepository;
 
+import temp.LoginRequest;
+
 @Service
 public class BuyerService {
 	
@@ -46,7 +48,7 @@ public class BuyerService {
 		return buyerRepository.save(buyer);
 	}
 	
-	public Buyer loginBuyer(String email, String iptPassword) throws ResourceNotFoundException {
+	public Buyer loginBuyer(String email, String iptPassword, LoginRequest login) throws ResourceNotFoundException {
 		Buyer buyer = buyerRepository.findByEmail(email.toLowerCase());
 		
 		if(buyer!=null) {
@@ -54,6 +56,8 @@ public class BuyerService {
 			String salt = buyer.getSalt();
 			boolean passwordMatch = EncryptService.verifyUserPassword(iptPassword, pwDB, salt);
 			if(passwordMatch == true) {
+				buyer.setToken(login.getToken());
+				buyerRepository.save(buyer);
 				return buyer;
 			}else {
 				throw new ResourceNotFoundException("Invalid Email/Password");

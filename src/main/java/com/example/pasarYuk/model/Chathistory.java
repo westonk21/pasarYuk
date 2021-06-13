@@ -33,6 +33,9 @@ public class Chathistory {
 	@Column(name = "message")
 	private String message;
 	
+	@Column(name = "image")
+	private String image;
+	
 	@Column(name = "timestamp")
 	private String timestamp;
 
@@ -41,15 +44,24 @@ public class Chathistory {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Chathistory(long chatIdHistory, long ownerId, String message, String timestamp, String ownerName, String ownerPhotoURL, String ownerRole) {
+	public Chathistory(long chatIdHistory, String image, long ownerId, String message, String timestamp, String ownerName, String ownerPhotoURL, String ownerRole) {
 		super();
 		this.chatIdHistory = chatIdHistory;
 		this.ownerId = ownerId;
+		this.image = image;
 		this.message = message;
 		this.timestamp = timestamp;
 		this.ownerName = ownerName;
 		this.ownerPhotoURL = ownerPhotoURL;
 		this.ownerRole = ownerRole;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public String getOwnerRole() {

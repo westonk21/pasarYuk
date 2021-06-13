@@ -3,8 +3,9 @@ package temp;
 public class Message {
 	
 	private String text;
+	private String image;
 
-	public Message(String text) {
+	public Message(String text, String image) {
 		super();
 		this.text = text;
 	}
@@ -12,6 +13,14 @@ public class Message {
 	public Message() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public String getText() {

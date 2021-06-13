@@ -27,6 +27,7 @@ import temp.ChatDTO;
 import temp.ChatUser;
 import temp.ChatUser2;
 import temp.ChathistoryDTO;
+import temp.Message;
 
 @Service
 public class ChatService {
@@ -49,7 +50,7 @@ public class ChatService {
 	@Autowired 
 	private ChatRepository chatRepository;
 	
-	public List<ChatDTO> getChatListForBuyerId(Long id, String role) throws ResourceNotFoundException {
+	public List<ChatDTO> getChatList(Long id, String role) throws ResourceNotFoundException {
 		List<Chat> chat = new ArrayList<Chat>();
 		List<ChatDTO> listChat = new ArrayList<ChatDTO>();
 		if(role.equals("BUYER")) {
@@ -184,6 +185,7 @@ public class ChatService {
 					ChathistoryDTO newCHS =  new ChathistoryDTO();
 					newCHS.set_id(idInc);
 					newCHS.setText(temp.getMessage());
+					newCHS.setImage(temp.getImage());
 					newCHS.setCreatedAt(temp.getTimestamp());
 						ChatUser user = new ChatUser();
 						id=temp.getOwnerId();
@@ -259,8 +261,11 @@ public class ChatService {
 //		return chatHistory;
 //	}
 	
-	public List<ChathistoryDTO> sendMessage(Long buyerId, Long rcvId, String type, String text ) throws ResourceNotFoundException {
+	public List<ChathistoryDTO> sendMessage(Long buyerId, Long rcvId, String type, Message msg ) throws ResourceNotFoundException {
 		
+		String text = msg.getText();
+		String image = msg.getImage();
+				
 		Date dateTemp = new Date();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
 		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
@@ -301,6 +306,7 @@ public class ChatService {
 		Chathistory temp = new Chathistory();
 		temp.setChatIdHistory(chatIdTemp);
 		temp.setMessage(text);
+		temp.setImage(image);
 		temp.setTimestamp(timeStamp);
 		if(type.equals("BUYERSL") || type.equals("BUYERST")) {
 			temp.setOwnerId(chat.getSenderId());

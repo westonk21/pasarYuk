@@ -31,6 +31,7 @@ import com.example.pasarYuk.services.MarketService;
 
 import temp.ChatDTO;
 import temp.ChathistoryDTO;
+import temp.LoginRequest;
 import temp.Message;
 
 @CrossOrigin
@@ -103,9 +104,9 @@ public class BuyerController {
 	}
 	//login
 	@GetMapping("/buyerLogin/{email}/{password}")
-	public Buyer loginBuyer(@PathVariable(value = "email") String email, @PathVariable(value = "password") String password ) throws ResourceNotFoundException {
+	public Buyer loginBuyer(@RequestBody LoginRequest loginReq, @PathVariable(value = "email") String email, @PathVariable(value = "password") String password ) throws ResourceNotFoundException {
 		String emailLC = email.toLowerCase();
-		Buyer buyerResp = buyerService.loginBuyer(emailLC, password);
+		Buyer buyerResp = buyerService.loginBuyer(emailLC, password, loginReq);
 		return buyerResp;
 	}
 	//register

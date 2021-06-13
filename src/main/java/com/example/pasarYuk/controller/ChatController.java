@@ -27,7 +27,7 @@ public class ChatController {
 	
 	@GetMapping("/listChat/{id}/{role}")
 	public List<ChatDTO> getChatList(@PathVariable(value = "id") Long id, @PathVariable(value = "role") String role) throws ResourceNotFoundException {
-		List<ChatDTO> chat = chatService.getChatListForBuyerId(id, role.toUpperCase());
+		List<ChatDTO> chat = chatService.getChatList(id, role.toUpperCase());
 		return chat;
 	}
 	
@@ -53,7 +53,7 @@ public class ChatController {
 	//type can be BUYERSL/BUYERST/SELLER/STAFF
 	@PostMapping("/sendMessage/{buyerId}/{rcvId}/{type}")
 	public String sendMessage(@Valid @RequestBody Message msg, @PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "rcvId") Long rcvId, @PathVariable(value = "type") String type) throws ResourceNotFoundException {
-		List<ChathistoryDTO> chat = chatService.sendMessage(buyerId, rcvId, type, msg.getText());
+		List<ChathistoryDTO> chat = chatService.sendMessage(buyerId, rcvId, type, msg);
 		return "OKE";
 	}
 	

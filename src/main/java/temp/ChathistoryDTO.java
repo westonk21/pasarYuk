@@ -4,6 +4,7 @@ public class ChathistoryDTO {
 
 	private long _id;
 	private String text;
+	private String image;
 	private String createdAt;
 	private ChatUser user;
 	
@@ -12,15 +13,24 @@ public class ChathistoryDTO {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public ChathistoryDTO(Long _id, String text, String createdAt, ChatUser user) {
+	public ChathistoryDTO(Long _id, String text, String image, String createdAt, ChatUser user) {
 		super();
 		this._id = _id;
 		this.text = text;
+		this.image = image;
 		this.createdAt = createdAt;
 		this.user = user;
 	}
 
 	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public long get_id() {
 		return _id;
 	}
