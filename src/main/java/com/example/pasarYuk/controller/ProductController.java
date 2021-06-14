@@ -34,7 +34,7 @@ public class ProductController {
 	
 	//get product
 	@GetMapping("products")
-	public List<Product> getAllProduct(){
+	public List<Product> getAllProduct() throws ResourceNotFoundException{
 		return productService.listProduct();
 	}
 	

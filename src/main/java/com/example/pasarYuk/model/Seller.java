@@ -39,6 +39,12 @@ public class Seller {
 	@Column(name = "lapak_name")
 	private String lapakName;
 	
+	@Column(name = "open_time")
+	private String openTime;
+	
+	@Column(name = "close_time")
+	private String closeTime;
+	
 //	@Column(name = "market_name")
 //	private String marketName;
 //	
@@ -55,7 +61,7 @@ public class Seller {
 		super();
 	}
 
-	public Seller(String password, long marketId, String phoneNumber, String email, String lapakName, String address, String sellerName, String salt, String photoUrl, String token) {
+	public Seller(String password, String openTime, String closeTime, long marketId, String phoneNumber, String email, String lapakName, String address, String sellerName, String salt, String photoUrl, String token) {
 		super();
 		this.marketId = marketId;
 		this.phoneNumber = phoneNumber;
@@ -63,6 +69,8 @@ public class Seller {
 		this.password = password;
 		this.email = email;
 		this.lapakName = lapakName;
+		this.openTime = openTime;
+		this.closeTime = closeTime;
 		this.salt = salt;
 		this.photoUrl = photoUrl;
 		this.token = token;
@@ -99,6 +107,22 @@ public class Seller {
 	public String getPassword() {
 		return password;
 	}
+	public String getOpenTime() {
+		return openTime;
+	}
+
+	public void setOpenTime(String openTime) {
+		this.openTime = openTime;
+	}
+
+	public String getCloseTime() {
+		return closeTime;
+	}
+
+	public void setCloseTime(String closeTime) {
+		this.closeTime = closeTime;
+	}
+
 	public String getPhotoUrl() {
 		return photoUrl;
 	}

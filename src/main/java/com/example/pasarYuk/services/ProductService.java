@@ -1,20 +1,28 @@
 package com.example.pasarYuk.services;
 
-import java.util.Comparator;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Product;
+import com.example.pasarYuk.model.Seller;
 import com.example.pasarYuk.repository.ProductRepository;
+import com.example.pasarYuk.repository.SellerRepository;
 
 @Service
 public class ProductService {
 
+	@Autowired
+	private SellerRepository sellerRepository;
+	
 	private ProductRepository productRepository;
 	
 	@Autowired
@@ -22,8 +30,27 @@ public class ProductService {
 		this.productRepository = productRepository;
 	}
 	
-	public List<Product> listProduct(){
-		return productRepository.findAll();
+	public List<Product> listProduct() throws ResourceNotFoundException{
+		Date dateTemp = new Date();
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
+		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
+		String timeStamp = date_format.format(dateTemp);
+		
+		List<Product> temp = productRepository.findAll();
+		List<Product> list = new ArrayList<Product>();
+		
+		for (Product item : temp) {
+			Seller seller = sellerRepository.findById(item.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+			int openTime = Integer.parseInt(seller.getOpenTime());
+			int closeTime = Integer.parseInt(seller.getCloseTime());
+			int currTime = Integer.parseInt(timeStamp.substring(8, 12));
+			System.out.println(currTime);
+			
+			if(currTime > openTime && currTime < closeTime) {
+				list.add(item);
+			}
+		}
+		return list;
 	}
 	
 	public Product getProductById(Long productId) throws ResourceNotFoundException {
