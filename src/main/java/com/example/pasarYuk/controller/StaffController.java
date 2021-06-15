@@ -3,6 +3,8 @@ package com.example.pasarYuk.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -60,13 +62,13 @@ public class StaffController {
 	
 	//login
 	@PostMapping("/staffLogin")
-	public Staff loginBuyer(@RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
+	public Staff loginBuyer(@Valid @RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
 		Staff staffResp = staffService.loginStaff(loginReq);
 		return staffResp;
 	}
 	//register
 	@PostMapping("/staffRegister/{otp}")
-	public String registerBuyer(@RequestBody Staff staff, @PathVariable(value = "otp") String otp) throws ResourceNotFoundException {
+	public String registerBuyer(@Valid @RequestBody Staff staff, @PathVariable(value = "otp") String otp) throws ResourceNotFoundException {
 		String staffResp = staffService.registerStaff(staff, otp);
 		return staffResp;
 	}
