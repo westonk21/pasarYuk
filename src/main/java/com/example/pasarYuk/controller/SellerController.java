@@ -65,14 +65,14 @@ public class SellerController {
 	
 	
 	//login
-	@GetMapping("/sellerLogin")
-	public Seller loginSeller(@RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
+	@PostMapping("/sellerLogin")
+	public Seller loginSeller(@Valid @RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
 		Seller sellerResp = sellerService.loginSeller(loginReq);
 		return sellerResp;
 	}
 	//register
 	@PostMapping("/sellerRegister/{otp}")
-	public String registerBuyer(@RequestBody Seller seller, @PathVariable(value = "otp") String otp) throws ResourceNotFoundException {
+	public String registerBuyer(@Valid @RequestBody Seller seller, @PathVariable(value = "otp") String otp) throws ResourceNotFoundException {
 		String sellerResp = sellerService.registerSeller(seller, otp);
 		return sellerResp;
 	}
