@@ -42,11 +42,17 @@ public class Guest {
 	@Column(name = "salt")
 	private String salt;
 	
+	@Column(name = "open_time")
+	private String openTime;
+	
+	@Column(name = "close_time")
+	private String closeTime;
+	
 	public Guest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Guest(String password, String salt, String guestName, String phoneNumber, String email, String address, String type, String status, String comment) {
+	public Guest(String openTime, String closeTime, String password, String salt, String guestName, String phoneNumber, String email, String address, String type, String status, String comment) {
 		super();
 		this.guestName = guestName;
 		this.phoneNumber = phoneNumber;
@@ -55,8 +61,24 @@ public class Guest {
 		this.type = type;
 		this.status = status;
 		this.comment = comment;
+		this.password = password;
+		this.salt = salt;
+		this.openTime = openTime;
+		this.closeTime = closeTime;
 	}
 	
+	public String getOpenTime() {
+		return openTime;
+	}
+	public void setOpenTime(String openTime) {
+		this.openTime = openTime;
+	}
+	public String getCloseTime() {
+		return closeTime;
+	}
+	public void setCloseTime(String closeTime) {
+		this.closeTime = closeTime;
+	}
 	public String getPassword() {
 		return password;
 	}

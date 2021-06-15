@@ -114,6 +114,8 @@ public class SellerService {
 				String pw = EncryptService.generateSecurePassword(sellerDtl.getPassword(), salt);
 				guest.setPassword(pw);
 				guest.setSalt(salt);
+				guest.setOpenTime(sellerDtl.getOpenTime());
+				guest.setCloseTime(sellerDtl.getCloseTime());
 				guestRepository.save(guest);
 			}else {
 				throw new ResourceNotFoundException("Email Already Registered, Please go to Login Page");
