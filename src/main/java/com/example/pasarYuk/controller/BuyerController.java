@@ -103,14 +103,14 @@ public class BuyerController {
 		return buyerResp;
 	}
 	//login
-	@GetMapping("/buyerLogin")
-	public Buyer loginBuyer(@RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
+	@PostMapping("/buyerLogin")
+	public Buyer loginBuyer(@Valid @RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
 		Buyer buyerResp = buyerService.loginBuyer(loginReq);
 		return buyerResp;
 	}
 	//register
 	@PostMapping("/buyerRegister/{otp}")
-	public Buyer registerBuyer(@RequestBody Buyer buyer, @PathVariable(value = "otp") String otp) throws ResourceNotFoundException {
+	public Buyer registerBuyer(@Valid @RequestBody Buyer buyer, @PathVariable(value = "otp") String otp) throws ResourceNotFoundException {
 		Buyer buyerResp = buyerService.registerBuyer(buyer, otp);
 		return buyerResp;
 	}
