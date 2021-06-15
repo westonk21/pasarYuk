@@ -36,11 +36,17 @@ public class Guest {
 	@Column(name = "comment")
 	private String comment;
 	
+	@Column(name = "password")
+	private String password;
+	
+	@Column(name = "salt")
+	private String salt;
+	
 	public Guest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Guest(String guestName, String phoneNumber, String email, String address, String type, String status, String comment) {
+	public Guest(String password, String salt, String guestName, String phoneNumber, String email, String address, String type, String status, String comment) {
 		super();
 		this.guestName = guestName;
 		this.phoneNumber = phoneNumber;
@@ -51,6 +57,18 @@ public class Guest {
 		this.comment = comment;
 	}
 	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 	public String getStatus() {
 		return status;
 	}

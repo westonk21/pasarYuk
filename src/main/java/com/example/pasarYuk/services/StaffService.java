@@ -122,6 +122,12 @@ public class StaffService {
 				guest.setEmail(staffDtl.getEmail());
 				guest.setType("staff");
 				guest.setStatus("NEW");
+				
+				String salt = EncryptService.getSalt(30);
+				String pw = EncryptService.generateSecurePassword(staffDtl.getPassword(), salt);
+				guest.setPassword(pw);
+				guest.setSalt(salt);
+//				buyerRepository.save(newBuyer);
 				guestRepository.save(guest);
 			}else {
 				throw new ResourceNotFoundException("Email Already Registered, Please go to Login Page");

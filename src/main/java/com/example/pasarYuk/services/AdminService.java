@@ -73,6 +73,8 @@ public class AdminService {
 //			seller.setAddress(guest.getAddress());
 			seller.setLapakName(type);
 			seller.setEmail(guest.getEmail());
+			seller.setPassword(guest.getPassword());
+			seller.setSalt(guest.getSalt());
 			
 			sellerRepository.save(seller);
 			if(ResponseEntity.ok(seller) != null) {
@@ -88,6 +90,8 @@ public class AdminService {
 			staff.setActive("0");
 			staff.setWorking("0");
 			staff.setWorkingPo(0);
+			staff.setPassword(guest.getPassword());
+			staff.setSalt(guest.getSalt());
 			
 			staffRepository.save(staff);
 			if(ResponseEntity.ok(staff) != null) {
