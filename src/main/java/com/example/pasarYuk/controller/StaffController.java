@@ -59,7 +59,7 @@ public class StaffController {
 	
 	
 	//login
-	@GetMapping("/staffLogin")
+	@PostMapping("/staffLogin")
 	public Staff loginBuyer(@RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
 		Staff staffResp = staffService.loginStaff(loginReq);
 		return staffResp;
