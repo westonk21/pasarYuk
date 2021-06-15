@@ -44,7 +44,7 @@ public class ProductService {
 			int openTime = Integer.parseInt(seller.getOpenTime());
 			int closeTime = Integer.parseInt(seller.getCloseTime());
 			int currTime = Integer.parseInt(timeStamp.substring(8, 12));
-			System.out.println(currTime);
+//			System.out.println(currTime);
 			
 			if(currTime > openTime && currTime < closeTime) {
 				list.add(item);

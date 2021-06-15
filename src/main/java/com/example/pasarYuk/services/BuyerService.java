@@ -48,8 +48,11 @@ public class BuyerService {
 		return buyerRepository.save(buyer);
 	}
 	
-	public Buyer loginBuyer(String email, String iptPassword, LoginRequest login) throws ResourceNotFoundException {
-		Buyer buyer = buyerRepository.findByEmail(email.toLowerCase());
+	public Buyer loginBuyer(LoginRequest login) throws ResourceNotFoundException {
+		String email = login.getEmail().toLowerCase();
+		String iptPassword = login.getPassword();
+		
+		Buyer buyer = buyerRepository.findByEmail(email);
 		
 		if(buyer!=null) {
 			String pwDB = buyer.getPassword();

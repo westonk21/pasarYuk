@@ -18,6 +18,8 @@ import com.example.pasarYuk.repository.GuestRepository;
 import com.example.pasarYuk.repository.ListOtpRepository;
 import com.example.pasarYuk.repository.StaffRepository;
 
+import temp.LoginRequest;
+
 
 
 @Service
@@ -58,7 +60,10 @@ public class StaffService {
 		return staffRepository.save(staff);
 	}
 	
-	public Staff loginBuyer(String email, String iptPassword) throws ResourceNotFoundException {
+	public Staff loginStaff(LoginRequest login) throws ResourceNotFoundException {
+		String email = login.getEmail().toLowerCase();
+		String iptPassword = login.getPassword();
+		
 		Staff staff = staffRepository.findByEmail(email.toLowerCase());
 		
 		if(staff!=null) {
@@ -75,13 +80,13 @@ public class StaffService {
 		}
 	}
 	
-	public String registerBuyer(Staff staffDtl, String otp) throws ResourceNotFoundException {
+	public String registerStaff(Staff staffDtl, String otp) throws ResourceNotFoundException {
 		Date dateTemp = new Date();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
 		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
 		String timeCurrent = date_format.format(dateTemp);
 
-		ListOTP temp = listOtpRepository.findByEmailAndType(staffDtl.getEmail().toLowerCase(), "Seller");
+		ListOTP temp = listOtpRepository.findByEmailAndType(staffDtl.getEmail().toLowerCase(), "Staff");
 		if(temp!=null) {
 			String timeDB = temp.getTimestamp();
 			
@@ -99,7 +104,7 @@ public class StaffService {
 					throw new ResourceNotFoundException("OTP has been Expired");
 				}
 			}else {
-				throw new ResourceNotFoundException("Invalid OTP3");
+				throw new ResourceNotFoundException("OTP out of Date");
 			}
 		}else {
 			throw new ResourceNotFoundException("Invalid OTP4");

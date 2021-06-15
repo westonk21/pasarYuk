@@ -20,9 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Seller;
+import com.example.pasarYuk.model.Staff;
 import com.example.pasarYuk.services.EmailService;
 //import com.example.pasarYuk.repository.sellerRepository;
 import com.example.pasarYuk.services.SellerService;
+
+import temp.LoginRequest;
 
 @CrossOrigin
 @RestController
@@ -61,6 +64,18 @@ public class SellerController {
 	}
 	
 	
+	//login
+	@GetMapping("/sellerLogin")
+	public Seller loginSeller(@RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
+		Seller sellerResp = sellerService.loginSeller(loginReq);
+		return sellerResp;
+	}
+	//register
+	@PostMapping("/sellerRegister/{otp}")
+	public String registerBuyer(@RequestBody Seller seller, @PathVariable(value = "otp") String otp) throws ResourceNotFoundException {
+		String sellerResp = sellerService.registerSeller(seller, otp);
+		return sellerResp;
+	}
 	//send otp
 	@PostMapping("/sellerOTP/{email}")
 	public String sendOTP(@PathVariable(value = "email") String email) {

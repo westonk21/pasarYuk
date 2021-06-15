@@ -18,6 +18,8 @@ import com.example.pasarYuk.repository.GuestRepository;
 import com.example.pasarYuk.repository.ListOtpRepository;
 import com.example.pasarYuk.repository.SellerRepository;
 
+import temp.LoginRequest;
+
 @Service
 public class SellerService {
 	
@@ -44,7 +46,10 @@ public class SellerService {
 		return Seller;
 	}
 	
-	public Seller loginBuyer(String email, String iptPassword) throws ResourceNotFoundException {
+	public Seller loginSeller(LoginRequest login) throws ResourceNotFoundException {
+		String email = login.getEmail().toLowerCase();
+		String iptPassword = login.getPassword();
+		
 		Seller seller = sellerRepository.findByEmail(email.toLowerCase());
 		
 		if(seller!=null) {
@@ -61,7 +66,7 @@ public class SellerService {
 		}
 	}
 	
-	public String registerBuyer(Seller sellerDtl, String otp) throws ResourceNotFoundException {
+	public String registerSeller(Seller sellerDtl, String otp) throws ResourceNotFoundException {
 		Date dateTemp = new Date();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
 		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");

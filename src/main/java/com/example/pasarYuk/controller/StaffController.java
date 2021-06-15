@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
+import com.example.pasarYuk.model.Buyer;
 import com.example.pasarYuk.model.Staff;
 import com.example.pasarYuk.repository.StaffRepository;
 import com.example.pasarYuk.services.EmailService;
 import com.example.pasarYuk.services.StaffService;
+
+import temp.LoginRequest;
 
 @CrossOrigin
 @RestController
@@ -55,12 +58,25 @@ public class StaffController {
 	}
 	
 	
+	//login
+	@GetMapping("/staffLogin")
+	public Staff loginBuyer(@RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
+		Staff staffResp = staffService.loginStaff(loginReq);
+		return staffResp;
+	}
+	//register
+	@PostMapping("/staffRegister/{otp}")
+	public String registerBuyer(@RequestBody Staff staff, @PathVariable(value = "otp") String otp) throws ResourceNotFoundException {
+		String staffResp = staffService.registerStaff(staff, otp);
+		return staffResp;
+	}
+	
 	//send otp
 	@PostMapping("/staffOTP/{email}")
 	public String sendOTP(@PathVariable(value = "email") String email) {
 		String emailLC = email.toLowerCase();
-		String buyerResp = emailService.sendOTP(emailLC, "Staff");
-		return buyerResp;
+		String staffResp = emailService.sendOTP(emailLC, "Staff");
+		return staffResp;
 	}
 	
 	//update active or not 

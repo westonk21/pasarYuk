@@ -103,10 +103,9 @@ public class BuyerController {
 		return buyerResp;
 	}
 	//login
-	@GetMapping("/buyerLogin/{email}/{password}")
-	public Buyer loginBuyer(@RequestBody LoginRequest loginReq, @PathVariable(value = "email") String email, @PathVariable(value = "password") String password ) throws ResourceNotFoundException {
-		String emailLC = email.toLowerCase();
-		Buyer buyerResp = buyerService.loginBuyer(emailLC, password, loginReq);
+	@GetMapping("/buyerLogin")
+	public Buyer loginBuyer(@RequestBody LoginRequest loginReq) throws ResourceNotFoundException {
+		Buyer buyerResp = buyerService.loginBuyer(loginReq);
 		return buyerResp;
 	}
 	//register
