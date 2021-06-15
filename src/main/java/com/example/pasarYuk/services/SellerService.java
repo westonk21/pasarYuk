@@ -102,7 +102,7 @@ public class SellerService {
 		Seller seller = sellerRepository.findByEmail(sellerDtl.getEmail().toLowerCase());
 		if(seller == null) {
 			Guest guestTemp = guestRepository.findByEmail(sellerDtl.getEmail().toLowerCase(), "seller");
-			if(guestTemp!=null) {
+			if(guestTemp==null) {
 				Guest guest = new Guest();
 				guest.setGuestName(sellerDtl.getSellerName());
 				guest.setPhoneNumber(sellerDtl.getPhoneNumber());

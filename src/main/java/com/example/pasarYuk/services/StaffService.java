@@ -115,7 +115,7 @@ public class StaffService {
 		Staff staff = staffRepository.findByEmail(staffDtl.getEmail().toLowerCase());
 		if(staff == null) {
 			Guest guestTemp = guestRepository.findByEmail(staffDtl.getEmail().toLowerCase(), "staff");
-			if(guestTemp!=null) {
+			if(guestTemp==null) {
 				Guest guest = new Guest();
 				guest.setGuestName(staffDtl.getStaffName());
 				guest.setPhoneNumber(staffDtl.getPhoneNumber());
