@@ -75,6 +75,9 @@ public class AdminService {
 			seller.setEmail(guest.getEmail());
 			seller.setPassword(guest.getPassword());
 			seller.setSalt(guest.getSalt());
+			seller.setOpenTime(guest.getOpenTime());
+			seller.setCloseTime(guest.getCloseTime());
+//			seller.setToken(guest.getToken());
 			
 			sellerRepository.save(seller);
 			if(ResponseEntity.ok(seller) != null) {

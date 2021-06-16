@@ -48,11 +48,14 @@ public class Guest {
 	@Column(name = "close_time")
 	private String closeTime;
 	
+	@Column(name = "token")
+	private String token;
+	
 	public Guest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Guest(String openTime, String closeTime, String password, String salt, String guestName, String phoneNumber, String email, String address, String type, String status, String comment) {
+	public Guest(String token, String openTime, String closeTime, String password, String salt, String guestName, String phoneNumber, String email, String address, String type, String status, String comment) {
 		super();
 		this.guestName = guestName;
 		this.phoneNumber = phoneNumber;
@@ -65,8 +68,15 @@ public class Guest {
 		this.salt = salt;
 		this.openTime = openTime;
 		this.closeTime = closeTime;
+		this.token = token;
 	}
 	
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
 	public String getOpenTime() {
 		return openTime;
 	}

@@ -57,6 +57,8 @@ public class SellerService {
 			String salt = seller.getSalt();
 			boolean passwordMatch = EncryptService.verifyUserPassword(iptPassword, pwDB, salt);
 			if(passwordMatch == true) {
+				seller.setToken(login.getToken());
+				sellerRepository.save(seller);
 				return seller;
 			}else {
 				throw new ResourceNotFoundException("Invalid Email/Password");
@@ -109,13 +111,13 @@ public class SellerService {
 				guest.setEmail(sellerDtl.getEmail());
 				guest.setType("seller");
 				guest.setStatus("NEW");
-				
 				String salt = EncryptService.getSalt(30);
 				String pw = EncryptService.generateSecurePassword(sellerDtl.getPassword(), salt);
 				guest.setPassword(pw);
 				guest.setSalt(salt);
 				guest.setOpenTime(sellerDtl.getOpenTime());
 				guest.setCloseTime(sellerDtl.getCloseTime());
+//				guest.setToken(sellerDtl.getToken());
 				guestRepository.save(guest);
 			}else {
 				throw new ResourceNotFoundException("Email Already Registered, Please go to Login Page");

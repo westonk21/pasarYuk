@@ -71,6 +71,8 @@ public class StaffService {
 			String salt = staff.getSalt();
 			boolean passwordMatch = EncryptService.verifyUserPassword(iptPassword, pwDB, salt);
 			if(passwordMatch == true) {
+				staff.setToken(login.getToken());
+				staffRepository.save(staff);
 				return staff;
 			}else {
 				throw new ResourceNotFoundException("Invalid Email/Password");
