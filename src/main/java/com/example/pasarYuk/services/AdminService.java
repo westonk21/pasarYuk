@@ -90,6 +90,8 @@ public class AdminService {
 			staff.setPhoneNumber(guest.getPhoneNumber());
 			staff.setEmail(guest.getEmail());
 			staff.setAddress(guest.getAddress());
+			staff.setUrlStaffPhotoktp(guest.getPhotoKtp());
+			staff.setPhotoUrl(guest.getPhotoPas());
 			staff.setActive("0");
 			staff.setWorking("0");
 			staff.setWorkingPo(0);

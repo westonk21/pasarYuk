@@ -122,8 +122,11 @@ public class StaffService {
 				guest.setGuestName(staffDtl.getStaffName());
 				guest.setPhoneNumber(staffDtl.getPhoneNumber());
 				guest.setEmail(staffDtl.getEmail());
+				guest.setAddress(staffDtl.getAddress());
 				guest.setType("staff");
 				guest.setStatus("NEW");
+				guest.setPhotoKtp(staffDtl.getUrlStaffPhotoktp());
+				guest.setPhotoPas(staffDtl.getPhotoUrl());
 				
 				String salt = EncryptService.getSalt(30);
 				String pw = EncryptService.generateSecurePassword(staffDtl.getPassword(), salt);

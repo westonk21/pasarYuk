@@ -51,11 +51,17 @@ public class Guest {
 	@Column(name = "token")
 	private String token;
 	
+	@Column(name = "photo_ktp")
+	private String photoKtp;
+	
+	@Column(name = "photo_pas")
+	private String photoPas;
+	
 	public Guest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Guest(String token, String openTime, String closeTime, String password, String salt, String guestName, String phoneNumber, String email, String address, String type, String status, String comment) {
+	public Guest(String photoKtp, String photoPas, String token, String openTime, String closeTime, String password, String salt, String guestName, String phoneNumber, String email, String address, String type, String status, String comment) {
 		super();
 		this.guestName = guestName;
 		this.phoneNumber = phoneNumber;
@@ -69,8 +75,22 @@ public class Guest {
 		this.openTime = openTime;
 		this.closeTime = closeTime;
 		this.token = token;
+		this.photoKtp = photoKtp;
+		this.photoPas = photoPas;
 	}
 	
+	public String getPhotoKtp() {
+		return photoKtp;
+	}
+	public void setPhotoKtp(String photoKtp) {
+		this.photoKtp = photoKtp;
+	}
+	public String getPhotoPas() {
+		return photoPas;
+	}
+	public void setPhotoPas(String photoPas) {
+		this.photoPas = photoPas;
+	}
 	public String getToken() {
 		return token;
 	}
