@@ -37,6 +37,16 @@ public class ProductController {
 	public List<Product> getAllProduct() throws ResourceNotFoundException{
 		return productService.listProduct();
 	}
+	//get product by name
+	@GetMapping("products-byname/{name}")
+	public List<Product> getAllProductByName(@PathVariable(value = "name") String name) throws ResourceNotFoundException{
+		return productService.listProductByName(name);
+	}
+	//get product by name
+	@GetMapping("products-bypromo/{buyerId}")
+	public List<Product> getAllProductByPromo(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{
+		return productService.listProductByPromo(buyerId);
+	}
 	
 	//list product by sellerID
 	@GetMapping("products/list-seller/{sellerId}")
@@ -72,10 +82,10 @@ public class ProductController {
 	}
 	
 	//update product
-	@PutMapping("products/{productId}/{sellerId}")
-	public ResponseEntity<Product> updateProduct(@PathVariable(value = "productId") Long productId, @PathVariable(value = "sellerId") Long sellerId, @Valid @RequestBody Product productDetails) throws ResourceNotFoundException{
+	@PutMapping("products/{productId}")
+	public ResponseEntity<Product> updateProduct(@PathVariable(value = "productId") Long productId, @Valid @RequestBody Product productDetails) throws ResourceNotFoundException{
 		//sellerId harusny pake session login nya seller
-		Product product = productService.updateProduct(productId, sellerId, productDetails);
+		Product product = productService.updateProduct(productId, productDetails);
 		
 		return ResponseEntity.ok(product);
 	}

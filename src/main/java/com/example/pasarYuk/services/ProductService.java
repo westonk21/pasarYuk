@@ -12,14 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
+import com.example.pasarYuk.model.Buyer;
 import com.example.pasarYuk.model.Product;
 import com.example.pasarYuk.model.Seller;
+import com.example.pasarYuk.repository.BuyerRepository;
 import com.example.pasarYuk.repository.ProductRepository;
 import com.example.pasarYuk.repository.SellerRepository;
 
 @Service
 public class ProductService {
 
+	@Autowired
+	private BuyerRepository buyerRepository;
 	@Autowired
 	private SellerRepository sellerRepository;
 	
@@ -53,6 +57,56 @@ public class ProductService {
 		return list;
 	}
 	
+	public List<Product> listProductByName(String name) throws ResourceNotFoundException{
+		Date dateTemp = new Date();
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
+		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
+		String timeStamp = date_format.format(dateTemp);
+		
+		List<Product> temp = productRepository.findByProductNameIgnoreCaseContaining(name);
+		List<Product> list = new ArrayList<Product>();
+		
+		for (Product item : temp) {
+			Seller seller = sellerRepository.findById(item.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+			int openTime = Integer.parseInt(seller.getOpenTime());
+			int closeTime = Integer.parseInt(seller.getCloseTime());
+			int currTime = Integer.parseInt(timeStamp.substring(8, 12));
+//			System.out.println(currTime);
+			
+			if(currTime > openTime && currTime < closeTime) {
+				list.add(item);
+			}
+		}
+		return list;
+	}
+	public List<Product> listProductByPromo(Long buyerId) throws ResourceNotFoundException{
+		Date dateTemp = new Date();
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
+		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
+		String timeStamp = date_format.format(dateTemp);
+		
+		Buyer buyer = buyerRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("Buyer not Found"));
+		Long marketId = buyer.getMarketId();
+		
+		List<Product> temp = productRepository.findProductPromoWithMarketId(marketId);
+		List<Product> list = new ArrayList<Product>();
+		if(temp.isEmpty()) {
+			throw new ResourceNotFoundException("No data found");
+		}else {
+			for (Product item : temp) {
+				Seller seller = sellerRepository.findById(item.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+				int openTime = Integer.parseInt(seller.getOpenTime());
+				int closeTime = Integer.parseInt(seller.getCloseTime());
+				int currTime = Integer.parseInt(timeStamp.substring(8, 12));
+				
+				if(currTime > openTime && currTime < closeTime) {
+					list.add(item);
+				}
+			}
+		}
+		return list;
+	}
+	
 	public Product getProductById(Long productId) throws ResourceNotFoundException {
 		Product product = productRepository.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productId));
@@ -73,7 +127,7 @@ public class ProductService {
 		return productRepository.save(product);
 	}
 	
-	public Product updateProduct(Long productId, Long sellerId, Product productDetails) throws ResourceNotFoundException {
+	public Product updateProduct(Long productId, Product productDetails) throws ResourceNotFoundException {
 //		Product product = productRepository.findById(productId)
 //				.orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productId));
 //		System.out.println(product.getSellerId());
@@ -81,7 +135,7 @@ public class ProductService {
 //			throw new ResourceNotFoundException("Product not found for this sellerId :: " + sellerId);
 //		}
 		
-		Product product = productRepository.findByProductIdAndSellerId(productId, sellerId)
+		Product product = productRepository.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productId));
 		
 		//product.setSellerId(productDetails.getSellerId());

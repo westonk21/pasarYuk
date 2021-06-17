@@ -22,10 +22,10 @@ public class News {
 	private String newsDesc;
 	
 	@Column(name = "start_date")
-	private int startDate;
+	private String startDate;
 	
 	@Column(name = "end_date")
-	private int endDate;
+	private String endDate;
 	
 	@Column(name = "url_image")
 	private String urlImage;
@@ -34,7 +34,7 @@ public class News {
 		super();
 	}
 
-	public News(String newsName, String newsDesc, int startDate, int endDate, String urlImage) {
+	public News(String newsName, String newsDesc, String startDate, String endDate, String urlImage) {
 		super();
 		this.newsName = newsName;
 		this.newsDesc = newsDesc;
@@ -67,29 +67,30 @@ public class News {
 		this.newsDesc = newsDesc;
 	}
 
-	public int getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(int startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public int getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(int endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 
-	public String getImageUrl() {
+	public String getUrlImage() {
 		return urlImage;
 	}
 
-	public void setImageUrl(String urlImage) {
+	public void setUrlImage(String urlImage) {
 		this.urlImage = urlImage;
 	}
+
 	
 	
 }
