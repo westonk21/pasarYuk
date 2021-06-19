@@ -150,13 +150,15 @@ public class SellerService {
 				.orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + sellerId));
 		
 		
-		seller.setMarketId(sellerDetails.getMarketId());
-		seller.setSellerName(sellerDetails.getSellerName());
-		seller.setPassword(sellerDetails.getPassword());
+//		seller.setMarketId(sellerDetails.getMarketId());
+//		seller.setSellerName(sellerDetails.getSellerName());
+//		seller.setPassword(sellerDetails.getPassword());
 		seller.setPhoneNumber(sellerDetails.getPhoneNumber());
 		seller.setEmail(sellerDetails.getEmail());
 //		seller.setAddress(sellerDetails.getAddress());
-		seller.setLapakName(sellerDetails.getLapakName());
+//		seller.setLapakName(sellerDetails.getLapakName());
+		seller.setOpenTime(sellerDetails.getOpenTime());
+		seller.setCloseTime(sellerDetails.getCloseTime());
 		
 		return this.sellerRepository.save(seller);
 	}
