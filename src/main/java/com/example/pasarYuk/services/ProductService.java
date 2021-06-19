@@ -144,7 +144,7 @@ public class ProductService {
 		product.setProductDesc(productDetails.getProductDesc());
 		product.setPrice(productDetails.getPrice());
 		product.setPricePromo(productDetails.getPricePromo());
-		product.setAvgStar(productDetails.getAvgStar());
+//		product.setAvgStar(productDetails.getAvgStar());
 		product.setCategory(productDetails.getCategory());		
 		product.setSatuanJual(productDetails.getSatuanJual());
 		product.setUrlProductImage(productDetails.getUrlProductImage());
