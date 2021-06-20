@@ -16,15 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
 import com.example.pasarYuk.model.Guest;
+import com.example.pasarYuk.model.Order;
+import com.example.pasarYuk.model.Orderitem;
 import com.example.pasarYuk.services.AdminService;
+import com.example.pasarYuk.services.OrderService;
 
 import temp.HomeAdminDTO;
+import temp.OrderitemDTO;
 
 @CrossOrigin
 @RestController
 @RequestMapping("api/v1")
 public class AdminController {
 
+	@Autowired
+	private OrderService orderService;
+	
 	@Autowired
 	private AdminService adminService;
 	
@@ -56,4 +63,23 @@ public class AdminController {
 
 		return ResponseEntity.ok(guest);
 	}
+	
+	@GetMapping("/admin/listorder")
+	public List<Order> getListOrder() {
+		List<Order> order = orderService.listOrder();
+		return order;
+	}
+	
+	@GetMapping("/admin/order/{orderId}")
+	public Order getOrder(@PathVariable(value = "orderId") Long orderId) throws ResourceNotFoundException {
+		Order order = orderService.getOrder(orderId);
+		return order;
+	}
+	@GetMapping("/admin/listorderitem/{orderId}")
+	public List<OrderitemDTO> getListOrderitem(@PathVariable(value = "orderId") Long orderId) throws ResourceNotFoundException{
+		List<OrderitemDTO> order = orderService.getListOrderitem(orderId);
+		return order;
+	}
+	
+	
 }

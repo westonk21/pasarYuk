@@ -36,6 +36,7 @@ import temp.CartProductDTO;
 import temp.LapakSection;
 import temp.OrderDTO;
 import temp.OrderStaffDTO;
+import temp.OrderitemDTO;
 
 @Service
 public class OrderService {
@@ -85,7 +86,36 @@ public class OrderService {
 		return orderRepository.findAll();
 	}
 	
-
+	public Order getOrder(Long orderId) throws ResourceNotFoundException {
+		return orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found "));
+	}
+	
+	public List<OrderitemDTO> getListOrderitem(Long orderId) throws ResourceNotFoundException{
+		List<Orderitem> listItem = orderitemRepository.findByOrderId(orderId);
+		List<OrderitemDTO> listOrderDTO = new ArrayList<OrderitemDTO>();
+		
+		for (Orderitem item : listItem) {
+			OrderitemDTO temp = new OrderitemDTO();
+			
+			temp.setQuantity(item.getQuantity());
+			
+			long productId = item.getOrderitemId().getProductId();
+			Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found "));
+			temp.setProductId(product.getProductId());
+			temp.setProductName(product.getProductName());
+			temp.setSellerId(product.getSellerId());
+			if(product.getPricePromo() != 0) {
+				temp.setPrice(product.getPricePromo());
+			}else {
+				temp.setPrice(product.getPrice());
+			}
+			
+			listOrderDTO.add(temp);
+		}
+		
+		return listOrderDTO;
+	}
+	
 	
 	public List<OrderDTO> getListOrder(String type, String role, Long id) throws ResourceNotFoundException{
 		//Order order = (Order) orderRepository.findOngoingOrderWithBuyerId(buyerId);
