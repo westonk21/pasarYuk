@@ -276,7 +276,11 @@ public class ChatService {
 		}else if(type.equals("BUYERST")) {
 			role = "STAFF";
 		}else {
-			role = type;
+			if(type.equals("SELLER") || type.equals("STAFF")) {
+				role = type;
+			}else {
+				throw new ResourceNotFoundException("Wrong Type input ");
+			}
 		}
 		Chat chat = chatRepository.findByBuyerIdAndReceiverId(buyerId, rcvId, role);
 //		List<ChathistoryDTO> chatHistory = new ArrayList<ChathistoryDTO>();
