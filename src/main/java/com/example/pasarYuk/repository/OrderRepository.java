@@ -153,6 +153,31 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			+ "WHERE staff_id=?1 AND order_type=?2"
 			, nativeQuery = true)
 	String findStaffLastOrderTimestamp(long staffId, String type);
+
+	
+	@Query(value=
+			"select count(*) "
+			+ "FROM orders "
+			+ "WHERE order_status='01' OR order_status='02' OR order_status='03' "
+			+ "GROUP BY order_status"
+			, nativeQuery = true)
+	List<Integer> getTotalOngoingOrder();
+	
+	@Query(value=
+			"select count(*) "
+			+ "FROM orders "
+			+ "WHERE order_status='04' "
+			+ "GROUP BY order_status"
+			, nativeQuery = true)
+	List<Integer> getTotalSuccesOrder();
+	
+	@Query(value=
+			"select count(*) "
+			+ "FROM orders "
+			+ "WHERE order_status='05' "
+			+ "GROUP BY order_status"
+			, nativeQuery = true)
+	List<Integer> getTotalCancelOrder();
 	
 	
 }

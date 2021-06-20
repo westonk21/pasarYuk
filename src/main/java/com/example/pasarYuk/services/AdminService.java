@@ -13,6 +13,7 @@ import com.example.pasarYuk.model.Guest;
 import com.example.pasarYuk.model.Seller;
 import com.example.pasarYuk.model.Staff;
 import com.example.pasarYuk.repository.GuestRepository;
+import com.example.pasarYuk.repository.OrderRepository;
 import com.example.pasarYuk.repository.SellerRepository;
 import com.example.pasarYuk.repository.StaffRepository;
 
@@ -27,6 +28,9 @@ public class AdminService {
 	@Autowired
 	private StaffRepository staffRepository;
 	
+	@Autowired
+	private OrderRepository orderRepository;
+	
 	private GuestRepository guestRepository;
 	@Autowired
 	public AdminService(GuestRepository guestRepository) {
@@ -37,15 +41,35 @@ public class AdminService {
 	public HomeAdminDTO getDetailWebHome() {
 		HomeAdminDTO temp = new HomeAdminDTO();
 		
+		int totalOgOrder=0;
+		int totalSuOrder=0;
+		int totalCaOrder=0;
+		
 		int totalSeller = sellerRepository.getTotalSeller();
 		int totalStaff = staffRepository.getTotalStaff();
 		int totalGuestSeller = guestRepository.getTotalGuestSeller();
 		int totalGuestStaff = guestRepository.getTotalGuestStaff();
 		
+		List<Integer> ongoingOrder = orderRepository.getTotalOngoingOrder();
+		List<Integer> succesOrder = orderRepository.getTotalSuccesOrder();
+		List<Integer> cancelOrder = orderRepository.getTotalCancelOrder();
+		for (Integer integer : ongoingOrder) {
+			totalOgOrder += integer;
+		}
+		for (Integer integer : succesOrder) {
+			totalSuOrder += integer;
+		}
+		for (Integer integer : cancelOrder) {
+			totalCaOrder += integer;
+		}
+		
 		temp.setTotalSeller(totalSeller);
 		temp.setTotalStaff(totalStaff);
 		temp.setTotalGuestSeller(totalGuestSeller);
 		temp.setTotalGuestStaff(totalGuestStaff);
+		temp.setTotalOngoingOrder(totalOgOrder);
+		temp.setTotalSuccesOrder(totalSuOrder);
+		temp.setTotalCancelOrder(totalCaOrder);
 		
 		return temp;
 	}

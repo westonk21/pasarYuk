@@ -6,17 +6,42 @@ public class HomeAdminDTO {
 	private int totalSeller;
 	private int totalGuestStaff;
 	private int totalGuestSeller;
+	private int totalOngoingOrder;
+	private int totalSuccesOrder;
+	private int totalCancelOrder;
 	
 	public HomeAdminDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public HomeAdminDTO(int totalStaff, int totalSeller, int totalGuestStaff, int totalGuestSeller) {
+	public HomeAdminDTO(int totalStaff, int totalSeller, int totalGuestStaff, int totalGuestSeller, int totalOngoingOrder, int totalSuccesOrder, int totalCancelOrder) {
 		super();
 		this.totalStaff = totalStaff;
 		this.totalSeller = totalSeller;
 		this.totalGuestStaff = totalGuestStaff;
 		this.totalGuestSeller = totalGuestSeller;
+		this.totalOngoingOrder = totalOngoingOrder;
+		this.totalSuccesOrder = totalSuccesOrder;
+		this.totalCancelOrder = totalCancelOrder;
+	}
+	
+	public int getTotalOngoingOrder() {
+		return totalOngoingOrder;
+	}
+	public void setTotalOngoingOrder(int totalOngoingOrder) {
+		this.totalOngoingOrder = totalOngoingOrder;
+	}
+	public int getTotalSuccesOrder() {
+		return totalSuccesOrder;
+	}
+	public void setTotalSuccesOrder(int totalSuccesOrder) {
+		this.totalSuccesOrder = totalSuccesOrder;
+	}
+	public int getTotalCancelOrder() {
+		return totalCancelOrder;
+	}
+	public void setTotalCancelOrder(int totalCancelOrder) {
+		this.totalCancelOrder = totalCancelOrder;
 	}
 	public int getTotalStaff() {
 		return totalStaff;
