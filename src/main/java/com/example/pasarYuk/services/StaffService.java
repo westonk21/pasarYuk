@@ -3,6 +3,7 @@ package com.example.pasarYuk.services;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -16,8 +17,10 @@ import com.example.pasarYuk.model.Seller;
 import com.example.pasarYuk.model.Staff;
 import com.example.pasarYuk.repository.GuestRepository;
 import com.example.pasarYuk.repository.ListOtpRepository;
+import com.example.pasarYuk.repository.OrderRepository;
 import com.example.pasarYuk.repository.StaffRepository;
 
+import temp.HomeStaffDTO;
 import temp.LoginRequest;
 
 
@@ -25,8 +28,8 @@ import temp.LoginRequest;
 @Service
 public class StaffService {
 
-//	@Autowired
-//	private OrderRepository orderRepository;
+	@Autowired
+	private OrderRepository orderRepository;
 //	
 //	@Autowired
 //	private ProductRepository productRepository;
@@ -49,6 +52,36 @@ public class StaffService {
 	public Staff findStaffById(long staffId) throws ResourceNotFoundException {
 		Staff staff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Staff not found for this id :: " + staffId));
 		return staff;
+	}
+	
+	public HomeStaffDTO getDetailHome(Long staffId) throws ResourceNotFoundException {
+		Date dateTemp = new Date();
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
+		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyy");
+		String timeStamp = date_format.format(dateTemp)+"000000";
+//		System.out.println(timeStamp);
+		
+		HomeStaffDTO temp = new HomeStaffDTO();
+		
+		Staff staff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Staff not found for this id :: " + staffId));
+		temp.setStaffName(staff.getStaffName());
+		temp.setPhoneNumber(staff.getPhoneNumber());
+		temp.setPhotoUrl(staff.getPhotoUrl());
+		
+		List<Integer> listOngoing = orderRepository.getTotalOngoingOrderWithStaffId(staffId, timeStamp);
+		int totalOngoing = 0;
+		for (Integer integer : listOngoing) {
+			totalOngoing += integer;
+		}
+		temp.setOngoingOrder(totalOngoing);		
+		Integer listSuccess = orderRepository.getTotalSuccessgOrderWithStaffId(staffId, timeStamp);
+		if(listSuccess==null)listSuccess=0;
+		temp.setFinishOrder(listSuccess);
+		Integer listCancel = orderRepository.getTotalCancelgOrderWithStaffId(staffId, timeStamp);
+		if(listCancel==null)listCancel=0;
+		temp.setCancelOrder(listCancel);
+		
+		return temp;
 	}
 	
 	//ACCEPT ORDER

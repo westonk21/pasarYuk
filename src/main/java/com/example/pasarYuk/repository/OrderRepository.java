@@ -155,6 +155,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	String findStaffLastOrderTimestamp(long staffId, String type);
 
 	
+	
+	
 	@Query(value=
 			"select count(*) "
 			+ "FROM orders "
@@ -162,7 +164,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			+ "GROUP BY order_status"
 			, nativeQuery = true)
 	List<Integer> getTotalOngoingOrder();
-	
 	@Query(value=
 			"select count(*) "
 			+ "FROM orders "
@@ -170,7 +171,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			+ "GROUP BY order_status"
 			, nativeQuery = true)
 	List<Integer> getTotalSuccesOrder();
-	
 	@Query(value=
 			"select count(*) "
 			+ "FROM orders "
@@ -180,4 +180,28 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Integer> getTotalCancelOrder();
 	
 	
+	
+	
+	
+	@Query(value=
+			"select count(*) "
+			+ "FROM orders "
+			+ "WHERE (order_status='01' OR order_status='02' OR order_status='03') AND staff_id=?1 AND order_timestamp >= ?2 "
+			+ "GROUP BY order_status"
+			, nativeQuery = true)
+	List<Integer> getTotalOngoingOrderWithStaffId(Long staffId, String timestamp);
+	@Query(value=
+			"select count(*) "
+			+ "FROM orders "
+			+ "WHERE order_status='04' AND staff_id=?1 AND order_timestamp >= ?2 "
+			+ "GROUP BY order_status"
+			, nativeQuery = true)
+	Integer getTotalSuccessgOrderWithStaffId(Long staffId, String timestamp);
+	@Query(value=
+			"select count(*) "
+			+ "FROM orders "
+			+ "WHERE order_status='05' AND staff_id=?1 AND order_timestamp >= ?2 "
+			+ "GROUP BY order_status"
+			, nativeQuery = true)
+	Integer getTotalCancelgOrderWithStaffId(Long staffId, String timestamp);
 }

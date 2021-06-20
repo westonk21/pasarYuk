@@ -24,6 +24,7 @@ import com.example.pasarYuk.repository.StaffRepository;
 import com.example.pasarYuk.services.EmailService;
 import com.example.pasarYuk.services.StaffService;
 
+import temp.HomeStaffDTO;
 import temp.LoginRequest;
 
 @CrossOrigin
@@ -44,6 +45,12 @@ public class StaffController {
 	@GetMapping("/staff")
 	public List<Staff> viewAllStaff(){
 		return staffRepository.findAll();
+	}
+	
+	//home staff
+	@GetMapping("/staff-home/{staffId}")
+	public HomeStaffDTO viewHome(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException {
+		return staffService.getDetailHome(staffId);
 	}
 	
 	// view staff by id
