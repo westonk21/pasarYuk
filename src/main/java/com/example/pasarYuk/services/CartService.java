@@ -290,11 +290,11 @@ public class CartService {
 				temp.setMarketName(marketName);
 			}
 			temp.setShippingFee(10000);
-			temp.setDiscountShipFee(10000);
+			temp.setDiscountShipFee(5000);
 			long subTotal = calculateSubTotal2(listProduct);
 			temp.setSubTotal(subTotal);
-//			long total = subTotal + (order2.getShippingFee() - order2.getDiscountShipFee());
-			long total = subTotal;
+			long total = subTotal + (temp.getShippingFee() - temp.getDiscountShipFee());
+//			long total = subTotal;
 			temp.setTotal(total);
 		}
 		
@@ -316,7 +316,9 @@ public class CartService {
 		long total=0;
 	    while(iterator.hasNext()) {
 //	    	System.out.println(iterator.next());
-	    	total = total + iterator.next().getPrice();
+	    	long price = iterator.next().getPrice();
+	    	int qty = iterator.next().getQuantity();
+	    	total = total + (price*qty);
 	    }
 		return total;
 	}
