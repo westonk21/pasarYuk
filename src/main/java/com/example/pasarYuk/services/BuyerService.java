@@ -129,11 +129,11 @@ public class BuyerService {
 		
 //		buyer.setUsername(buyerDetails.getUsername());
 		buyer.setBuyerName(buyerDetails.getBuyerName());
-//		buyer.setPassword(buyerDetails.getPassword());
+		buyer.setPassword(buyerDetails.getPassword());
 		buyer.setEmail(buyerDetails.getEmail().toLowerCase());
 		buyer.setPhoneNumber(buyerDetails.getPhoneNumber());
 		buyer.setAddress(buyerDetails.getAddress());
-		buyer.setMarketId(buyerDetails.getMarketId());
+//		buyer.setMarketId(buyerDetails.getMarketId());
 		
 		return this.buyerRepository.save(buyer);
 	}
