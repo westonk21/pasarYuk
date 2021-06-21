@@ -293,7 +293,7 @@ public class CartService {
 			temp.setDiscountShipFee(5000);
 			long subTotal = calculateSubTotal2(listProduct);
 			temp.setSubTotal(subTotal);
-			long total = subTotal ;
+			long total = subTotal + (temp.getShippingFee() - temp.getDiscountShipFee());
 //			long total = subTotal;
 			temp.setTotal(total);
 		}
