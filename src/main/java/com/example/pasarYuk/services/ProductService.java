@@ -90,9 +90,7 @@ public class ProductService {
 		
 		List<Product> temp = productRepository.findProductPromoWithMarketId(marketId);
 		List<Product> list = new ArrayList<Product>();
-		if(temp.isEmpty()) {
-			throw new ResourceNotFoundException("No data found");
-		}else {
+		if(!temp.isEmpty()) {
 			for (Product item : temp) {
 				Seller seller = sellerRepository.findById(item.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
 				int openTime = Integer.parseInt(seller.getOpenTime());
