@@ -13,7 +13,7 @@ public class OrderDTO {
 	private long orderId;
 	private Staff staff;
 	private String orderDate;
-	private String orderTime;
+	private String orderTimestamp;
 	private String orderStatus;
 	private String marketName;
 	private String shippingAddress;
@@ -28,14 +28,14 @@ public class OrderDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public OrderDTO(long orderId, Staff staff, String orderDate, String orderTime, String orderStatus,
+	public OrderDTO(long orderId, Staff staff, String orderDate, String orderTimestamp, String orderStatus,
 			String marketName, String shippingAddress, Buyer buyerDetail, List<Product> listItem, long shippingFee,
 			long discountShipFee, long subTotal, long total) {
 		super();
 		this.orderId = orderId;
 		this.staff = staff;
 		this.orderDate = orderDate;
-		this.orderTime = orderTime;
+		this.orderTimestamp = orderTimestamp;
 		this.orderStatus = orderStatus;
 		this.marketName = marketName;
 		this.shippingAddress = shippingAddress;
@@ -108,11 +108,11 @@ public class OrderDTO {
 	public void setOrderDate(String orderDate) {
 		this.orderDate = orderDate;
 	}
-	public String getOrderTime() {
-		return orderTime;
+	public String getOrderTimestamp() {
+		return orderTimestamp;
 	}
-	public void setOrderTime(String orderTime) {
-		this.orderTime = orderTime;
+	public void setOrderTimestamp(String orderTimestamp) {
+		this.orderTimestamp = orderTimestamp;
 	}
 	public String getOrderStatus() {
 		return orderStatus;

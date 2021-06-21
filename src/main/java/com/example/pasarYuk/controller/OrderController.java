@@ -132,7 +132,7 @@ public class OrderController {
 	@PostMapping("/orders/new/{buyerId}/{type}")
 	public Order newOrder(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "type") String type) throws ResourceNotFoundException {
 		//sementara buyerId pake dari url dlu, kalo udah oke baru http session
-		Order orderResp =  orderService.newOrder(buyerId, type);
+		Order orderResp =  orderService.newOrder(buyerId, type.toUpperCase());
 		return orderResp;
 	}
 	

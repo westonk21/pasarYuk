@@ -165,7 +165,7 @@ public class OrderService {
 				temp.setStaff(staff);
 //				temp.setOrderDate(order2.getOrderDate());
 //				temp.setOrderTime(order2.getOrderTime());
-				temp.setOrderTime(order2.getOrderTimestamp());
+				temp.setOrderTimestamp(order2.getOrderTimestamp());
 				temp.setOrderStatus(order2.getOrderStatus());
 				temp.setShippingAddress(order2.getShippingAddress());
 				
