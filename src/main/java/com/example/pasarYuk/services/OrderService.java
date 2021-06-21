@@ -104,6 +104,8 @@ public class OrderService {
 			long subTotal = calculateSubTotal(orderItemList);
 			long total = subTotal + (order2.getShippingFee() - order2.getDiscountShipFee());
 			temp.setTotal(total);
+			
+			list.add(temp);
 		}
 		
 		return list;
