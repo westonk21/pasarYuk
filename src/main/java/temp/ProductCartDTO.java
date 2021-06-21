@@ -27,6 +27,7 @@ public class ProductCartDTO {
 	public ProductCartDTO(long productId, long sellerId, String productName, String productDesc, long price,
 			long pricePromo, String satuanJual, float avgStar, String category, String urlProductImage, int quantity) {
 		super();
+		this.productId = productId;
 		this.sellerId = sellerId;
 		this.productName = productName;
 		this.productDesc = productDesc;

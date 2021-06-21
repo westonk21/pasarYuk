@@ -293,7 +293,7 @@ public class CartService {
 			temp.setDiscountShipFee(5000);
 			long subTotal = calculateSubTotal2(listProduct);
 			temp.setSubTotal(subTotal);
-			long total = subTotal + (temp.getShippingFee() - temp.getDiscountShipFee());
+			long total = subTotal ;
 //			long total = subTotal;
 			temp.setTotal(total);
 		}
@@ -312,14 +312,22 @@ public class CartService {
 		return total;
 	}
 	public long calculateSubTotal2(List<ProductCartDTO> listItem) {
-		Iterator<ProductCartDTO> iterator = listItem.iterator();
+//		Iterator<ProductCartDTO> iterator = listItem.iterator();
 		long total=0;
-	    while(iterator.hasNext()) {
-//	    	System.out.println(iterator.next());
-	    	long price = iterator.next().getPrice();
-	    	int qty = iterator.next().getQuantity();
-	    	total = total + (price*qty);
-	    }
+//	    while(iterator.hasNext()) {
+//	    	System.out.println(iterator.next().getPrice());
+//	    	long price = iterator.next().getPrice();
+////	    	int qty = iterator.next().getQuantity();
+//	    	System.out.println(price);
+////	    	System.out.println(qty);
+//	    	total += price;
+//	    }
+		int length = listItem.size();
+		for(int i=0;i<length;i++) {
+			long price = listItem.get(i).getPrice();
+			long qty = listItem.get(i).getQuantity();
+			total+=price*qty;
+		}
 		return total;
 	}
 	
