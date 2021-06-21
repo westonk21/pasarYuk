@@ -24,7 +24,7 @@ public class ProductCartDTO {
 
 
 
-	public ProductCartDTO(long sellerId, String productName, String productDesc, long price,
+	public ProductCartDTO(long productId, long sellerId, String productName, String productDesc, long price,
 			long pricePromo, String satuanJual, float avgStar, String category, String urlProductImage, int quantity) {
 		super();
 		this.sellerId = sellerId;
@@ -42,7 +42,7 @@ public class ProductCartDTO {
 
 
 	public Object clone() {
-		ProductCartDTO clone = new ProductCartDTO(this.sellerId, this.productName, this.productDesc, this.price, this.pricePromo, this.satuanJual, this.avgStar, this.category, this.urlProductImage, this.quantity);
+		ProductCartDTO clone = new ProductCartDTO(this.productId, this.sellerId, this.productName, this.productDesc, this.price, this.pricePromo, this.satuanJual, this.avgStar, this.category, this.urlProductImage, this.quantity);
 		return clone;
 	}
 
