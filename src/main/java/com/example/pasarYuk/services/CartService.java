@@ -146,8 +146,11 @@ public class CartService {
 			for (Cart cart2 : cart) {
 				if(cart2.getCheckItem().equals("1")) {
 					Product prd = productRepository.findById(cart2.getCartId().getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product id not found  in database"));
-					int price = (int) (prd.getPrice() * cart2.getQuantity());
-					total += price;
+//					int price = (int) (prd.getPrice() * cart2.getQuantity());
+					long price = prd.getPrice();
+					int qty = cart2.getQuantity();
+					
+					total += price*qty;
 				}
 			}
 		}
