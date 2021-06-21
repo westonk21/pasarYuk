@@ -26,6 +26,7 @@ import temp.CartDTO;
 import temp.CartMarketDTO;
 import temp.CartProductDTO;
 import temp.PaymentDTO;
+import temp.ProductCartDTO;
 
 @Service
 public class CartService {
@@ -250,13 +251,27 @@ public class CartService {
 //		List<Product> orderItemList = new ArrayList<Product>();
 		Long sellerId = null;
 		
-		List<Product> listProduct = new ArrayList<Product>();
+		List<ProductCartDTO> listProduct = new ArrayList<ProductCartDTO>();
 		if(cart!=null) {
 			System.out.println(cart);
 			for (Cart cart2 : cart) {
 				if(cart2.getCheckItem().equals("1")) {
 					Product prd = productRepository.findById(cart2.getCartId().getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product id not found  in database"));
-					listProduct.add(prd);
+					
+					ProductCartDTO prdTemp = new ProductCartDTO();
+					prdTemp.setProductId(prd.getProductId());
+					prdTemp.setSellerId(prd.getSellerId());
+					prdTemp.setProductName(prd.getProductName());
+					prdTemp.setProductDesc(prd.getProductDesc());
+					prdTemp.setPrice(prd.getPrice());
+					prdTemp.setPricePromo(prd.getPricePromo());
+					prdTemp.setSatuanJual(prd.getSatuanJual());
+					prdTemp.setAvgStar(prd.getAvgStar());
+					prdTemp.setCategory(prd.getCategory());
+					prdTemp.setUrlProductImage(prd.getUrlProductImage());
+					prdTemp.setQuantity(cart2.getQuantity());
+					
+					listProduct.add(prdTemp);
 					
 					sellerId = prd.getSellerId();
 				}
@@ -273,7 +288,7 @@ public class CartService {
 			}
 			temp.setShippingFee(10000);
 			temp.setDiscountShipFee(10000);
-			long subTotal = calculateSubTotal(listProduct);
+			long subTotal = calculateSubTotal2(listProduct);
 			temp.setSubTotal(subTotal);
 //			long total = subTotal + (order2.getShippingFee() - order2.getDiscountShipFee());
 			long total = subTotal;
@@ -286,6 +301,15 @@ public class CartService {
 	
 	public long calculateSubTotal(List<Product> listItem) {
 		Iterator<Product> iterator = listItem.iterator();
+		long total=0;
+	    while(iterator.hasNext()) {
+//	    	System.out.println(iterator.next());
+	    	total = total + iterator.next().getPrice();
+	    }
+		return total;
+	}
+	public long calculateSubTotal2(List<ProductCartDTO> listItem) {
+		Iterator<ProductCartDTO> iterator = listItem.iterator();
 		long total=0;
 	    while(iterator.hasNext()) {
 //	    	System.out.println(iterator.next());

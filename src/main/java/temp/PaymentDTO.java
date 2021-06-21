@@ -14,13 +14,13 @@ public class PaymentDTO {
 	private long discountShipFee;
 	private long subTotal;
 	private long total;
-	private List<Product> listItem = new ArrayList<Product>();
+	private List<ProductCartDTO> listItem = new ArrayList<ProductCartDTO>();
 	
 	public PaymentDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public PaymentDTO(Buyer buyerDetail, List<Product> listItem, String marketName, long shippingFee, long discountShipFee, long subTotal, long total) {
+	public PaymentDTO(Buyer buyerDetail, List<ProductCartDTO> listItem, String marketName, long shippingFee, long discountShipFee, long subTotal, long total) {
 		super();
 		this.buyerDetail = buyerDetail;
 		this.listItem = listItem;
@@ -67,12 +67,12 @@ public class PaymentDTO {
 	public void setBuyerDetail(Buyer buyerDetail) {
 		this.buyerDetail = buyerDetail;
 	}
-	public List<Product> getListItem() {
+	public List<ProductCartDTO> getListItem() {
 		return listItem;
 	}
-	public void setListItem(List<Product> listItem) {
-		for (Product product : listItem) {
-			this.listItem.add((Product) product.clone());
+	public void setListItem(List<ProductCartDTO> listItem) {
+		for (ProductCartDTO product : listItem) {
+			this.listItem.add((ProductCartDTO) product.clone());
 		}
 	}
 	
