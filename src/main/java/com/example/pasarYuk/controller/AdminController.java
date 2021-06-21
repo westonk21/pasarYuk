@@ -22,6 +22,7 @@ import com.example.pasarYuk.services.AdminService;
 import com.example.pasarYuk.services.OrderService;
 
 import temp.HomeAdminDTO;
+import temp.OrderAdminDTO;
 import temp.OrderitemDTO;
 
 @CrossOrigin
@@ -65,8 +66,8 @@ public class AdminController {
 	}
 	
 	@GetMapping("/admin/listorder")
-	public List<Order> getListOrder() {
-		List<Order> order = orderService.listOrder();
+	public List<OrderAdminDTO> getListOrder() {
+		List<OrderAdminDTO> order = orderService.listOrderAdmin();
 		return order;
 	}
 	

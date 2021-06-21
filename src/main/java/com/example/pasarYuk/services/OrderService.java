@@ -34,6 +34,7 @@ import com.example.pasarYuk.repository.StaffRepository;
 
 import temp.CartProductDTO;
 import temp.LapakSection;
+import temp.OrderAdminDTO;
 import temp.OrderDTO;
 import temp.OrderStaffDTO;
 import temp.OrderitemDTO;
@@ -84,6 +85,28 @@ public class OrderService {
 //======================================================================================================
 	public List<Order> listOrder(){
 		return orderRepository.findAll();
+	}
+	
+	public List<OrderAdminDTO> listOrderAdmin(){
+		List<OrderAdminDTO> list = new ArrayList<OrderAdminDTO>();
+		List<Order> order = orderRepository.findAll();
+		
+		for (Order order2 : order) {
+			OrderAdminDTO temp = new OrderAdminDTO();
+			temp.setOrderId(order2.getOrderId());
+			temp.setOrderTimestamp(order2.getOrderTimestamp());
+			temp.setOrderStatus(order2.getOrderStatus());
+			temp.setShippingAddress(order2.getShippingAddress());
+			temp.setMarketName(order2.getMarketName());
+			
+			List<Product> orderItemList = new ArrayList<Product>();
+			orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
+			long subTotal = calculateSubTotal(orderItemList);
+			long total = subTotal + (order2.getShippingFee() - order2.getDiscountShipFee());
+			temp.setTotal(total);
+		}
+		
+		return list;
 	}
 	
 	public Order getOrder(Long orderId) throws ResourceNotFoundException {
