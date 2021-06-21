@@ -165,11 +165,21 @@ public class ChatService {
 			List<Chathistory> tempDB = chathistoryRepository.getHistoryBuyerId(chatId);
 			int idInc = 1;
 			long idRole=0;
+			long idMusuh=0;
+			int flagSama = 0;
 			long id;
 			if(tempDB !=null) {
 				for (Chathistory find : tempDB) {
 					if(find.getOwnerRole().equals(type)) {
 						idRole = find.getOwnerId();
+					}else {
+						idMusuh = find.getOwnerId();
+					}
+					if(idRole!=0 && idMusuh!=0) {
+						if(idRole == idMusuh) {
+							flagSama=1;
+						}
+						break;
 					}
 				}
 				for (Chathistory temp : tempDB) {
@@ -189,8 +199,13 @@ public class ChatService {
 					newCHS.setCreatedAt(temp.getTimestamp());
 						ChatUser user = new ChatUser();
 						id=temp.getOwnerId();
-						if(!temp.getOwnerRole().equals(type)) {
-							if(temp.getOwnerId() == idRole) {
+//						if(!temp.getOwnerRole().equals(type)) {
+//							if(temp.getOwnerId() == idRole) {
+//								id++;
+//							}
+//						}
+						if(flagSama == 1) {
+							if(!temp.getOwnerRole().equals(type)) {
 								id++;
 							}
 						}
