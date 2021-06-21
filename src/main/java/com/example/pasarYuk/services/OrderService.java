@@ -552,9 +552,9 @@ public class OrderService {
 		order.setOrderTimestamp(timeStamp);
 		
 		//FIND STAFF, CHECK IF STAFF HAVE A ONGOING ORDER OR NOT, IF NOT FIND ANOTHER STAFF
-		List<Cart> listCart = cartRepository.findCheckedMarketByBuyerId(buyerId);
+		List<Cart> listCart = cartRepository.findCheckedItemByBuyerId(buyerId);
 //		System.out.println(listCart);
-		if(listCart!=null) {
+		if(!listCart.isEmpty()) {
 			Cart temp = listCart.get(0);
 			marketIdTemp = temp.getMarketId();
 			String marketName = marketRepository.getMarketName(temp.getMarketId());
@@ -567,7 +567,7 @@ public class OrderService {
 		List<Staff> staff = staffRepository.findAllByMarketId(marketIdTemp);
 //		System.out.println(staff); 
 		String sendToken=null;
-		if(staff!=null) {
+		if(!staff.isEmpty()) {
 			for (Staff staff2 : staff) {
 //				System.out.println("masuk");
 				if(type.equals("LIVE")) {
@@ -620,7 +620,7 @@ public class OrderService {
 		long orderIdTemp = order.getOrderId();
 		List<Cart> cart = cartRepository.findCheckedItemByBuyerId(buyerId);
 //		int i;
-		if(cart!=null) {
+		if(!cart.isEmpty()) {
 //			i=0;
 			for (Cart cart2 : cart) {
 				int qtyTemp = cart2.getQuantity();
