@@ -125,4 +125,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 			+ "WHERE sl.market_id=?1 AND pd.price_promo!=0"
 			, nativeQuery = true)
 	List<Product> findProductPromoWithMarketId(Long marketId);
+	
+	@Query(value=
+			"SELECT pd.* "
+			+ "FROM product pd "
+			+ "INNER JOIN seller sl ON pd.seller_id = sl.seller_id "
+			+ "WHERE sl.market_id=?1"
+			, nativeQuery = true)
+	List<Product> findProductWithMarketId(Long marketId);
 }

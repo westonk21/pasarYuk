@@ -47,6 +47,11 @@ public class ProductController {
 	public List<Product> getAllProductByPromo(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{
 		return productService.listProductByPromo(buyerId);
 	}
+	//get product by market
+	@GetMapping("products-market/{buyerId}")
+	public List<Product> getAllProductByMarket(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{
+		return productService.listProductByMarket(buyerId);
+	}
 	
 	//list product by sellerID
 	@GetMapping("products/list-seller/{sellerId}")

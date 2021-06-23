@@ -104,6 +104,31 @@ public class ProductService {
 		}
 		return list;
 	}
+	public List<Product> listProductByMarket(Long buyerId) throws ResourceNotFoundException{
+		Date dateTemp = new Date();
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
+		SimpleDateFormat date_format = new SimpleDateFormat("ddMMyyyyHHmmss");
+		String timeStamp = date_format.format(dateTemp);
+		
+		Buyer buyer = buyerRepository.findById(buyerId).orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
+		long marketId = buyer.getMarketId();
+		
+		List<Product> temp = productRepository.findProductWithMarketId(marketId);
+		List<Product> list = new ArrayList<Product>();
+		
+		for (Product item : temp) {
+			Seller seller = sellerRepository.findById(item.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+			int openTime = Integer.parseInt(seller.getOpenTime());
+			int closeTime = Integer.parseInt(seller.getCloseTime());
+			int currTime = Integer.parseInt(timeStamp.substring(8, 12));
+//			System.out.println(currTime);
+			
+			if(currTime > openTime && currTime < closeTime) {
+				list.add(item);
+			}
+		}
+		return list;
+	}
 	
 	public Product getProductById(Long productId) throws ResourceNotFoundException {
 		Product product = productRepository.findById(productId)
