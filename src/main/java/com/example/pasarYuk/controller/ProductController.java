@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pasarYuk.exception.ResourceNotFoundException;
+import com.example.pasarYuk.model.Buyer;
 import com.example.pasarYuk.model.Product;
 //import com.example.pasarYuk.services.CartService;
 //import com.example.pasarYuk.repository.BuyerRepository;
@@ -93,6 +94,13 @@ public class ProductController {
 		Product product = productService.updateProduct(productId, productDetails);
 		
 		return ResponseEntity.ok(product);
+	}
+	@PutMapping("/products-upd-market/{buyerId}/{marketId}")
+	public List<Product> updateProductMarket(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "marketId") Long marketId) throws ResourceNotFoundException{
+		
+		List<Product> product = productService.updateProductMarket(buyerId, marketId);
+		
+		return product;
 	}
 	
 	//delete buyer

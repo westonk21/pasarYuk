@@ -146,6 +146,7 @@ public class BuyerController {
 		return ResponseEntity.ok(buyer);
 	}
 	
+	
 	//delete buyer
 	@DeleteMapping("/buyers/{buyerId}")
 	public Map<String, Boolean> deleteBuyer(@PathVariable(value = "buyerId") Long buyerId) throws ResourceNotFoundException{
