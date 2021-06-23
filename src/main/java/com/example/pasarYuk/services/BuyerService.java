@@ -158,4 +158,13 @@ public class BuyerService {
 		
 		return response;
 	}
+
+	public String updateAddress(Long buyerId, String address) throws ResourceNotFoundException {
+		// TODO Auto-generated method stub
+		Buyer buyer = buyerRepository.findById(buyerId)
+				.orElseThrow(() -> new ResourceNotFoundException("Buyer not found for this id :: " + buyerId));
+		buyer.setAddress(address);
+		buyerRepository.save(buyer);
+		return "Oke";
+	}
 }

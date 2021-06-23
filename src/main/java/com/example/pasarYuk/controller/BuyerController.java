@@ -138,6 +138,12 @@ public class BuyerController {
 		return ResponseEntity.ok(buyer);
 	}
 	
+	@PutMapping("/buyers-upd-addr/{buyerId}")
+	public String updateAddress(@PathVariable(value = "buyerId") Long buyerId, @Valid @RequestBody Buyer buyer) throws ResourceNotFoundException {
+		String upd = buyerService.updateAddress(buyerId, buyer.getAddress());
+		return upd;
+	}
+	
 	@PutMapping("/buyers/{buyerId}/market/{marketId}")
 	public ResponseEntity<Buyer> updateMarket(@PathVariable(value = "buyerId") Long buyerId, @PathVariable(value = "marketId") Long marketId) throws ResourceNotFoundException{
 		
