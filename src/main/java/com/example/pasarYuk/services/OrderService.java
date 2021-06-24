@@ -171,7 +171,8 @@ public class OrderService {
 			}
 		}
 		if(order.size() == 0) {
-			throw new ResourceNotFoundException("No data found for this ID : " + id);
+//			throw new ResourceNotFoundException("No data found for this ID : " + id);
+			return orderDTOList;
 		}
 		
 		//get list item
