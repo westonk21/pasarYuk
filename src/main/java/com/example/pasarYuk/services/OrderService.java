@@ -313,6 +313,7 @@ public class OrderService {
 				temp.setShippingAddress(order.getShippingAddress());
 				
 				List<Product> orderItemList = new ArrayList<Product>();
+				//order list with sort by seller Id means sort by market
 				orderItemList = productRepository.getListItemWithOrderIdSortName(order.getOrderId());
 				
 				System.out.println(orderItemList.size());
@@ -323,6 +324,7 @@ public class OrderService {
 					List<CartProductDTO> listProduct = new ArrayList<CartProductDTO>();
 					int i=1;
 					int lengthList = orderItemList.size();
+//					System.out.println(lengthList);
 					Long sellerId = null;
 					String lapakNameTmp = null;
 					for (Product product : orderItemList) {
@@ -330,6 +332,7 @@ public class OrderService {
 							Seller tempSl = sellerRepository.findById(product.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + product.getSellerId()));
 							sellerId = product.getSellerId();
 							lapakNameTmp = tempSl.getLapakName();
+							System.out.println("masuk" + lapakNameTmp);
 //							LapakSection lapak = new LapakSection();
 //							
 //							lapak.setLapakName(tempSl.getLapakName());
@@ -339,12 +342,15 @@ public class OrderService {
 //							continue;
 						}
 						if(product.getSellerId() != sellerId) {
+							System.out.println("masuk1 " + i + "product sellerid :  " + product.getSellerId() +"    sellerId : " + sellerId);
 							//System.out.println(listProduct.get(0));
 							LapakSection lapak = new LapakSection();
+							System.out.println(lapakNameTmp);
 							lapak.setLapakName(lapakNameTmp);
 							lapak.setData(listProduct);
 							listLapak.add(lapak);
 							
+							listProduct = new ArrayList<CartProductDTO>();
 							Seller tempSl = sellerRepository.findById(product.getSellerId()).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: " + product.getSellerId()));
 							sellerId = product.getSellerId();
 							lapakNameTmp = tempSl.getLapakName();
@@ -355,11 +361,12 @@ public class OrderService {
 						res.setPrice(product.getPrice());
 						res.setProductName(product.getProductName());
 						res.setUrlProductImage(product.getUrlProductImage());
-						Orderitem oiTemp = orderitemRepository.findById(new OrderitemCkey(order.getOrderId(), product.getProductId())).orElseThrow(() -> new ResourceNotFoundException("Seller not found for this id :: "));
+						Orderitem oiTemp = orderitemRepository.findById(new OrderitemCkey(order.getOrderId(), product.getProductId())).orElseThrow(() -> new ResourceNotFoundException("Orderitem not found"));
 						res.setQuantity(oiTemp.getQuantity());
 						listProduct.add(res);	
 						
 						if(i == lengthList) {
+							System.out.println("masuk2 "+ i);
 							LapakSection lapak = new LapakSection();
 							lapak.setLapakName(lapakNameTmp);
 							lapak.setData(listProduct);
