@@ -217,7 +217,7 @@ public class StaffService {
 		return response;
 	}
 
-	public Staff updateActive(Long staffId) throws ResourceNotFoundException {
+	public HomeStaffDTO updateActive(Long staffId) throws ResourceNotFoundException {
 		Staff staff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Staff not found for this id :: " + staffId));
 		
 		if(staff.getActive().equals("1")) {
@@ -225,7 +225,8 @@ public class StaffService {
 		}else {
 			staff.setActive("1");
 		}
+		staffRepository.save(staff);
 		
-		return this.staffRepository.save(staff);
+		return getDetailHome(staffId);
 	}
 }

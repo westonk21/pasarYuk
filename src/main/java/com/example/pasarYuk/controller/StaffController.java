@@ -90,8 +90,8 @@ public class StaffController {
 	
 	//update active or not 
 	@PutMapping("/staff/active/update/{staffId}")
-	public ResponseEntity<Staff> updateActive(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException {
-		Staff staff = staffService.updateActive(staffId);
+	public ResponseEntity<HomeStaffDTO> updateActive(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException {
+		HomeStaffDTO staff = staffService.updateActive(staffId);
 		return ResponseEntity.ok(staff);
 	}
 	
