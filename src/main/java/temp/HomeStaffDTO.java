@@ -5,6 +5,7 @@ public class HomeStaffDTO {
 	private String staffName;
 	private String phoneNumber;
 	private String photoUrl;
+	private String active;
 	private int ongoingOrder;
 	private int finishOrder;
 	private int cancelOrder;
@@ -13,7 +14,7 @@ public class HomeStaffDTO {
 		// TODO Auto-generated constructor stub
 	}
 	public HomeStaffDTO(String staffName, String phoneNumber, String photoUrl, int ongoingOrder, int finishOrder,
-			int cancelOrder) {
+			int cancelOrder, String active) {
 		super();
 		this.staffName = staffName;
 		this.phoneNumber = phoneNumber;
@@ -21,6 +22,14 @@ public class HomeStaffDTO {
 		this.ongoingOrder = ongoingOrder;
 		this.finishOrder = finishOrder;
 		this.cancelOrder = cancelOrder;
+		this.active = active;
+	}
+	
+	public String getActive() {
+		return active;
+	}
+	public void setActive(String active) {
+		this.active = active;
 	}
 	public String getStaffName() {
 		return staffName;

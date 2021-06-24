@@ -67,6 +67,7 @@ public class StaffService {
 		temp.setStaffName(staff.getStaffName());
 		temp.setPhoneNumber(staff.getPhoneNumber());
 		temp.setPhotoUrl(staff.getPhotoUrl());
+		temp.setActive(staff.getActive());
 		
 		List<Integer> listOngoing = orderRepository.getTotalOngoingOrderWithStaffId(staffId, timeStamp);
 		int totalOngoing = 0;

@@ -684,12 +684,16 @@ public class OrderService {
 //			throw new ResourceNotFoundException("Order Already Assign to another Staff");
 //		}
 		//order.setStaffId(staffId);
+		String msgHd = "";
+		String msg = "";
 		
 		if(order!=null) {
 			if(order.getOrderType().equals("LIVE")) {
 				if(type.equals("accept")) {
 					if(order.getOrderStatus().equals("01")) {
 						order.setOrderStatus("02");
+						msgHd = "Orderan Kamu";
+						msg = "Kami mendapatkan Driver untukmu, Pesanan segera dikumpulkan!!";
 					}else {
 						throw new ResourceNotFoundException("Order Status is not 01");
 					}
@@ -705,6 +709,8 @@ public class OrderService {
 					staffRepository.save(updWorkingStaff);
 					order.setOrderStatus("05");
 					
+					msgHd = "Orderan Kamu di Tolak";
+					msg = "Maafkan Kami, Orderan kamu di tolak oleh Staff";
 					//FIND FOW NEW STAFF
 					//harusnya perlu sort ke staff yg last order ny paling lama
 	//				List<Staff> staff = staffRepository.findAllByMarketId(marketId);
@@ -742,11 +748,17 @@ public class OrderService {
 						updWorkingStaff.setWorking("0");
 						staffRepository.save(updWorkingStaff);
 						order.setOrderStatus("04");
+						
+						msgHd = "Orderan Selesai !!";
+						msg = "Terima Kasih Telah Berbelanja dengan Aplikasi Kami";
 					}else if(status.equals("01")) { 
 						throw new ResourceNotFoundException("Order is not accepted yet");
 					}else{
 						if(status.equals("02")) {
 							order.setOrderStatus("03");
+							
+							msgHd = "Orderan Kamu !!";
+							msg = "Pesanan Sudah Siap, Staff Kami dalam Perjalanan ke Tempatmu";
 						}
 	//					int statusInt = Integer.parseInt(status);
 	//					statusInt++;
@@ -760,17 +772,26 @@ public class OrderService {
 						throw new ResourceNotFoundException("Order is not accepted yet");
 					}else if(order.getOrderStatus().equals("02")) {
 						order.setOrderStatus("03");
+						
+						msgHd = "Orderan Kamu !!";
+						msg = "Pesanan Sudah Siap, Staff Kami dalam Perjalanan ke Tempatmu";
 					}else if(order.getOrderStatus().equals("03")) {
 						Staff updWorkingStaff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Fail update Staff Working status"));
 						updWorkingStaff.setWorkingPo(updWorkingStaff.getWorkingPo() - 1);
 						staffRepository.save(updWorkingStaff);
 						order.setOrderStatus("04");
+						
+						msgHd = "Orderan Selesai !!";
+						msg = "Terima Kasih Telah Berbelanja dengan Aplikasi Kami";
 					}else {
 						throw new ResourceNotFoundException("Order is not valid to update");
 					}
 				}else if(type.equals("accept")) {
 					if(order.getOrderStatus().equals("01")) {
 						order.setOrderStatus("02");
+						
+						msgHd = "Orderan Kamu";
+						msg = "Kami mendapatkan Driver untukmu, Pesanan segera dikumpulkan!!";
 					}else {
 						throw new ResourceNotFoundException("Order Status is not 01");
 					}
@@ -782,16 +803,19 @@ public class OrderService {
 					updWorkingStaff.setWorkingPo(updWorkingStaff.getWorkingPo() - 1);
 					staffRepository.save(updWorkingStaff);
 					order.setOrderStatus("05");
+					
+					msgHd = "Orderan Kamu di Tolak";
+					msg = "Maafkan Kami, Orderan kamu di tolak oleh Staff";
 				}
 			}
 		} 
 		
 		
 		//hit api send notif, dengan message yg di isi dari if else di atas
-		if(sendToken != null) {
+		if(sendToken != null && !msg.equals("")) {
 			PushNotificationRequest request = new PushNotificationRequest();
-			request.setTitle("Orderan Baru !!");
-			request.setMessage("Ada orderan nih, segera pastikan anda bisa memprosesnya!!");
+			request.setTitle(msgHd);
+			request.setMessage(msg);
 			request.setToken(sendToken);
 			request.setTopic("");
 			pushNotificationService.sendPushNotificationToToken(request);
