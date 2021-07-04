@@ -1,5 +1,6 @@
 package com.example.pasarYuk.services;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +39,7 @@ import temp.OrderAdminDTO;
 import temp.OrderDTO;
 import temp.OrderStaffDTO;
 import temp.OrderitemDTO;
+import temp.ReviewDTO;
 
 @Service
 public class OrderService {
@@ -200,9 +202,7 @@ public class OrderService {
 					orderItemList = productRepository.getListItemWithOrderIdForSellerId(order2.getOrderId(), id);
 				}else {
 					orderItemList = productRepository.getListItemWithOrderId(order2.getOrderId());
-//					System.out.println();
 				}
-//				System.out.println(orderItemList);
 				temp.setListItem(orderItemList);
 				
 				temp.setShippingFee(order2.getShippingFee());
@@ -865,6 +865,47 @@ public class OrderService {
 		response.put("Deleted", Boolean.TRUE);
 		
 		return response;
+	}
+	
+	
+	public List<ReviewDTO> listProduct(Long orderId) throws ResourceNotFoundException {
+		List<Orderitem> listItem = orderitemRepository.findByOrderId(orderId);
+		List<ReviewDTO> temp = new ArrayList<ReviewDTO>();
+		
+		if(!listItem.isEmpty()) {
+			for (Orderitem item : listItem) {
+				Product product = productRepository.findById(item.getOrderitemId().getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found "));
+				ReviewDTO temp2 = new ReviewDTO();
+				
+				temp2.setProductId(product.getProductId());
+				temp2.setProductName(product.getProductName());
+				temp2.setUrlProductImage(product.getUrlProductImage());
+				temp2.setStar(0);
+				
+				temp.add(temp2);
+			}
+		}
+		
+		return temp;
+	}
+	public String reviewProduct(Long orderId, List<ReviewDTO> listReview) throws ResourceNotFoundException {
+		//List<Orderitem> listItem = orderitemRepository.findByOrderId(orderId);
+		for (ReviewDTO temp : listReview) {
+			Product product = productRepository.findById(temp.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found "));
+			float dbStar = product.getAvgStar();
+			if(dbStar!=0) {
+				float newStar = (dbStar + temp.getStar() ) / 2 ;
+				DecimalFormat df = new DecimalFormat("#.#");
+				String newTemp = df.format(newStar);
+				float newTemp2 = Float.valueOf(newTemp).floatValue();
+				product.setAvgStar(newTemp2);
+			}else {
+				product.setAvgStar(temp.getStar());
+			}
+			productRepository.save(product);
+		}
+		
+		return "Oke";
 	}
 }
 

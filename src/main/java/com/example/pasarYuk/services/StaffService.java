@@ -1,5 +1,6 @@
 package com.example.pasarYuk.services;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -228,5 +229,24 @@ public class StaffService {
 		staffRepository.save(staff);
 		
 		return getDetailHome(staffId);
+	}
+	
+	public String reviewStaff(Long staffId, float rate) throws ResourceNotFoundException {
+		Staff staff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Staff not found for this id :: " + staffId));
+		
+		if(staff.getAvgStar()!=0) {
+			float dbStar = staff.getAvgStar();
+			float newStar = (dbStar + rate) / 2;
+			DecimalFormat df = new DecimalFormat("#.#");
+			String newTemp = df.format(newStar);
+			float newTemp2 = Float.valueOf(newTemp).floatValue();
+			staff.setAvgStar(newTemp2);
+		}else {
+			staff.setAvgStar(rate);
+		}
+		
+		staffRepository.save(staff);
+		
+		return "Oke";
 	}
 }

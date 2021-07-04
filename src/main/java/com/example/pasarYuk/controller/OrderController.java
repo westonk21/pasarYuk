@@ -25,6 +25,7 @@ import com.example.pasarYuk.services.OrderitemService;
 import temp.ListItem;
 import temp.OrderDTO;
 import temp.OrderStaffDTO;
+import temp.ReviewDTO;
 
 @RestController
 @RequestMapping("api/v1")
@@ -121,7 +122,6 @@ public class OrderController {
 	}
 	
 	
-	
 	@PostMapping("/orders")
 	public Order createOrder(@RequestBody Order order) {
 		Order orderResp = orderService.createNewOrder(order);
@@ -150,5 +150,14 @@ public class OrderController {
 		return response;
 	}
 	
-	
+	@GetMapping("/orders-get-review/{orderId}")
+	public List<ReviewDTO> listProduct(@PathVariable(value = "orderId") Long orderId) throws ResourceNotFoundException{
+		List<ReviewDTO> temp = orderService.listProduct(orderId);
+		return temp;
+	}
+	@PostMapping("/orders-send-review/{orderId}")
+	public String reviewProduct(@PathVariable(value = "orderId") Long orderId, @Valid @RequestBody List<ReviewDTO> listReview) throws ResourceNotFoundException{
+		String temp = orderService.reviewProduct(orderId, listReview);
+		return temp;
+	}
 }

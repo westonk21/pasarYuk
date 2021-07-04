@@ -60,12 +60,14 @@ public class Staff {
 	@Column(name = "token")
 	private String token;
 	
+	@Column(name = "avg_star")
+	private float avgStar;
 	
 	public Staff() {
 		super();
 	}
 	
-	public Staff(String password, long marketId, String working, String phoneNumber, String email, String address, String urlStaffPhotoktp, String active, String staffName, int workingPo, String lastorderTimestamp, String salt, String photoUrl, String token) {
+	public Staff(float avgStar, String password, long marketId, String working, String phoneNumber, String email, String address, String urlStaffPhotoktp, String active, String staffName, int workingPo, String lastorderTimestamp, String salt, String photoUrl, String token) {
 		super();
 //		this.staffNIK = staffNIK;
 		this.phoneNumber = phoneNumber;
@@ -82,8 +84,17 @@ public class Staff {
 		this.salt = salt;
 		this.photoUrl = photoUrl;
 		this.token = token;
+		this.avgStar = avgStar;
 	}
 	
+	public float getAvgStar() {
+		return avgStar;
+	}
+
+	public void setAvgStar(float avgStar) {
+		this.avgStar = avgStar;
+	}
+
 	public String getPhotoUrl() {
 		return photoUrl;
 	}

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.example.pasarYuk.model.Product;
 
+import temp.ProductCartDTO;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
 	
@@ -85,6 +87,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 			+ "WHERE oi.order_id=?1"
 			, nativeQuery = true)
 	List<Product> getListItemWithOrderId(Long orderId);
+	
 	
 	@Query(value=
 			"SELECT pd.* "

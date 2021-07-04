@@ -121,6 +121,7 @@ public class AdminService {
 			staff.setWorkingPo(0);
 			staff.setPassword(guest.getPassword());
 			staff.setSalt(guest.getSalt());
+			staff.setAvgStar(0);
 			
 			staffRepository.save(staff);
 			if(ResponseEntity.ok(staff) != null) {

@@ -88,6 +88,13 @@ public class StaffController {
 		return staffResp;
 	}
 	
+	//review Staff
+	@PostMapping("/staffReview/{staffId}/{rate}")
+	public String reviewStaff(@PathVariable(value = "staffId") Long staffId, @PathVariable(value = "rate") float rate) throws ResourceNotFoundException {
+		String temp = staffService.reviewStaff(staffId, rate);
+		return temp;
+	}
+	
 	//update active or not 
 	@PutMapping("/staff/active/update/{staffId}")
 	public ResponseEntity<HomeStaffDTO> updateActive(@PathVariable(value = "staffId") Long staffId) throws ResourceNotFoundException {
